@@ -129,19 +129,19 @@
 .cart-foods {
   margin-top: 10px;
 }
-.cart-foods .cart-items {
-  display: grid;
-  grid-template-columns: 130px 1fr;
-  /* grid-template-rows: 1fr; */
-  /* height:  */
-  /* max-content;  */
-  /* 145px; */
+.cart-foods .cart-items-wrapper {
   border: 1px solid #000;
-  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
   border-radius: 6px;
-  overflow: hidden;
+  position: relative;
+  padding: 15px;
 }
-.cart-items-right .cross {
+.cart-foods .cart-items-wrapper-bottom {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+}
+.cart-items-wrapper .cross {
   cursor: pointer;
   position: absolute;
   background: var(--main-color);
@@ -151,16 +151,20 @@
   border-radius: 50%;
   justify-content: center;
   right: 10px;
-  top: 10px;
+  top: 6px;
 }
-.cart-items .cart-items-left img {
+/* .cart-items-left {
+  background: #fff;
+  overflow: hidden;
+  width: 120px;
+} */
+.cart-items-left img {
   object-position: center;
   object-fit: cover;
   width: 100%;
   height: 100%;
 }
-.cart-items .cart-items-right {
-  position: relative;
+.cart-items-right {
   display: flex;
   padding: 0px 10px;
   margin-bottom: 5px;
@@ -173,31 +177,7 @@
   margin-top: 5px;
   justify-content: space-between;
 }
-.cart-items-right-top .name-kitchen {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-}
-.hr_kitchen {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-}
-.name-kitchen hr {
-  height: 30px;
-  border: none;
-  background: #7a7a7a;
-  width: 2px;
-}
-.name-kitchen p {
-  font-size: 17px;
-}
-.name-kitchen p.last-child {
-  font-size: 14px;
-  color: var(--main-color);
-  font-weight: 600;
-  cursor: pointer;
-}
+
 .cart-items-right-middle {
   display: flex;
   flex-direction: row;
@@ -224,14 +204,14 @@
   border-radius: 8px;
   width: 150px;
   justify-content: space-between;
-  background: #e5e5e5;
-  border: 1px solid #555;
+  background: #000;
   align-items: center;
   font-size: 18px;
 }
-.quantity .icons {
-  font-size: 20px;
-  color: #555;
+.quantity .icons,
+.quantity p {
+  font-size: 17px;
+  color: #fff;
   cursor: pointer;
 }
 .cart-items-right-bottom .total {
@@ -249,34 +229,21 @@
   cursor: pointer;
 }
 @media (max-width: 750px) {
-  .name-kitchen {
-    flex-direction: column;
-  }
-  .name-kitchen .hr_kitchen {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    gap: 10px;
-  }
-  .hr_kitchen .last-child {
-    white-space: nowrap;
-  }
-  .name-kitchen hr {
-    width: 100%;
-    height: 1px;
-  }
   .cart-items-right-bottom {
     flex-direction: column;
     align-items: start;
     gap: 5px;
     margin-top: 5px;
   }
+  .quantity-container span {
+    /* display: none; */
+  }
   .quantity-container {
-    justify-content: space-between;
+    /* justify-content: space-between; */
     width: 100%;
   }
-  .quantity {
-    width: 100%;
+  .cart-items-right-middle .quantity {
+    width: 50%;
   }
   .btn {
     border-radius: 12px;

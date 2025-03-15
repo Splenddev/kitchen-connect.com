@@ -205,7 +205,7 @@ const App = () => {
           width: `${
             location.pathname === '/settings' || location.pathname === '/user'
               ? 'unset'
-              : '90%'
+              : '85%'
           }`,
         }}
         id="home">

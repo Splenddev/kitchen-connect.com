@@ -108,91 +108,91 @@ const Cart = () => {
             if (cartItems[item._id] > 0) {
               return (
                 <div
-                  className="cart-items"
+                  className="cart-items-wrapper"
                   key={index}>
-                  <div className="cart-items-left">
-                    <img src={url + '/images/' + item.image} />
+                  <div className="cross flex-center">
+                    <FontAwesomeIcon
+                      onClick={() => {
+                        removeAllFromCart(item._id);
+                      }}
+                      icon={faClose}
+                    />
                   </div>
-                  <div className="cart-items-right">
-                    <div className="cross flex-center">
-                      <FontAwesomeIcon
-                        onClick={() => {
-                          removeAllFromCart(item._id);
-                        }}
-                        icon={faClose}
-                      />
+                  <div className="cart-items-wrapper-top">
+                    From <b>{item.kitchen.kitchen_name} </b>Kitchen
+                  </div>
+                  <div className="cart-items-wrapper-bottom">
+                    <div className="cart-items-left">
+                      <img src={url + '/images/' + item.image} />
                     </div>
-                    <div className="cart-items-right-top">
-                      <div className="name-kitchen">
+                    <div className="cart-items-right">
+                      <div className="cart-items-right-top">
                         <p>{item.name}</p>
-                        <div className="hr_kitchen">
-                          <hr />
-                          <p className="last-child">
-                            {item.kitchen.kitchen_name}
+                      </div>
+                      <div className="cart-items-right-middle">
+                        <button
+                          className="btn"
+                          onClick={() => {
+                            setFoodView({
+                              name: item.name,
+                              kitchen_name: item.kitchen.kitchen_name,
+                              category: item.category,
+                              description: item.description,
+                              id: item._id,
+                              kitchenImage: item.k_image,
+                              image: item.image,
+                              price: item.price * 100,
+                              foodInfo: item.foodInformation,
+                              ingredients:
+                                item.foodInformation.category.ingredients,
+                              allergens:
+                                item.foodInformation.category.allergens,
+                              benefits:
+                                item.foodInformation.healthImpacts.benefits,
+                              risks: item.foodInformation.healthImpacts.risks,
+                              extras: item.foodInformation.extrasAndMods.extras,
+                              mods: item.foodInformation.extrasAndMods.mods,
+                              calories: item.foodInformation.nutrients.calories,
+                              others: item.foodInformation.nutrients.others,
+                            });
+                            viewDetailsHandler();
+                          }}>
+                          Details
+                        </button>
+                        <div className="quantity-container">
+                          <span>Qty:</span>
+                          <div className="quantity">
+                            <FontAwesomeIcon
+                              className="icons"
+                              icon={faMinusCircle}
+                              onClick={() => {
+                                removeFromCart(item._id);
+                              }}
+                            />
+                            <p>{cartItems[item._id]}</p>
+                            <FontAwesomeIcon
+                              onClick={() => {
+                                addToCart(item._id);
+                              }}
+                              className="icons"
+                              icon={faPlusCircle}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="cart-items-right-bottom">
+                        <div className="total">
+                          <p>
+                            <span>Price:</span>{' '}
+                            <FontAwesomeIcon icon={faNairaSign} />{' '}
+                            {item.price * 100}
+                          </p>
+                          <p>
+                            <span>Total: </span>
+                            <FontAwesomeIcon icon={faNairaSign} />{' '}
+                            {item.price * cartItems[item._id] * 100}
                           </p>
                         </div>
-                      </div>
-                    </div>
-                    <div className="cart-items-right-middle">
-                      <button
-                        className="btn"
-                        onClick={() => {
-                          setFoodView({
-                            name: item.name,
-                            kitchen_name: item.kitchen.kitchen_name,
-                            category: item.category,
-                            description: item.description,
-                            id: item._id,
-                            kitchenImage: item.k_image,
-                            image: item.image,
-                            price: item.price * 100,
-                            foodInfo: item.foodInformation,
-                            ingredients:
-                              item.foodInformation.category.ingredients,
-                            allergens: item.foodInformation.category.allergens,
-                            benefits:
-                              item.foodInformation.healthImpacts.benefits,
-                            risks: item.foodInformation.healthImpacts.risks,
-                            extras: item.foodInformation.extrasAndMods.extras,
-                            mods: item.foodInformation.extrasAndMods.mods,
-                            calories: item.foodInformation.nutrients.calories,
-                            others: item.foodInformation.nutrients.others,
-                          });
-                          viewDetailsHandler();
-                        }}>
-                        Details
-                      </button>
-                      <div className="quantity-container">
-                        <p>Quantity:</p>
-                        <div className="quantity">
-                          <FontAwesomeIcon
-                            className="icons"
-                            icon={faMinusCircle}
-                            onClick={() => {
-                              removeFromCart(item._id);
-                            }}
-                          />
-                          <p>{cartItems[item._id]}</p>
-                          <FontAwesomeIcon
-                            onClick={() => {
-                              addToCart(item._id);
-                            }}
-                            className="icons"
-                            icon={faPlusCircle}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="cart-items-right-bottom">
-                      <div className="total">
-                        <p>
-                          Price: <FontAwesomeIcon icon={faNairaSign} />{' '}
-                          {item.price * 100}
-                        </p>
-                        <p>
-                          Total Amount: <FontAwesomeIcon icon={faNairaSign} />{' '}
-                          {item.price * cartItems[item._id] * 100}
-                        </p>
                       </div>
                     </div>
                   </div>
