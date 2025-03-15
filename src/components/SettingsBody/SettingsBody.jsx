@@ -3,7 +3,7 @@ import './SettingsBody.css';
 import { useContext } from 'react';
 import { StoreContext } from '../../context/StoreContext';
 import { useEffect } from 'react';
-import SettingsSidebar from '../SettingsSidebar/SettingsSidebar';
+import SettingsSidebar from '../SettingsSideBar/SettingsSideBar';
 import ProfileUpdate from '../ProfileUpdate/ProfileUpdate';
 
 const SettingsBody = () => {
