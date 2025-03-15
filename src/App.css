@@ -1,0 +1,86 @@
+.app {
+  width: 85%;
+  position: relative;
+  margin: auto;
+  transition: 0.3s ease;
+}
+.app-navbar {
+  top: 0;
+  left: 50%;
+  z-index: 1;
+  width: 100%;
+}
+
+.side-popup-container-wrap {
+  opacity: 0.6;
+  position: absolute;
+  background: #fff;
+  width: 100%;
+  height: 100%;
+  z-index: 7;
+}
+.side-popup-opener {
+  position: fixed;
+  place-content: center;
+  display: flex;
+  align-items: center;
+  top: 50%;
+  right: 0%;
+  border-top-left-radius: 9px;
+  border-bottom-left-radius: 9px;
+  background: var(--main-color);
+  height: 50px;
+  width: 28px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  z-index: 99;
+  /* transform: translateX(0%); */
+}
+.side-popup-opener .icon {
+  color: #fff;
+  transform: rotate(0);
+  transition: transform 0.3s 0.1s ease-in-out;
+}
+.side-popup-opener .icon.forward {
+  transform: rotate(180deg);
+}
+.side-popup-opener.left {
+  right: 90%;
+}
+@media (max-width: 700px) {
+  .side-popup-opener.left {
+    right: 100%;
+  }
+}
+.hide {
+  display: none;
+}
+.go-up {
+  position: fixed;
+  bottom: 10%;
+  right: 2%;
+  z-index: 10;
+  animation: fadeInMove 0.7s;
+}
+@keyframes fadeInMove {
+  0% {
+    opacity: 0;
+    right: 0%;
+  }
+  100% {
+    opacity: 1;
+    right: 2%;
+  }
+}
+.go-up button {
+  padding: 10px;
+  background: var(--main-color);
+  border: none;
+  cursor: pointer;
+  border-radius: 20px;
+}
+button .up-icon {
+  color: #fff;
+  font-size: 20px;
+}

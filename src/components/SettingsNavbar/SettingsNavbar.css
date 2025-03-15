@@ -1,0 +1,71 @@
+.settings-navbar {
+  display: grid;
+  gap: 20px;
+  height: 70px;
+  grid-template-columns: 300px 1fr;
+  border-bottom: 1px solid #8b8b8b;
+}
+.company-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding-left: 10px;
+}
+.company-logo .image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.company-logo p {
+  font-weight: 600;
+}
+div.image img {
+  width: 60px;
+}
+.settings-sub-option-wrapper {
+  display: flex;
+  justify-content: start;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  width: 100%;
+  background: #fff;
+  padding-left: 15px;
+}
+.settings-sub-option-wrapper ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.settings-sub-option {
+  display: flex;
+  position: relative;
+  align-items: center;
+  color: #7c7c7c;
+  cursor: pointer;
+  user-select: none;
+  height: 100%;
+  transition: 0.3s ease;
+}
+.settings-sub-option .active-indicator {
+  position: absolute;
+  bottom: 0;
+  height: 5px;
+  width: 100%;
+  border-radius: 20px;
+  background: transparent;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+.settings-sub-option.active {
+  color: #000;
+  font-weight: 600;
+}
+.settings-sub-option.active .active-indicator {
+  transform: scaleX(1);
+  /* width: 100%; */
+  color: #000;
+  background: var(--main-color);
+}

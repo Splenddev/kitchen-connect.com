@@ -1,0 +1,348 @@
+import { useContext, useState } from 'react';
+import './Loginpopup.css';
+import { assets } from '../../assets/assets/frontend_assets/assets';
+import { StoreContext } from '../../context/StoreContext';
+import axios from 'axios';
+import BackNav from '../BackNav/BackNav';
+import { useNavigate } from 'react-router-dom';
+import '../CheckBox/CheckBox.css';
+import Loader from '../Loader/Loader';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClose } from '@fortawesome/free-solid-svg-icons';
+import { toast } from 'react-toastify';
+
+const LoginPopup = () => {
+  const navigate = useNavigate();
+  // useState
+  const {
+    url,
+    setToken,
+    currentState,
+    setCurrentState,
+    rightCard,
+    setRightCard,
+    userData,
+    setUserData,
+    setUserInfo,
+  } = useContext(StoreContext);
+
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!userData.name && currentState === 'Sign Up') {
+      newErrors.name = 'Name is required';
+    }
+    if (!userData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(userData.email)) {
+      newErrors.email = 'Enter a valid email address';
+    }
+    if (!userData.password) {
+      newErrors.password = 'Password is required';
+    } else if (userData.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters long';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  const onChangeHandler = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    validateForm();
+    setUserData((data) => ({ ...data, [name]: value }));
+  };
+
+  const login = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await axios.post(`${url}/api/user/login`, userData);
+      if (response.data.success) {
+        setToken(response.data.token);
+        setUserInfo(response.data.user);
+        localStorage.setItem('token', response.data.token);
+        setUserData({
+          email: '',
+          password: '',
+        });
+        navigate('/');
+        toast.success(`${response.data.message}`);
+      } else {
+        setLoading(false);
+        toast.info('Check your network connection and try again.');
+      }
+    } catch (error) {
+      toast.error(
+        `User not found! Check your network connection, form inputs and try again.`
+      );
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signup = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    if (!validateForm()) {
+      toast.info(
+        `${errors.email ? errors.email + '.' : ''} ${
+          errors.password ? errors.password + '.' : ''
+        } ${errors.name ? errors.name + '.' : ''} `
+      );
+      setLoading(false);
+      return;
+    }
+    try {
+      const response = await axios.post(`${url}/api/user/register`, userData);
+      if (response.data.success) {
+        // clearTimeout(timeout);
+        setLoading(false);
+        setToken(response.data.token);
+        localStorage.setItem('token', response.data.token);
+        setUserData({
+          name: '',
+          email: '',
+          password: '',
+        });
+        navigate('/');
+        toast.success(`${response.data.message}`);
+      } else {
+        toast.error(
+          response.data.message || 'An Error occured while signing you up'
+        );
+      }
+    } catch (error) {
+      console.error('Signup error', error);
+      toast.warn(
+        error.response?.data?.message ||
+          'The Email is registered already. Please try logging in.'
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <BackNav
+        setRightCard={setRightCard}
+        setData={setUserData}
+      />
+      <div className="login-popup">
+        <div className={`form-container ${rightCard ? 'right-card' : ''}`}>
+          <div className="form-container-left">
+            <form
+              onSubmit={currentState === 'Login' ? login : signup}
+              className="login-signup-container">
+              {currentState === 'Login' ? (
+                <div
+                  style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <h2>Welcome Back User!</h2>{' '}
+                  <FontAwesomeIcon
+                    className={`${rightCard ? 'icon' : 'hide'}`}
+                    onClick={() => setRightCard(false)}
+                    icon={faClose}
+                  />
+                </div>
+              ) : (
+                <></>
+              )}
+              <div className="login-signup-title">
+                <h2>
+                  {currentState === 'Login'
+                    ? 'Log In to your account'
+                    : 'Create a new account'}
+                </h2>
+                {currentState !== 'Login' && (
+                  <FontAwesomeIcon
+                    className={`${rightCard ? 'icon' : 'hide'}`}
+                    onClick={() => setRightCard(false)}
+                    icon={faClose}
+                  />
+                )}
+              </div>
+              <div className="login-signup-inputs">
+                {currentState === 'Login' ? (
+                  <></>
+                ) : (
+                  <div className="input">
+                    <label htmlFor="name">
+                      <p>Name</p>
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      onChange={onChangeHandler}
+                      id="name"
+                      value={userData.name}
+                      required
+                      placeholder="Your Full Name eg. John Doe"
+                    />
+                  </div>
+                )}
+                <div className="input">
+                  <label htmlFor="email">
+                    <p>Email</p>
+                  </label>
+                  <input
+                    type="email"
+                    value={userData.email}
+                    name="email"
+                    onChange={onChangeHandler}
+                    required
+                    id="email"
+                    placeholder="Your email address eg. abc123@gmail.com"
+                  />
+                </div>
+                <div className="input">
+                  <label htmlFor="password">
+                    <p>Password</p>
+                  </label>
+                  <input
+                    type="password"
+                    value={userData.password}
+                    name="password"
+                    onChange={onChangeHandler}
+                    required
+                    id="password"
+                    placeholder="Password"
+                  />
+                </div>
+              </div>
+              <button className={`${loading ? 'loading-state' : ''}`}>
+                {currentState === 'Sign Up' ? 'Create Account' : 'Sign In'}
+                <div className="btn-loader-container">
+                  {loading && (
+                    <Loader
+                      color_primary={'black'}
+                      color_secondary={'white'}
+                      width={'25px'}
+                      height={'25px'}
+                      borderWidth={'2px'}
+                      boxShadow={'-2px 2px 3px #808080;'}
+                      containerBorderRadius={'50%'}
+                    />
+                  )}{' '}
+                </div>
+              </button>
+              {currentState === 'Sign Up' && (
+                <div className="login-signup-condition">
+                  <div className="checkbox-wrapper">
+                    <input
+                      id="_checkbox-26"
+                      type="checkbox"
+                      required
+                    />
+                    <label
+                      className="checkbox"
+                      htmlFor="_checkbox-26">
+                      <div className="tick_mark"></div>
+                    </label>
+                  </div>
+                  <label htmlFor="_checkbox-26">
+                    <p>
+                      By continuing, I agree to the{' '}
+                      <span>Terms of Use & Privacy Policy</span>
+                    </p>
+                  </label>
+                </div>
+              )}
+
+              {currentState === 'Login' ? (
+                <p>
+                  Create a new account?{' '}
+                  <span
+                    onClick={() => {
+                      setCurrentState('Sign Up');
+                      setUserData({
+                        name: '',
+                        email: '',
+                        password: '',
+                      });
+                      setLoading(false);
+                    }}>
+                    Click here.
+                  </span>
+                </p>
+              ) : (
+                <p>
+                  Already have an account?{' '}
+                  <span
+                    onClick={() => {
+                      setCurrentState('Login');
+                      setLoading(false);
+                      setUserData({
+                        name: '',
+                        email: '',
+                        password: '',
+                      });
+                    }}>
+                    Login here.
+                  </span>
+                </p>
+              )}
+            </form>
+          </div>{' '}
+          <div className="form-container-right">
+            <div className="register-welcome">
+              <h2>Welcome to</h2>
+              <div className="img_container_company">
+                <div className="image">
+                  <img src={assets.logo} />
+                </div>
+                <p>Kitchen Connect</p>
+              </div>
+              <div className="kitchen-description">
+                <b>Kitchen Connect</b> is a seamless food ordering web app that
+                connects students and staff at KWASU with multiple kitchen
+                restaurants. Users can browse menus, place orders and make
+                secure payments via Flutterwave. With a user-friendly interface
+                and reliable service, <b>Kitchen Connect</b> makes ordering food
+                faster and more convenient
+              </div>
+              <div className="new_existing_user">
+                <span>
+                  New User?{' '}
+                  <b
+                    onClick={() => {
+                      setCurrentState('Sign Up');
+                      setRightCard(true);
+                      setUserData({
+                        name: '',
+                        email: '',
+                        password: '',
+                      });
+                    }}>
+                    Click here
+                  </b>
+                </span>
+                <hr />
+                <span>
+                  Existing User?{' '}
+                  <b
+                    onClick={() => {
+                      setCurrentState('Login');
+                      setRightCard(true);
+                      setUserData({
+                        name: '',
+                        email: '',
+                        password: '',
+                      });
+                    }}>
+                    Click here
+                  </b>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default LoginPopup;

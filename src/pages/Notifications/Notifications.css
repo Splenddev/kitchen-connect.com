@@ -1,0 +1,15 @@
+.notification {
+  display: none;
+  border: 1px solid #000;
+  width: 300px;
+  height: 400px;
+  background: #fff;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+}
+.navbar-locations {
+  position: relative;
+}
