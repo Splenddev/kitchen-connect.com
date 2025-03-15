@@ -243,7 +243,7 @@
     width: 100%;
   }
   .cart-items-right-middle .quantity {
-    width: 50%;
+    width: 20vw;
   }
   .btn {
     border-radius: 12px;
