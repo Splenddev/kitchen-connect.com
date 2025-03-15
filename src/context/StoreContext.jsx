@@ -169,13 +169,14 @@ const StoreContextProvider = (props) => {
   useEffect(() => {
     async function loadData() {
       await fetchFoods();
+      if (!token) return;
       if (localStorage.getItem('token')) {
         setToken(localStorage.getItem('token'));
         await loadCartData(localStorage.getItem('token'));
       }
     }
     loadData();
-  }, []);
+  }, [token]);
   useEffect(() => {
     const fetchFoods = async () => {
       if (!query) {
@@ -293,6 +294,7 @@ const StoreContextProvider = (props) => {
     setRightCard,
     userData,
     setUserData,
+    location,
   };
   return (
     <StoreContext.Provider value={contextValue}>

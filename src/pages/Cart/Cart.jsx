@@ -10,7 +10,7 @@ import {
   faPlusCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import BackNav from '../../components/BackNav/BackNav';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Cart = () => {
@@ -28,6 +28,7 @@ const Cart = () => {
     url,
     token,
   } = useContext(StoreContext);
+  let navigate = useNavigate();
   const [data, setData] = useState({
     firstName: '',
     lastName: '',
@@ -88,14 +89,15 @@ const Cart = () => {
         <button
           className={getTotalCartAmount() === 0 ? 'no-product' : ''}
           onClick={setCartToZero}>
-          Remove All From Cart
+          Remove All
         </button>
-        <button
+        <div
           className={
             getTotalCartAmount() === 0 ? 'no-product' : 'total-cart-quantity'
           }>
-          Total Food Selected: <h5>{getTotalCartQuantity()}</h5>
-        </button>
+          Total Food: <div>{getTotalCartQuantity()}</div>
+        </div>
+        <button onClick={() => navigate(-1)}>Add more</button>
       </div>
       {getTotalCartAmount() === 0 ? (
         <p className="no-food-to-display">
@@ -121,6 +123,7 @@ const Cart = () => {
                   <div className="cart-items-wrapper-top">
                     From <b>{item.kitchen.kitchen_name} </b>Kitchen
                   </div>
+                  <hr />
                   <div className="cart-items-wrapper-bottom">
                     <div className="cart-items-left">
                       <img src={url + '/images/' + item.image} />
