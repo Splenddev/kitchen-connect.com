@@ -102,7 +102,6 @@
 }
 .cart-options .total-cart-quantity {
   background: #fff;
-  color: #000;
   display: flex;
   gap: 10px;
   white-space: nowrap;
@@ -112,11 +111,12 @@
 }
 .cart-options .total-cart-quantity div {
   font-size: 13px;
-  /* height: 35px;
-  width: 35px; */
-  padding: 10px;
+  height: 35px;
+  width: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #fff;
-  place-content: center;
   border-radius: 50%;
   background: var(--main-color);
 }
@@ -149,7 +149,7 @@
 }
 .cart-foods .cart-items-wrapper-bottom {
   display: grid;
-  grid-template-columns: 90px 1fr;
+  grid-template-columns: 95px 1fr;
 }
 .cart-items-wrapper .cross {
   cursor: pointer;
@@ -194,7 +194,7 @@
   flex-direction: row;
   align-items: start;
   gap: 100px;
-  padding-bottom: 10px;
+  padding-bottom: 5px;
   padding-top: 10px;
 }
 .cart-items-right-middle .btn {

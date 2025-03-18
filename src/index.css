@@ -10,7 +10,19 @@ a {
   text-decoration: none;
   color: var(--primary);
 }
-
+.adding-to-cart {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* width: 100%; */
+  padding: 0 20px;
+}
+.adding-to-cart a {
+  color: #2562e7;
+  background: #fff;
+  border-radius: 12px;
+  padding: 5px 10px;
+}
 :root {
   --main-color: #e72525;
   --primary: #000000;

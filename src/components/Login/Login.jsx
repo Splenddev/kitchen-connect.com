@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import './Loginpopup.css';
+import './Login.css';
 import { assets } from '../../assets/assets/frontend_assets/assets';
 import { StoreContext } from '../../context/StoreContext';
 import axios from 'axios';
@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 
-const LoginPopup = () => {
+const Login = () => {
   const navigate = useNavigate();
   // useState
   const {
@@ -28,7 +28,6 @@ const LoginPopup = () => {
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-
   const validateForm = () => {
     const newErrors = {};
     if (!userData.name && currentState === 'Sign Up') {
@@ -61,29 +60,33 @@ const LoginPopup = () => {
     try {
       const response = await axios.post(`${url}/api/user/login`, userData);
       if (response.data.success) {
-        setToken(response.data.token);
-        setUserInfo(response.data.user);
+        setLoading(false);
+
         localStorage.setItem('token', response.data.token);
+        localStorage.setItem('userInfo', JSON.stringify(response.data.user));
+        setUserInfo(response.data.user);
+        setToken(response.data.token);
         setUserData({
           email: '',
           password: '',
         });
-        navigate('/');
         toast.success(`${response.data.message}`);
+        navigate(-1);
       } else {
         setLoading(false);
         toast.info('Check your network connection and try again.');
       }
     } catch (error) {
-      toast.error(
-        `User not found! Check your network connection, form inputs and try again.`
-      );
+      if (error.response) {
+        toast.error(error.response.data.message || 'An error occurred!');
+      } else {
+        toast.error(`Network Issue! Check your network connection.`);
+      }
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
-
   const signup = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -99,16 +102,12 @@ const LoginPopup = () => {
     try {
       const response = await axios.post(`${url}/api/user/register`, userData);
       if (response.data.success) {
-        // clearTimeout(timeout);
-        setLoading(false);
-        setToken(response.data.token);
-        localStorage.setItem('token', response.data.token);
         setUserData({
           name: '',
           email: '',
           password: '',
         });
-        navigate('/');
+        setCurrentState('Login');
         toast.success(`${response.data.message}`);
       } else {
         toast.error(
@@ -117,10 +116,14 @@ const LoginPopup = () => {
       }
     } catch (error) {
       console.error('Signup error', error);
-      toast.warn(
-        error.response?.data?.message ||
-          'The Email is registered already. Please try logging in.'
-      );
+      if (error.response) {
+        toast.error(
+          error.response.data.message ||
+            'The Email is registered already. Please try logging in.'
+        );
+      } else {
+        toast.error(`Network Issue! Check your network connection.`);
+      }
     } finally {
       setLoading(false);
     }
@@ -223,7 +226,7 @@ const LoginPopup = () => {
                       width={'25px'}
                       height={'25px'}
                       borderWidth={'2px'}
-                      boxShadow={'-2px 2px 3px #808080;'}
+                      boxShadow={'-2px 2px 3px #808080'}
                       containerBorderRadius={'50%'}
                     />
                   )}{' '}
@@ -345,4 +348,4 @@ const LoginPopup = () => {
   );
 };
 
-export default LoginPopup;
+export default Login;

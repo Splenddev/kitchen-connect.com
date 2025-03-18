@@ -20,6 +20,7 @@ import { StoreContext } from './context/StoreContext.jsx';
 import SidePopup from './components/SidePopup/SidePopup.jsx';
 import { faBackward } from '@fortawesome/free-solid-svg-icons';
 import Notifications from './pages/Notifications/Notifications.jsx';
+import TokenExpired from './components/TokenExpired/TokenExpired.jsx';
 const App = () => {
   const [menu, setMenu] = useState('home');
 
@@ -31,6 +32,7 @@ const App = () => {
     closePopup,
     reloadData,
     setShowLogin,
+    tokenExpired,
   } = useContext(StoreContext);
   const location = useLocation();
   const navigate = useNavigate();
@@ -209,6 +211,7 @@ const App = () => {
           }`,
         }}
         id="home">
+        {tokenExpired && <TokenExpired />}
         <div
           className={isOpen ? 'side-popup-container-wrap' : 'hide'}
           onClick={() => {

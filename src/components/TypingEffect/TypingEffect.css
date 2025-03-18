@@ -1,0 +1,34 @@
+.typing-effect-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: #000000d7;
+  z-index: 4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.typing-effect {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.typing-effect-text {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.5rem;
+  font-weight: bold;
+  white-space: nowrap;
+  color: #fff;
+  transition: all 0.15s ease-in-out;
+}
+.cursor {
+  width: 10px;
+  animation: blink 0.5s infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}

@@ -18,17 +18,16 @@ const NavBar = () => {
     getTotalCartAmount,
     getTotalCartQuantity,
     token,
-    setToken,
+    // setToken,
     setRightCard,
     setUserData,
+    // setUserInfo,
+    logout,
   } = useContext(StoreContext);
   // useState
   const [userState, setUserState] = useState(false);
   const navigate = useNavigate();
-  const logout = () => {
-    localStorage.removeItem('token');
-    setToken('');
-  };
+
   return (
     <div
       className="main-nav"
@@ -85,13 +84,20 @@ const NavBar = () => {
               <ul
                 className={` nav-profile-dropdown ${userState ? 'show' : ''}`}>
                 <div>
+                  <div className={userState && 'pointer-shape'}></div>
                   <li>
-                    <FontAwesomeIcon icon={faBagShopping} />
-                    <h>Orders</h>
+                    <FontAwesomeIcon
+                      className="icon"
+                      icon={faBagShopping}
+                    />
+                    <h4>Orders</h4>
                   </li>
                   <li onClick={logout}>
-                    <FontAwesomeIcon icon={faSignOut} />
-                    <h>Logout</h>
+                    <FontAwesomeIcon
+                      className="icon"
+                      icon={faSignOut}
+                    />
+                    <h4>Logout</h4>
                   </li>
                 </div>
               </ul>

@@ -46,7 +46,7 @@ const Cart = () => {
     }));
   };
 
-  const assetsMade = food_list;
+  const foodInCart = food_list;
   const proceedHandler = async (e) => {
     e.preventDefault();
     if (getTotalCartAmount() === 0) {
@@ -106,7 +106,7 @@ const Cart = () => {
         </p>
       ) : (
         <div className="cart-foods">
-          {assetsMade.map((item, index) => {
+          {foodInCart.map((item, index) => {
             if (cartItems[item._id] > 0) {
               return (
                 <div

@@ -224,8 +224,14 @@ p.kitchen:hover {
   transition: 0.3s ease;
   padding: 0 15%;
 }
+.food-details-right-bottom .left.in-cart {
+  background: #000000b0;
+}
 .food-details-right-bottom .left:hover {
   background: #000000e8;
+}
+.food-details-right-bottom .left.in-cart:hover {
+  background: #0000009a;
 }
 .left .icon {
   color: #fff;

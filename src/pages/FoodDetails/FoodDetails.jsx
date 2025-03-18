@@ -34,6 +34,7 @@ const FoodDetails = () => {
     cartItems,
     setSelectState,
     closePopup,
+    scrollToTop,
   } = useContext(StoreContext);
   const navigate = useNavigate();
   const location = useLocation();
@@ -47,7 +48,7 @@ const FoodDetails = () => {
       setSelectState(`Selected${foodView.id}`);
       setIcon(true);
     }
-  }, [foodView.id, quantity, setSelectState]);
+  }, [foodView.id, quantity, setIcon, setSelectState]);
   return (
     <>
       <div
@@ -177,17 +178,25 @@ const FoodDetails = () => {
           </div>
           <div className="food-details-right-bottom ">
             <div
-              className="left flex-sb flex-center"
+              className={`left ${
+                location.pathname === '/cart' && 'in-cart'
+              } flex-sb flex-center`}
               onClick={() => {
-                navigate('/cart');
                 closePopup();
+                scrollToTop();
+                if (location.pathname === '/cart') {
+                  return;
+                }
+                navigate('/cart');
               }}>
-              To Cart{' '}
+              {location.pathname !== '/cart' ? 'To ' : 'In '}
+              Cart
               <FontAwesomeIcon
                 className="icon"
                 icon={faCartShopping}
               />
             </div>
+
             <div className="right">
               <button
                 onClick={() => {

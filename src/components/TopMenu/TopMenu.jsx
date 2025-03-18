@@ -5,6 +5,7 @@ import { useContext } from 'react';
 import { StoreContext } from '../../context/StoreContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faNairaSign } from '@fortawesome/free-solid-svg-icons';
+import TypingEffect from '../TypingEffect/TypingEffect';
 
 const TopMenu = ({
   name,
@@ -27,7 +28,9 @@ const TopMenu = ({
     setSelectState,
     selectState,
     k_imageHandler,
+    adding,
   } = useContext(StoreContext);
+
   const checkboxHandler = (e) => {
     setChecked(e.target.checked);
     if (e.target.checked) {
@@ -63,7 +66,9 @@ const TopMenu = ({
     }
   };
   return (
-    <div className="top-menu-cards">
+    <div className={'top-menu-cards ' + adding}>
+      {adding === `add${id}` && <TypingEffect />}
+
       <div className="top-menu-card">
         <div className="image-container">
           <img src={url + '/images/' + image} />
@@ -71,7 +76,6 @@ const TopMenu = ({
         <div className="food-other-contents">
           <div className="ratings--name">
             <h2>{name}</h2>
-
             <div className="checkbox-wrapper top-menu">
               <input
                 id={`_checkbox-26 ${id}`}

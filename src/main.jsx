@@ -13,7 +13,7 @@ import React from 'react';
 import AllFoodsList from './pages/AllFoodsList/AllFoodsList.jsx';
 import Settings from './pages/Settings/Settings.jsx';
 import VerifyPayment from './pages/VerifyPayment/VerifyPayment.jsx';
-import LoginPopup from './components/LoginPopup/LoginPopup.jsx';
+import Login from './components/Login/Login.jsx';
 
 const router = createBrowserRouter([
   {
@@ -50,7 +50,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/user',
-        element: <LoginPopup />,
+        element: <Login />,
       },
     ],
   },

@@ -1,0 +1,56 @@
+.token-expired-container {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background: #080000e0;
+  z-index: 11;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.token-expired {
+  background: #ffffff;
+  padding: 20px;
+  width: 500px;
+  position: relative;
+  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 12px;
+}
+.token-expired-warning-modal-btn ~ p {
+  font-weight: 600;
+}
+.token-expired-warning-modal-btn {
+  font-size: 100px;
+  color: var(--main-color);
+}
+.token-expired-close-modal-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 20px;
+  cursor: pointer;
+}
+.token-expired-btn {
+  display: flex;
+  gap: 20px;
+}
+.token-expired-btn button {
+  padding: 10px 20px;
+  background: var(--main-color);
+  border: none;
+  outline: none;
+  border-radius: 19px;
+  color: #fff;
+  cursor: pointer;
+}
+@media (max-width: 750px) {
+  .token-expired {
+    width: 90vw;
+  }
+}
