@@ -12,7 +12,7 @@
   border-radius: 30px;
   margin: auto;
   width: 90%;
-  height: 500px;
+  height: 610px;
   background: #fff;
   display: grid;
   overflow: hidden;
@@ -129,7 +129,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 520px;
+  height: 555px;
 }
 .form-container-right h2 {
   color: #fff;
@@ -177,7 +177,7 @@
   justify-content: center;
 }
 .login-signup-container {
-  height: 580px;
+  height: 600px;
   width: 100%;
   color: #808080;
   display: flex;
@@ -207,7 +207,20 @@
   flex-direction: column;
   gap: 20px;
 }
-.login-signup-inputs .input {
+.login-signup-inputs .input div {
+  position: relative;
+}
+.login-signup-inputs .input div .visibility {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+.input .password::-ms-reveal,
+.input .password::-ms-clear,
+.input .password::-webkit-textfield-decoration-container {
+  display: none !important;
 }
 .login-signup-inputs input {
   outline: none;

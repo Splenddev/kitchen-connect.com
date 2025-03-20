@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import '../CheckBox/CheckBox.css';
 import Loader from '../Loader/Loader';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClose } from '@fortawesome/free-solid-svg-icons';
+import { faClose, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 
 const Login = () => {
@@ -27,7 +27,18 @@ const Login = () => {
   } = useContext(StoreContext);
 
   const [loading, setLoading] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isVisibleRepeat, setIsVisibleRepeat] = useState(false);
+  const [repeatPassword, setRepeatPassword] = useState('');
   const [errors, setErrors] = useState({});
+
+  const togglePasswordVisibility = () => {
+    setIsVisible(!isVisible);
+  };
+  const toggleRepeatPasswordVisibility = () => {
+    setIsVisibleRepeat(!isVisibleRepeat);
+  };
+
   const validateForm = () => {
     const newErrors = {};
     if (!userData.name && currentState === 'Sign Up') {
@@ -52,6 +63,9 @@ const Login = () => {
     const value = e.target.value;
     validateForm();
     setUserData((data) => ({ ...data, [name]: value }));
+    if (name === 'repeat-password') {
+      setRepeatPassword(value);
+    }
   };
 
   const login = async (e) => {
@@ -70,7 +84,7 @@ const Login = () => {
           email: '',
           password: '',
         });
-        toast.success(`${response.data.message}`);
+        toast.success(response.data.message);
         navigate(-1);
       } else {
         setLoading(false);
@@ -80,7 +94,9 @@ const Login = () => {
       if (error.response) {
         toast.error(error.response.data.message || 'An error occurred!');
       } else {
-        toast.error(`Network Issue! Check your network connection.`);
+        toast.error(
+          `Network Issue! Check your network connection. ${error.message}`
+        );
       }
       console.error(error);
     } finally {
@@ -99,6 +115,12 @@ const Login = () => {
       setLoading(false);
       return;
     }
+    if (userData.password !== repeatPassword) {
+      console.log('yes');
+      setLoading(false);
+      toast.error('Password does not match.');
+      return;
+    }
     try {
       const response = await axios.post(`${url}/api/user/register`, userData);
       if (response.data.success) {
@@ -108,7 +130,7 @@ const Login = () => {
           password: '',
         });
         setCurrentState('Login');
-        toast.success(`${response.data.message}`);
+        toast.success(response.data.message);
       } else {
         toast.error(
           response.data.message || 'An Error occured while signing you up'
@@ -174,7 +196,7 @@ const Login = () => {
                 ) : (
                   <div className="input">
                     <label htmlFor="name">
-                      <p>Name</p>
+                      <p>Full Name</p>
                     </label>
                     <input
                       type="text"
@@ -189,7 +211,7 @@ const Login = () => {
                 )}
                 <div className="input">
                   <label htmlFor="email">
-                    <p>Email</p>
+                    <p>Email Address</p>
                   </label>
                   <input
                     type="email"
@@ -205,16 +227,58 @@ const Login = () => {
                   <label htmlFor="password">
                     <p>Password</p>
                   </label>
-                  <input
-                    type="password"
-                    value={userData.password}
-                    name="password"
-                    onChange={onChangeHandler}
-                    required
-                    id="password"
-                    placeholder="Password"
-                  />
+                  <div>
+                    <input
+                      className="password"
+                      type={isVisible ? 'text' : 'password'}
+                      value={userData.password}
+                      name="password"
+                      onChange={onChangeHandler}
+                      required
+                      id="password"
+                      placeholder="Password"
+                    />
+                    <span
+                      className="visibility"
+                      onClick={togglePasswordVisibility}>
+                      {isVisible ? (
+                        <FontAwesomeIcon icon={faEye} />
+                      ) : (
+                        <FontAwesomeIcon icon={faEyeSlash} />
+                      )}
+                    </span>
+                  </div>
                 </div>
+                {currentState === 'Login' ? (
+                  <></>
+                ) : (
+                  <div className="input">
+                    <label htmlFor="repeat-password">
+                      <p>Repeat Password</p>
+                    </label>
+                    <div>
+                      <input
+                        className="password"
+                        type={isVisibleRepeat ? 'text' : 'password'}
+                        value={repeatPassword}
+                        name="repeat-password"
+                        onChange={onChangeHandler}
+                        required
+                        id="repeat-password"
+                        placeholder="Repeat Password"
+                      />
+                      <span
+                        className="visibility"
+                        onClick={toggleRepeatPasswordVisibility}>
+                        {isVisibleRepeat ? (
+                          <FontAwesomeIcon icon={faEye} />
+                        ) : (
+                          <FontAwesomeIcon icon={faEyeSlash} />
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
               <button className={`${loading ? 'loading-state' : ''}`}>
                 {currentState === 'Sign Up' ? 'Create Account' : 'Sign In'}
@@ -236,6 +300,7 @@ const Login = () => {
                 <div className="login-signup-condition">
                   <div className="checkbox-wrapper">
                     <input
+                      name="checkbox"
                       id="_checkbox-26"
                       type="checkbox"
                       required

@@ -76,7 +76,9 @@ const App = () => {
         <></>
       )}
       {location.pathname === home ? (
-        <ul className="navbar-locations">
+        <ul
+          className="navbar-locations"
+          style={{ position: 'sticky', top: 0, right: 0, zIndex: 10 }}>
           <Notifications />
           <a href="#navbar">
             <li
