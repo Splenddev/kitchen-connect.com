@@ -48,8 +48,8 @@ const StoreContextProvider = (props) => {
   });
   const [adding, setAdding] = useState('');
   const [query, setQuery] = useState('');
-  // const url = 'http://localhost:4000';
-  const url = 'https://server-b0f1.onrender.com';
+  const url = 'http://localhost:4000';
+  // const url = 'https://server-b0f1.onrender.com';
   //  let alerted = false;
 
   useEffect(() => {
@@ -342,7 +342,7 @@ const StoreContextProvider = (props) => {
         return true;
       }
     };
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || null;
     if (isTokenExpired(token)) {
       setTokenState(false);
       console.log('token expired');
@@ -360,7 +360,7 @@ const StoreContextProvider = (props) => {
         return;
       }
       setToken(localStorage.getItem('token'));
-      setUserInfo(JSON.parse(localStorage.getItem('userInfo')));
+      setUserInfo(JSON.parse(localStorage.getItem('userInfo') || '{}'));
       await loadCartData(localStorage.getItem('token'));
     }
     if (tokenState !== null) {

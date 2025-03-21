@@ -4,11 +4,6 @@
   align-items: center;
 }
 .loader {
-  width: 40px;
-  height: 40px;
-  border: solid #ccc;
   border-radius: 50%;
-  border-top: solid var(--main-color);
-  border-width: 5px;
-  animation: spin 0.4s linear infinite;
+  animation: spin 0.5s linear infinite;
 }

@@ -12,6 +12,7 @@ import {
 import BackNav from '../../components/BackNav/BackNav';
 import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const Cart = () => {
   const {
@@ -26,8 +27,9 @@ const Cart = () => {
     getTotalCartQuantity,
     setCartToZero,
     url,
-    token,
+    // token,
   } = useContext(StoreContext);
+  const token = localStorage.getItem('token');
   let navigate = useNavigate();
   const [data, setData] = useState({
     firstName: '',
@@ -53,31 +55,43 @@ const Cart = () => {
       return;
     }
     let orderItems = [];
-    food_list.map((item) => {
+
+    food_list.forEach((item) => {
       if (cartItems[item._id] > 0) {
-        let itemInfo = item;
-        itemInfo['quantity'] = cartItems[item._id];
+        let itemInfo = { ...item, quantity: cartItems[item._id] }; // Create a new object
         orderItems.push(itemInfo);
       }
     });
+
+    // food_list.map((item) => {
+    //   if (cartItems[item._id] > 0) {
+    //     let itemInfo = item;
+    //     itemInfo['quantity'] = cartItems[item._id];
+    //     orderItems.push(itemInfo);
+    //   }
+    // });
     let orderData = {
       address: data,
       items: orderItems,
-      email: data.email,
-      name: data.firstName,
       amount: getTotalCartAmount() + 2,
     };
     try {
-      let response = await axios.post(url + '/api/order/payment', orderData, {
-        headers: { token },
+      let response = await axios.post(url + '/api/order/create', orderData, {
+        headers: {
+          token,
+          // 'Content-Type': 'application/json',
+          // Authorization: `Bearer ${token}`,
+        },
       });
       if (response.data.success) {
-        window.location.href = response.data.payment_url;
+        toast.success('Order placed successfully! Redirecting...');
+        window.location.href = response.data.paymentUrl;
       } else {
-        console.error('order placement failed', response.data.error);
+        return console.error('order placement failed');
       }
     } catch (error) {
-      console.error('internal error', error);
+      toast.error('An error occurred while placing the order.');
+      return console.error('internal error ' + error.message);
     }
   };
 

@@ -11,7 +11,7 @@ const VerifyPayment = () => {
   // const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const transactionId = urlParams.get('transaction_id');
-  const orderId = urlParams.get('tx_ref');
+  const orderId = urlParams.get('orderId');
   const verifyPayment = async () => {
     console.log(orderId);
     console.log(transactionId);
@@ -41,7 +41,7 @@ const VerifyPayment = () => {
 
       verifyPayment();
     }
-  }, [transactionId, orderId]);
+  }, []);
   return <h2>Verifying payment...</h2>;
 };
 

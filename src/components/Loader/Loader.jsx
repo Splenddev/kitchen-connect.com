@@ -22,7 +22,7 @@ const Loader = ({
           width: `${width}`,
           height: `${height}`,
           border: `${borderWidth} solid ${color_secondary}`,
-          borderTop: `solid ${color_primary}`,
+          borderTop: `${borderWidth} solid ${color_primary}`,
         }}
         className="loader"></div>
     </div>

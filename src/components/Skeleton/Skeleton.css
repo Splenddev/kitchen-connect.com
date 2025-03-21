@@ -5,7 +5,7 @@
 }
 
 .skeleton-info {
-  --base-color: #eeeeee;
+  --base-color: #d4d4d4;
   --highlight-color: #f5f5f5;
   --animation-duration: 2s;
   --animation-direction: normal;
@@ -18,7 +18,7 @@
   line-height: 1;
 
   position: relative;
-  user-select: none;
+  /* user-select: none; */
   overflow: hidden;
 }
 

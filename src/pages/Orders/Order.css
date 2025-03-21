@@ -1,0 +1,125 @@
+.orders-container {
+  margin-top: 60px;
+}
+.orders-data-navbar ul {
+  display: flex;
+  list-style: none;
+  justify-content: space-between;
+  background: #f3f3f3;
+  padding: 5px;
+  gap: 10px;
+  border-radius: 30px;
+}
+
+.orders-data-navbar ul li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 7px 20px;
+  width: 100%;
+  border-radius: 30px;
+  font-weight: 600;
+  transition: 0.3s ease;
+  cursor: pointer;
+  color: #686868;
+}
+.orders-data-navbar ul li span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  font-size: 10px;
+  background: #686868;
+  color: #fff;
+}
+.orders-data-navbar ul li.active {
+  background: #fff;
+  color: #000;
+}
+.orders-data-navbar ul li.active span {
+  background: #000;
+  color: #fff;
+}
+.orders-data-list {
+  /* background: #000000; */
+  /* padding: 10px; */
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+.orders-data {
+  /* box-shadow: 0px 0px 1px 2px rgba(0, 0, 0, 0.39); */
+  background: #f3f3f3;
+  padding: 15px;
+  border-radius: 15px;
+}
+/* .orders-data:first-child {
+  }
+  .orders-data:last-child {
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    } */
+.orders-data-top {
+  display: flex;
+  justify-content: space-between;
+}
+.order-data-date-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.orders-data-container {
+  margin-bottom: 10px;
+}
+.order-data-status-container {
+  gap: 10px;
+}
+.order-data-status {
+  padding: 4px 20px;
+  cursor: not-allowed;
+  border-radius: 20px;
+  gap: 5px;
+  text-transform: capitalize;
+}
+.order-data-status.paid {
+  background: #daffd1;
+  color: #2cb60a;
+}
+.order-data-status.pend {
+  background: #caeaff;
+  color: #007acc;
+}
+.order-data-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.order-data-btn span b {
+  color: var(--main-color);
+}
+.order-data-btn button {
+  padding: 10px 20px;
+  display: flex;
+  gap: 10px;
+  cursor: pointer;
+  border-radius: 20px;
+  background: #000;
+  color: #fff;
+  font-size: 16px;
+  align-items: center;
+}
+.order-data-btn button:first-child:hover .icon {
+  transform: translateX(-7px);
+}
+.order-data-btn button:last-child:hover .icon {
+  transform: translateX(7px);
+}
+.order-data-btn button .icon {
+  color: #fff;
+  font-size: 22px;
+}

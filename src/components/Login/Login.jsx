@@ -72,7 +72,10 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(`${url}/api/user/login`, userData);
+      const response = await axios.post(
+        `https://server-b0f1.onrender.com/api/user/login`,
+        userData
+      );
       if (response.data.success) {
         setLoading(false);
 
@@ -85,7 +88,7 @@ const Login = () => {
           password: '',
         });
         toast.success(response.data.message);
-        navigate(-1);
+        navigate('/');
       } else {
         setLoading(false);
         toast.info('Check your network connection and try again.');
