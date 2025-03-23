@@ -48,7 +48,11 @@ const StoreContextProvider = (props) => {
   });
   const [adding, setAdding] = useState('');
   const [query, setQuery] = useState('');
+<<<<<<< HEAD
   // const url = 'http://localhost:4000';
+=======
+  //const url = 'http://localhost:4000';
+>>>>>>> 5ac7919e233e5a801d41c7f4460d42af33220955
   const url = 'https://server-b0f1.onrender.com';
   //  let alerted = false;
 
