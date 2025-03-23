@@ -16,9 +16,10 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 7px 20px;
+  padding: 7px max(1.2vw, 8px);
   width: 100%;
   border-radius: 30px;
+  font-size: max(1.2vw, 12px);
   font-weight: 600;
   transition: 0.3s ease;
   cursor: pointer;
@@ -53,17 +54,36 @@
   margin-top: 10px;
 }
 .orders-data {
-  /* box-shadow: 0px 0px 1px 2px rgba(0, 0, 0, 0.39); */
-  background: #f3f3f3;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.39);
   padding: 15px;
-  border-radius: 15px;
+  border-radius: 10px;
+  background: #fff;
+  border-top-left-radius: -15px;
+  overflow: hidden;
+  position: relative;
+  z-index: 5;
+  width: 100%;
 }
-/* .orders-data:first-child {
-  }
-  .orders-data:last-child {
-    border-bottom-right-radius: 20px;
-    border-bottom-left-radius: 20px;
-    } */
+
+.orders-data::before {
+  content: '';
+  position: absolute;
+  /* width: 12px; */
+  left: 15px;
+  bottom: 0;
+  width: 700px;
+  height: 700px;
+  border-radius: 50%;
+  right: 0%;
+  top: -10px;
+  z-index: -1;
+}
+.orders-data.paid:before {
+  background: #2cb60a;
+}
+.orders-data.pend:before {
+  background: #5372f0;
+}
 .orders-data-top {
   display: flex;
   justify-content: space-between;
@@ -91,8 +111,60 @@
   color: #2cb60a;
 }
 .order-data-status.pend {
-  background: #caeaff;
-  color: #007acc;
+  background: #dde4ff;
+  color: #5372f0;
+}
+.order-data-food-items {
+  /* display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); */
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: -2;
+  /* width: 80vw; */
+  /* white-space: nowrap; */
+}
+.order-data-food-item {
+  background: #f1f1f1;
+  box-shadow: 0px 0px 5px 0px #686868;
+  border-radius: 6px;
+  margin-top: 5px;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 10px;
+  justify-content: space-between;
+  padding: 8px 5px;
+}
+.order-data-food-item-name-quantity {
+  width: 100%;
+  font-size: max(1.2vw, 12.5px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.order-data-food-item-quantity {
+  display: flex;
+  justify-content: space-between;
+}
+.order-data-food-items .img-cont {
+}
+.order-data-food-items img {
+  width: 60px;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+.order-data-food-item-btn {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.order-data-food-item-btn button {
+  text-transform: capitalize;
+  background: transparent;
+  border: none;
+  color: #1100fa;
+  cursor: pointer;
 }
 .order-data-btn {
   display: flex;
