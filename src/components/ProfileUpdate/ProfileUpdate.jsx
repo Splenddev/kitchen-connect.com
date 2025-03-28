@@ -23,6 +23,11 @@ const ProfileUpdate = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isEnabled, setisEnabled] = useState({
+    fName: true,
+    lName: true,
+    uName: true,
+  });
   const [inputState, setInputState] = useState(false);
 
   const [profileData, setProfileData] = useState({
@@ -254,6 +259,9 @@ const ProfileUpdate = () => {
       return console.error('internal error ' + error.message);
     }
   };
+  const isDisabled = () => {
+    setisEnabled(!isEnabled);
+  };
   return (
     <div className="account-update">
       <div className="account-update-header flex-center-sb">
@@ -325,11 +333,16 @@ const ProfileUpdate = () => {
               <p>Name</p>
               <div className="inputs">
                 <div className="firstName layout">
-                  <div className="label">
+                  <div
+                    className="label"
+                    onClick={isDisabled}>
                     <label htmlFor="firstName">
                       <p>First Name</p>
                     </label>
-                    <FontAwesomeIcon icon={faEdit} />
+                    <FontAwesomeIcon
+                      name="fName"
+                      icon={faEdit}
+                    />
                   </div>
                   <div
                     className={`wrapper ${
@@ -341,7 +354,7 @@ const ProfileUpdate = () => {
                       type="text"
                       id="firstName"
                       name="firstName"
-                      disabled={profileData.firstName}
+                      disabled={profileData.firstName && isEnabled}
                       onChange={onChangeHandler}
                       value={profileData.firstName}
                       required

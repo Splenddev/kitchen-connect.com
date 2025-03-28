@@ -13,25 +13,12 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { StoreContext } from '../../context/StoreContext';
 import { useContext } from 'react';
+import ProfileImage from '../ProfileImage/ProfileImage';
 // import { assets } from '../../assets/assets/frontend_assets/assets';
 const SettingsSidebar = () => {
-  const {
-    setting,
-    setSetting,
-    setSettingDisplay,
-    reloadData,
-    setText,
-    color,
-    userInfo,
-    url,
-  } = useContext(StoreContext);
-  const fullName =
-    // 'Felix Nwode';
-    userInfo.name;
-  const displayName = fullName
-    .split(' ')
-    .map((word) => word.charAt(0))
-    .join(' ');
+  const { setting, setSetting, setSettingDisplay, reloadData, setText, color } =
+    useContext(StoreContext);
+
   return (
     <div className="settings-sidebar">
       <ul className="settings-option-wrapper">
@@ -162,19 +149,7 @@ const SettingsSidebar = () => {
       </ul>
       <div className="settings-sidebar-signout">
         <div className="user-detail-image flex-center">
-          {userInfo.profileImage ? (
-            <img src={`${url}/images/${userInfo.profileImage}`} />
-          ) : (
-            <div
-              style={{
-                backgroundColor: `${
-                  color[Math.floor(Math.random() * color.length)]
-                }`,
-              }}
-              className="display-name">
-              {displayName}
-            </div>
-          )}
+          <ProfileImage />
         </div>
         <div className="user-signout">
           <FontAwesomeIcon

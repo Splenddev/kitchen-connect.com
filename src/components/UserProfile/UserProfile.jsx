@@ -1,5 +1,4 @@
 import './UserProfile.css';
-import { assets } from '../../assets/assets/frontend_assets/assets';
 import { useContext } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { StoreContext } from '../../context/StoreContext';
@@ -20,6 +19,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../Loader/Loader';
+import ProfileImage from '../ProfileImage/ProfileImage';
 const UserProfile = () => {
   const navigate = useNavigate();
   const {
@@ -70,10 +70,9 @@ const UserProfile = () => {
           exit="exit">
           <div className="user-profile-top">
             <div className="user-profile-image-email ">
-              <img
-                src={assets.profile_image}
-                alt="profile image"
-              />
+              <div className="img">
+                <ProfileImage />
+              </div>
               <div>
                 <p className="name">
                   {userInfo.name}{' '}
@@ -94,7 +93,7 @@ const UserProfile = () => {
             <div
               className="user-profile-list-container"
               onClick={() => {
-                setIsOpenProfile(false);
+                // setIsOpenProfile(false);
               }}>
               <div className="user-profile-list-elements layout">
                 <FontAwesomeIcon
