@@ -35,7 +35,7 @@ const Cart = () => {
     firstName: '',
     lastName: '',
     email: '',
-    area: '',
+    area: 'Select Area',
     street: '',
     phone: '',
   });
@@ -105,18 +105,16 @@ const Cart = () => {
           onClick={setCartToZero}>
           Remove All
         </button>
-        <div
-          className={
-            getTotalCartAmount() === 0 ? 'no-product' : 'total-cart-quantity'
-          }>
+        <div className="total-cart-quantity">
           Total Food: <div>{getTotalCartQuantity()}</div>
         </div>
         <button onClick={() => navigate(-1)}>Add more</button>
       </div>
       {getTotalCartAmount() === 0 ? (
         <p className="no-food-to-display">
-          There is no food here. Please select food from the{' '}
-          <NavLink to={'/'}>homepage</NavLink>
+          There are no food selected. Please select foods from the{' '}
+          <NavLink to={'/'}>Home page</NavLink> or from{' '}
+          <NavLink to={'/all_food_list'}>All Food Page</NavLink>
         </p>
       ) : (
         <div className="cart-foods">
@@ -201,13 +199,12 @@ const Cart = () => {
                         <div className="total">
                           <p>
                             <span>Price:</span>{' '}
-                            <FontAwesomeIcon icon={faNairaSign} />{' '}
-                            {item.price * 100}
+                            <FontAwesomeIcon icon={faNairaSign} /> {item.price}
                           </p>
                           <p>
                             <span>Total: </span>
                             <FontAwesomeIcon icon={faNairaSign} />{' '}
-                            {item.price * cartItems[item._id] * 100}
+                            {item.price * cartItems[item._id]}
                           </p>
                         </div>
                       </div>
@@ -223,75 +220,92 @@ const Cart = () => {
       <form
         onSubmit={proceedHandler}
         className="cart">
+        <div className="title-block">
+          <p>Customer Details</p>
+          <input
+            value={'Use My Data'}
+            type="button"
+            onClick={() => {
+              setData({
+                firstName: 'John',
+                lastName: 'Doe',
+                email: 'abc@gmail.com',
+                area: 'Safari Westend',
+                street: 'street 1',
+                phone: '0123456789',
+              });
+            }}
+          />
+        </div>
         <div className="customer-details">
-          <p>First Name</p>
-          <input
-            name="firstName"
-            onChange={onChangeHandler}
-            required
-            value={data.firstName}
-            type="text"
-          />
-          <p>Last Name</p>
-          <input
-            name="lastName"
-            onChange={onChangeHandler}
-            required
-            value={data.lastName}
-            type="text"
-          />
-          <p>Email</p>
-          <input
-            type="email"
-            name="email"
-            onChange={onChangeHandler}
-            required
-            value={data.email}
-          />
-          <p>Phone</p>
-          <input
-            name="phone"
-            onChange={onChangeHandler}
-            required
-            value={data.phone}
-            type="text"
-          />
-          <p>What is your Delivery Area?</p>
-          <div className="address-select">
-            <select
-              name="area"
+          <div className="customer-details-inputs">
+            <input
+              placeholder="First name"
+              name="firstName"
               onChange={onChangeHandler}
               required
-              value={data.area}>
-              <option
-                disabled
-                selected
-                value="Select Area">
-                Select Area
-              </option>
-              <option value="Inside Campus">Inside Campus</option>
-              <option value="Millionaire Hostel Side">
-                Millionaire Hostel Side
-              </option>
-              <option value="Safari Westend">Safari Westend</option>
-              <option value="Winners Church Side">Winners Church Side</option>
-              <option value="Yidi Road Side ">Yidi Road Side </option>
-              <option value="Market Side">Market Side</option>
-              <option value="School Road">School Road</option>
-              <option value="Elemere">Elemere</option>
-              <option value="Inside Safari">Inside Safari</option>
-              <option value="Pando Lion">Pando Lion</option>
-              <option value="Amina Castle">Amina Castle</option>
-              <option value="Westend 1">Westend 1</option>
-              <option value="Westend 2">Westend 2</option>
-            </select>
+              value={data.firstName}
+              type="text"
+            />
+            <input
+              placeholder="Last name"
+              name="lastName"
+              onChange={onChangeHandler}
+              required
+              value={data.lastName}
+              type="text"
+            />
+            <input
+              placeholder="Email address"
+              type="email"
+              name="email"
+              onChange={onChangeHandler}
+              required
+              value={data.email}
+            />
+            <input
+              placeholder="Phone number"
+              name="phone"
+              onChange={onChangeHandler}
+              required
+              value={data.phone}
+              type="text"
+            />
           </div>
-          <p>What is your delivery address?</p>
-          <textarea
-            name="street"
-            onChange={onChangeHandler}
-            required
-            value={data.street}></textarea>
+          <hr />
+          <div className="customer-details-textarea">
+            <p>What is your Delivery Area?</p>
+            <div className="address-select">
+              <select
+                name="area"
+                onChange={onChangeHandler}
+                required
+                value={data.area}>
+                <option value="">Select an option</option>
+                <option value="Inside Campus">Inside Campus</option>
+                <option value="Millionaire Hostel Side">
+                  Millionaire Hostel Side
+                </option>
+                <option value="Safari Westend">Safari Westend</option>
+                <option value="Winners Church Side">Winners Church Side</option>
+                <option value="Yidi Road Side ">Yidi Road Side </option>
+                <option value="Market Side">Market Side</option>
+                <option value="School Road">School Road</option>
+                <option value="Elemere">Elemere</option>
+                <option value="Inside Safari">Inside Safari</option>
+                <option value="Pando Lion">Pando Lion</option>
+                <option value="Amina Castle">Amina Castle</option>
+                <option value="Westend 1">Westend 1</option>
+                <option value="Westend 2">Westend 2</option>
+              </select>
+            </div>
+            <p>What is your delivery address?</p>
+            <textarea
+              name="street"
+              onChange={onChangeHandler}
+              required
+              value={data.street}></textarea>
+          </div>
         </div>
         <div className="cart-bottom">
           <div className="cart-total">

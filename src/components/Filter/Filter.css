@@ -19,7 +19,7 @@
   display: none;
 }
 .filter-handler .filter-kitchen-icon {
-  font-size: 20px;
+  font-size: 14px;
   color: var(--main-color);
 }
 .filter-kitchen-title {
@@ -31,10 +31,10 @@
 }
 .filter-kitchen-title span {
   white-space: nowrap;
-  font-size: 15px;
+  font-size: 14px;
 }
 .arrow-down-icon {
-  font-size: 18px;
+  font-size: 15px;
   color: var(--main-color);
   transition: 0.3s ease;
 }

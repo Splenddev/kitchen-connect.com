@@ -1,0 +1,126 @@
+.user-profile {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  /* left: 12px; */
+  z-index: 1000;
+}
+.user-profile-contents {
+  padding: 40px 10px 40px 15px;
+  width: 350px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #fff;
+}
+.user-profile-list-container .layout {
+  display: grid;
+  grid-template-columns: 45px 1fr;
+  background: #f9f9f9;
+  padding: 10px 20px;
+  align-items: center;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.user-profile-image-email {
+  display: grid;
+  grid-template-columns: 60px 1fr 20px;
+  align-items: center;
+  /* display: flex;
+  justify-content: space-between; */
+}
+.user-profile-image-email img {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--main-color);
+  border-radius: 50%;
+  padding: 1px;
+}
+.user-profile-image-email ~ hr,
+.user-profile-bottom hr {
+  border: none;
+  height: 1px;
+  background: #d9d9d9;
+  width: 100%;
+  margin: 10px 0;
+}
+.user-profile-image-email div p.name {
+  text-transform: capitalize;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all ease 0.3s;
+}
+.user-profile-image-email div p.name:hover {
+  gap: 15px;
+}
+.user-profile-image-email div p.name .icon {
+  transition: all ease 0.3s;
+  font-size: 16.5px;
+}
+.user-profile-image-email div p.name:hover .icon {
+  scale: 0.8;
+}
+.user-profile-image-email div p.email {
+  color: #b4b4b4;
+}
+.user-profile-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.user-profile-list-elements .flex-sb p:last-child {
+  height: 22px;
+  width: 22px;
+  background: var(--main-color);
+  color: #fff;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 1px;
+}
+
+.user-profile-list-elements .icon {
+  color: #fff;
+  font-size: 16px;
+  filter: drop-shadow(-1px -1px 0 #000) drop-shadow(1px -1px 0 #000)
+    drop-shadow(-1px 1px 0 #000) drop-shadow(1px 1px 0 #000);
+}
+.user-profile-bottom {
+  display: flex;
+  align-items: center;
+  flex-direction: column-reverse;
+}
+.user-profile-bottom div {
+  gap: 10px;
+}
+.user-profile-bottom button {
+  gap: 10px;
+  padding: 10px 15px;
+  background: #000;
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+.user-profile-bottom > p {
+  color: var(--main-color);
+}
+.user-profile-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: -1;
+}

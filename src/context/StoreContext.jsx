@@ -16,7 +16,9 @@ const StoreContextProvider = (props) => {
   // useState
   const [cartItems, setCartItems] = useState({});
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenProfile, setIsOpenProfile] = useState(false);
   const [text, setText] = useState('account');
+  const [noFood, setNoFood] = useState(false);
   const [icon, setIcon] = useState(false);
   const [tokenState, setTokenState] = useState(null);
   const [selectState, setSelectState] = useState('Select Me!');
@@ -29,6 +31,8 @@ const StoreContextProvider = (props) => {
   const color = ['#0ab63d', '#4e15d4', '#f0b921', '#db0b0b', '#db0b84'];
   const [food_list, setFood_list] = useState([]);
   const [optionMenu, setOptionMenu] = useState('');
+  const [foodEaten, setFoodEaten] = useState(0);
+  const [loadFoodEaten, setLoadFoodEaten] = useState(true);
   const [filterKitchen, setFilterKitchen] = useState('All');
   const [restaurantsView, setRestaurantsView] = useState({});
   const [allFoodsInList, setAllFoodsInList] = useState({});
@@ -38,18 +42,26 @@ const StoreContextProvider = (props) => {
   const [subText, setSubText] = useState('Profile');
   const [userInfo, setUserInfo] = useState({});
   const [filterIcon, setFilterIcon] = useState(false);
+  const [totalPage, setTotalPage] = useState(1);
+
   const [loading, setLoading] = useState(true);
+  const [loadingOrders, setLoadingOrders] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
   const [currentState, setCurrentState] = useState('Login');
+  const [count, setcount] = useState({});
+  const [page, setPage] = useState(1);
+  const [allOrders, setAllOrders] = useState(0);
+
   const [userData, setUserData] = useState({
     name: '',
     email: '',
     password: '',
   });
+  const [orderData, setOrderData] = useState([]);
   const [adding, setAdding] = useState('');
   const [query, setQuery] = useState('');
-  // const url = 'http://localhost:4000';
-  const url = 'https://server-b0f1.onrender.com';
+  const url = 'http://localhost:4000';
+  // const url = 'https://server-b0f1.onrender.com';
   //  let alerted = false;
 
   useEffect(() => {
@@ -91,29 +103,6 @@ const StoreContextProvider = (props) => {
         );
         if (response.data.success) {
           setAdding('');
-          // `$`
-          toast.success(
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '10px',
-                padding: '0 20px',
-              }}>
-              <p>{response.data.message}</p>
-              <a
-                style={{
-                  padding: '5px 10px',
-                  borderRadius: '12px',
-                  background: 'white',
-                  color: '#2562e7',
-                }}
-                href="/cart">
-                Go To Cart
-              </a>
-            </div>,
-            { autoClose: 5000 }
-          );
         } else {
           setAdding('');
           toast.info('Check your network connection and try again.');
@@ -379,14 +368,74 @@ const StoreContextProvider = (props) => {
           `${url}/api/food/list/search?search=${query}`
         );
         setFood_list(response.data.data);
+        if (food_list.length <= 0 || !food_list) {
+          setNoFood(true);
+        }
       } catch (error) {
+        setNoFood(true);
         console.log(error);
         console.error('Error fetching food');
       }
       setLoading(false);
     };
     fetchFoods();
-  }, [query]);
+  }, [query, food_list]);
+  const fetchOrders = async () => {
+    const limit = 10;
+    setLoadingOrders(true);
+    const token = localStorage.getItem('token');
+    const response = await axios.post(
+      `${url}/api/order/userorders?page=${page}&limit=${limit}`,
+      {},
+      { headers: { token } }
+    );
+    try {
+      if (response.data.success) {
+        setOrderData(response.data.data);
+        setcount(
+          orderData.reduce((acc, parent) => ({ ...acc, [parent._id]: 1 }), {})
+        );
+        setTotalPage(response.data.totalPages);
+        console.log(response.data.data);
+      } else {
+        toast.info('Check your network connection and try again.');
+        console.log('Error');
+      }
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.message || 'An error occurred!');
+        if (
+          error.response.data.message === 'Session expired. Please login again!'
+        ) {
+          setTokenExpired(true);
+        }
+      } else {
+        toast.error(`Network Issue! Check your network connection.`);
+      }
+      console.log('Error', error);
+    } finally {
+      setLoadingOrders(false);
+    }
+  };
+  useEffect(() => {
+    if (token) {
+      fetchOrders();
+    }
+  }, [token]);
+  useEffect(() => {
+    setLoadFoodEaten(true);
+    if (orderData) {
+      setLoadFoodEaten(false);
+      orderData.forEach((order) => {
+        if (order.payment.status === 'paid') {
+          order.items.forEach((item) =>
+            setFoodEaten((prev) => (prev += item.quantity))
+          );
+        }
+      });
+      setAllOrders(orderData.length);
+    }
+  }, [orderData]);
 
   function reloadData(index) {
     setSubText(settings[index].set1);
@@ -491,6 +540,25 @@ const StoreContextProvider = (props) => {
     logout,
     adding,
     setAdding,
+    orderData,
+    setOrderData,
+    foodEaten,
+    allOrders,
+    setAllOrders,
+    setFoodEaten,
+    loadFoodEaten,
+    isOpenProfile,
+    setIsOpenProfile,
+    noFood,
+    setNoFood,
+    loadingOrders,
+    setLoadingOrders,
+    count,
+    setcount,
+    page,
+    setPage,
+    totalPage,
+    setTotalPage,
   };
   return (
     <StoreContext.Provider value={contextValue}>

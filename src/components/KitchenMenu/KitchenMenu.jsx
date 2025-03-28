@@ -13,8 +13,15 @@ import Filter from '../Filter/Filter';
 import Skeletons from '../Skeletons/Skeletons';
 
 const KitchenMenu = () => {
-  const { food_list, setQuery, query, filterKitchen, loading, scrollToTop } =
-    useContext(StoreContext);
+  const {
+    food_list,
+    setQuery,
+    query,
+    filterKitchen,
+    loading,
+    scrollToTop,
+    noFood,
+  } = useContext(StoreContext);
   // const [food_length, setFood_length] = useState('');
   const navigate = useNavigate();
   const allFoodsInListHandler = () => {
@@ -40,7 +47,7 @@ const KitchenMenu = () => {
             type="text"
             value={query}
             onChange={searchHandler}
-            placeholder={`Search favorite meals from${
+            placeholder={`Search meals from${
               filterKitchen.toLowerCase() === 'all' ||
               filterKitchen.toLowerCase() === 'filter kitchen'
                 ? ' all'
@@ -89,20 +96,20 @@ const KitchenMenu = () => {
                 />
               );
             })}
-
-          {loading ? (
-            <></>
-          ) : (
-            <div
-              className="see-more"
-              onClick={allFoodsInListHandler}>
-              <p>See All Foods</p>{' '}
-              <FontAwesomeIcon
-                className="icon"
-                icon={faArrowRightLong}
-              />
-            </div>
-          )}
+        </div>
+      )}
+      {noFood && <p className="no-food">There are no food with this name!</p>}
+      {loading ? (
+        <></>
+      ) : (
+        <div
+          className="see-more"
+          onClick={allFoodsInListHandler}>
+          <p>See All Foods</p>{' '}
+          <FontAwesomeIcon
+            className="icon"
+            icon={faArrowRightLong}
+          />
         </div>
       )}
       <Title

@@ -39,6 +39,10 @@
   align-items: center;
   flex-direction: row;
 }
+.profile-btn {
+  flex-direction: column;
+  gap: 10px;
+}
 .profile-update-image-upload button {
   padding: 6px 10px;
   border-radius: 20px;
@@ -47,6 +51,12 @@
   cursor: pointer;
   background: #dbffe6;
   color: #004715;
+}
+button.update-img {
+  padding: 9px 15px;
+  border: none;
+  background: #0ab63d;
+  color: #fff;
 }
 button.profile-set {
   background: #9b9b9b;
@@ -103,7 +113,7 @@ button.profile-set {
 }
 .name-update > p {
   font-weight: 600;
-  font-size: 19px;
+  font-size: 15px;
 }
 .name-update .inputs {
   display: flex;
@@ -112,16 +122,22 @@ button.profile-set {
 }
 .inputs .layout {
   display: grid;
-  grid-template-columns: 0.3fr 1fr;
+  grid-template-columns: 1fr;
+  row-gap: 5px;
+}
+.layout .label {
+  display: flex;
+  justify-content: space-between;
 }
 .layout input {
-  padding: 10px;
+  padding: 8px;
   border-radius: 4px;
   border: 2px solid #0ab63d;
   outline: none;
   width: 100%;
   background: 
   /* transparent; */ #fafafa;
+  font-size: 14px;
 }
 
 div.blink input {
@@ -193,13 +209,7 @@ div.blink input {
 .userName-btn p {
   position: relative;
 }
-.icon-point {
-  position: absolute;
-  right: 16px;
-  top: -15px;
-  color: var(--main-color);
-  animation: point 1s ease-in-out infinite;
-}
+
 button.blurry {
   background: #6fd174;
 }

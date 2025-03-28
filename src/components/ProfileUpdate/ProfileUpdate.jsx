@@ -5,16 +5,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faAngleUp,
   faEdit,
-  faHandPointUp,
   faPen,
   faUserAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 import Loader from '../Loader/Loader';
+import axios from 'axios';
 
 const ProfileUpdate = () => {
   //context
-  const { subText } = useContext(StoreContext);
+  const { subText, url, token, setUserInfo, userInfo } =
+    useContext(StoreContext);
 
   //state
   const [image, setImage] = useState(null);
@@ -23,10 +24,11 @@ const ProfileUpdate = () => {
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [inputState, setInputState] = useState(false);
+
   const [profileData, setProfileData] = useState({
-    firstName: '',
-    lastName: '',
-    userName: '',
+    firstName: userInfo.name.trim().split(' ')[0],
+    lastName: userInfo.name.trim().split(' ').slice(1).join(' '),
+    userName: userInfo && userInfo.username,
   });
   const [dummyUserNames, setDummyUserNames] = useState([]);
   const [figures, setfigures] = useState(0);
@@ -160,9 +162,14 @@ const ProfileUpdate = () => {
       } else toast.success('The Userame is available');
       setLoading(false);
     }, 2000);
+    const name = profileData.firstName + ' ' + profileData.lastName;
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('username', profileData.userName);
+    console.log(formData);
   };
 
-  const sumbitData = (e) => {
+  const sumbitData = async (e) => {
     e.preventDefault();
     if (
       !profileData.firstName ||
@@ -176,7 +183,26 @@ const ProfileUpdate = () => {
     userResponse;
     if (userResponse) {
       setDummyUserNames((prev) => [...prev, profileData.userName]);
-      toast.success('Data submitted successfully.');
+      const name = profileData.firstName + ' ' + profileData.lastName;
+      const username = profileData.userName;
+      const data = { name, username };
+      try {
+        let response = await axios.put(`${url}/api/user/update/profile`, data, {
+          headers: {
+            token,
+          },
+        });
+        if (response.data.success) {
+          toast.success('Data submitted successfully.');
+          localStorage.setItem('userInfo', JSON.stringify(response.data.user));
+          setUserInfo(response.data.user);
+        } else {
+          return console.error('update failed');
+        }
+      } catch (error) {
+        toast.error(error.response.data.message);
+        return console.error('internal error ' + error.message);
+      }
       setProfileData({
         firstName: '',
         lastName: '',
@@ -186,7 +212,48 @@ const ProfileUpdate = () => {
       toast.info('Data not submitted.');
     }
   };
-
+  const profilePicHandler = async () => {
+    if (!image) {
+      toast.error('Please choose an image to continue');
+      return;
+    }
+    const formData = new FormData();
+    formData.append('image', image);
+    try {
+      let response = await axios.put(
+        `${url}/api/user/update/profile/image`,
+        formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data', token },
+        }
+      );
+      if (response.data.success) {
+        toast.success(
+          response.data.message || 'Profile image updated successfully.'
+        );
+        const user = response.data.user;
+        const userDatabaseData = {
+          _id: user._id,
+          name: user.name,
+          username: user.username,
+          email: user.email,
+          paymentOption: user.paymentOption,
+          profileImage: user.profileImage,
+          phoneNumber: user.phoneNumber,
+        };
+        localStorage.setItem('userInfo', JSON.stringify(userDatabaseData));
+        setUserInfo(userDatabaseData);
+        console.log(userDatabaseData);
+        setImage(null);
+      } else {
+        toast.error(response.data.message || error);
+        return console.error('update failed');
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+      return console.error('internal error ' + error.message);
+    }
+  };
   return (
     <div className="account-update">
       <div className="account-update-header flex-center-sb">
@@ -194,66 +261,76 @@ const ProfileUpdate = () => {
         <button className="sub-text">Save & Update</button>
       </div>
       <hr />
-      <form onSubmit={sumbitData}>
-        <div className="profile-update">
-          <div className="profile-update-image-upload">
-            <div className="profile-image">
-              <label htmlFor="profile-img">
-                <div className="profile-img-container">
-                  {preview ? (
-                    <img
-                      src={preview}
-                      alt="Profile Preview"
-                    />
-                  ) : (
-                    <FontAwesomeIcon
-                      className="icon"
-                      icon={faUserAlt}
-                    />
-                  )}
-                </div>
-                <div className="edit-icon-container">
-                  <FontAwesomeIcon
-                    className="icon"
-                    icon={faPen}
-                  />
-                </div>
-              </label>
-              <input
-                type="file"
-                id="profile-img"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  const max = 1 * 1024 * 1024;
-                  if (!file) return;
-                  if (file.size > max) {
-                    toast.error('File too big.');
-                    return;
-                  }
-                  setImage(file);
-                  // setImage(e.target.files[0]);
-                }}
-                hidden
-                required
+      <div className="profile-update-image-upload">
+        <div className="profile-image">
+          <label htmlFor="profile-img">
+            <div className="profile-img-container">
+              {preview ? (
+                <img
+                  src={preview}
+                  alt="Profile Preview"
+                />
+              ) : (
+                <FontAwesomeIcon
+                  className="icon"
+                  icon={faUserAlt}
+                />
+              )}
+            </div>
+            <div className="edit-icon-container">
+              <FontAwesomeIcon
+                className="icon"
+                icon={faPen}
               />
             </div>
-            <button
-              className={image ? '' : 'profile-set'}
-              onClick={() => {
-                setImage(null);
-              }}>
-              <p>Clear Image</p>
-            </button>
-          </div>
+          </label>
+          <input
+            type="file"
+            name="image"
+            id="profile-img"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files[0];
+              const max = 1 * 1024 * 1024;
+              if (!file) return;
+              if (file.size > max) {
+                toast.error('File too big.');
+                return;
+              }
+              setImage(file);
+            }}
+            hidden
+            required
+          />
+        </div>
+        <div className="profile-btn flex">
+          <button
+            className={image ? '' : 'profile-set'}
+            onClick={() => {
+              setImage(null);
+            }}>
+            <p>Clear Image</p>
+          </button>
+          <button
+            className={image ? 'update-img' : 'profile-set'}
+            onClick={profilePicHandler}>
+            <p>Set Profile Picture</p>
+          </button>
+        </div>
+      </div>
+      <form onSubmit={sumbitData}>
+        <div className="profile-update">
           <div className="details-update">
             <div className="name-update flex-fld-column">
               <p>Name</p>
               <div className="inputs">
                 <div className="firstName layout">
-                  <label htmlFor="firstName">
-                    <p>First Name</p>
-                  </label>
+                  <div className="label">
+                    <label htmlFor="firstName">
+                      <p>First Name</p>
+                    </label>
+                    <FontAwesomeIcon icon={faEdit} />
+                  </div>
                   <div
                     className={`wrapper ${
                       error === 'firstName' || error === 'firstNameLength'
@@ -264,6 +341,7 @@ const ProfileUpdate = () => {
                       type="text"
                       id="firstName"
                       name="firstName"
+                      disabled={profileData.firstName}
                       onChange={onChangeHandler}
                       value={profileData.firstName}
                       required
@@ -271,9 +349,12 @@ const ProfileUpdate = () => {
                   </div>
                 </div>
                 <div className="lastName layout">
-                  <label htmlFor="lastName">
-                    <p>Last Name</p>
-                  </label>
+                  <div className="label">
+                    <label htmlFor="lastName">
+                      <p>Last Name</p>
+                    </label>{' '}
+                    <FontAwesomeIcon icon={faEdit} />
+                  </div>
                   <div
                     className={`wrapper ${
                       error === 'lastName' || error === 'lastNameLength'
@@ -286,15 +367,19 @@ const ProfileUpdate = () => {
                       name="lastName"
                       onChange={onChangeHandler}
                       value={profileData.lastName}
+                      disabled={profileData.lastName}
                       required
                     />
                   </div>
                 </div>
                 <div className="userName">
                   <div className=" layout">
-                    <label htmlFor="lastName">
-                      <p>User Name</p>
-                    </label>
+                    <div className="label">
+                      <label htmlFor="lastName">
+                        <p>User Name</p>
+                      </label>{' '}
+                      <FontAwesomeIcon icon={faEdit} />
+                    </div>
                     <div className="loader-wrap">
                       <input
                         ref={inputRef}
@@ -303,7 +388,7 @@ const ProfileUpdate = () => {
                         onChange={onChangeHandler}
                         type="text"
                         id="userName"
-                        disabled={inputState}
+                        disabled={inputState || profileData.userName}
                         required
                       />
                       <div
@@ -329,7 +414,6 @@ const ProfileUpdate = () => {
                     </div>
                   </div>
                   <div className="userName-btn layout">
-                    <div></div>
                     {isVisible ? (
                       <div>
                         <input
@@ -381,10 +465,6 @@ const ProfileUpdate = () => {
                     ) : (
                       <p>
                         For more username creation option, click on the angle{' '}
-                        <FontAwesomeIcon
-                          icon={faHandPointUp}
-                          className="icon-point"
-                        />
                       </p>
                     )}
                   </div>
