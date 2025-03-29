@@ -2,8 +2,8 @@
 import { useNavigate } from 'react-router-dom';
 import './VerifyPayment.css';
 import { useContext, useEffect } from 'react';
-import axios from 'axios';
 import { StoreContext } from '../../context/StoreContext';
+import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const VerifyPayment = () => {
@@ -11,35 +11,36 @@ const VerifyPayment = () => {
   const urlParams = new URLSearchParams(window.location.search);
   // const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const transactionId = urlParams.get('transaction_id');
+  // const transactionId = urlParams.get('trxref');
   const orderId = urlParams.get('orderId');
-  const tx_ref = urlParams.get('tx_ref');
+  const reference = urlParams.get('reference');
   const verifyPayment = async () => {
     console.log(orderId);
-    console.log(transactionId);
-    console.log(tx_ref);
+    // console.log(transactionId);
+    console.log(reference);
 
-    if (!orderId || !tx_ref) {
-      console.log(orderId, transactionId, tx_ref);
+    if (!orderId || !reference) {
+      console.log(orderId, reference);
       toast.error(`Missing details! Check your network connection.`);
       return;
     }
 
     try {
-      const response = await axios.post(`${url}/api/order/verify-payments`, {
-        orderId,
-        transactionId,
-        tx_ref,
-      });
-      if (response.data.status === 'success') {
-        alert('Payment verified successfully! Your order has been placed');
+      const response = await axios.post(
+        `${url}/api/order/verify-payments/paystack`,
+        { orderId, reference }
+      );
+      if (response.data.status === 'paid') {
+        toast.success(response.data.message);
         navigate('/orders');
         console.log('paid');
-      } else if (response.data.status === 'false') {
-        alert('Payment cancelled! ');
+      } else if (response.data.status === 'failed') {
+        toast.error(response.data.message);
+        // alert('Payment cancelled! ');
         navigate('/cart');
         console.log('failed');
       } else {
+        toast.error(response.data.message);
         alert('Payment pending! Go to orders and requery payment!');
         navigate('/orders');
         console.log('pending');
@@ -47,7 +48,7 @@ const VerifyPayment = () => {
     } catch (error) {
       console.error(error.message);
       alert('An error occured! Please try again!', error.message);
-      navigate('/');
+      // navigate('/');
     }
   };
   useEffect(() => {

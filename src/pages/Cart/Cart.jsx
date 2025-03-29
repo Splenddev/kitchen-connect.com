@@ -73,16 +73,21 @@ const Cart = () => {
     let orderData = {
       address: data,
       items: orderItems,
-      amount: getTotalCartAmount() + 2,
+      amount: parseInt(getTotalCartAmount() + 2),
+      email: data.email,
     };
     try {
-      let response = await axios.post(url + '/api/order/create', orderData, {
-        headers: {
-          token,
-          // 'Content-Type': 'application/json',
-          // Authorization: `Bearer ${token}`,
-        },
-      });
+      let response = await axios.post(
+        url + '/api/order/create/paystack',
+        orderData,
+        {
+          headers: {
+            token,
+            // 'Content-Type': 'application/json',
+            // Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.data.success) {
         toast.success('Order placed successfully! Redirecting...');
         window.location.href = response.data.paymentUrl;
@@ -110,112 +115,117 @@ const Cart = () => {
         </div>
         <button onClick={() => navigate(-1)}>Add more</button>
       </div>
-      {getTotalCartAmount() === 0 ? (
-        <p className="no-food-to-display">
-          There are no food selected. Please select foods from the{' '}
-          <NavLink to={'/'}>Home page</NavLink> or from{' '}
-          <NavLink to={'/all_food_list'}>All Food Page</NavLink>
-        </p>
-      ) : (
-        <div className="cart-foods">
-          {foodInCart.map((item, index) => {
-            if (cartItems[item._id] > 0) {
-              return (
-                <div
-                  className="cart-items-wrapper"
-                  key={index}>
-                  <div className="cross flex-center">
-                    <FontAwesomeIcon
-                      onClick={() => {
-                        removeAllFromCart(item._id);
-                      }}
-                      icon={faClose}
-                    />
-                  </div>
-                  <div className="cart-items-wrapper-top">
-                    From <b>{item.kitchen.kitchen_name} </b>Kitchen
-                  </div>
-                  <hr />
-                  <div className="cart-items-wrapper-bottom">
-                    <div className="cart-items-left">
-                      <img src={url + '/images/' + item.image} />
+      <div className="cart-body">
+        {getTotalCartAmount() === 0 ? (
+          <p className="no-food-to-display">
+            There are no food selected. Please select foods from the{' '}
+            <NavLink to={'/'}>Home page</NavLink> or from{' '}
+            <NavLink to={'/all_food_list'}>All Food Page</NavLink>
+          </p>
+        ) : (
+          <div className="cart-foods">
+            {foodInCart.map((item, index) => {
+              if (cartItems[item._id] > 0) {
+                return (
+                  <div
+                    className="cart-items-wrapper"
+                    key={index}>
+                    <div className="cross flex-center">
+                      <FontAwesomeIcon
+                        onClick={() => {
+                          removeAllFromCart(item._id);
+                        }}
+                        icon={faClose}
+                      />
                     </div>
-                    <div className="cart-items-right">
-                      <div className="cart-items-right-top">
-                        <p>{item.name}</p>
+                    <div className="cart-items-wrapper-top">
+                      From <b>{item.kitchen.kitchen_name} </b>Kitchen
+                    </div>
+                    <hr />
+                    <div className="cart-items-wrapper-bottom">
+                      <div className="cart-items-left">
+                        <img src={url + '/images/' + item.image} />
                       </div>
-                      <div className="cart-items-right-middle">
-                        <button
-                          className="btn"
-                          onClick={() => {
-                            setFoodView({
-                              name: item.name,
-                              kitchen_name: item.kitchen.kitchen_name,
-                              category: item.category,
-                              description: item.description,
-                              id: item._id,
-                              kitchenImage: item.k_image,
-                              image: item.image,
-                              price: item.price * 100,
-                              foodInfo: item.foodInformation,
-                              ingredients:
-                                item.foodInformation.category.ingredients,
-                              allergens:
-                                item.foodInformation.category.allergens,
-                              benefits:
-                                item.foodInformation.healthImpacts.benefits,
-                              risks: item.foodInformation.healthImpacts.risks,
-                              extras: item.foodInformation.extrasAndMods.extras,
-                              mods: item.foodInformation.extrasAndMods.mods,
-                              calories: item.foodInformation.nutrients.calories,
-                              others: item.foodInformation.nutrients.others,
-                            });
-                            viewDetailsHandler();
-                          }}>
-                          Details
-                        </button>
-                        <div className="quantity-container">
-                          <span>Qty:</span>
-                          <div className="quantity">
-                            <FontAwesomeIcon
-                              className="icons"
-                              icon={faMinusCircle}
-                              onClick={() => {
-                                removeFromCart(item._id);
-                              }}
-                            />
-                            <p>{cartItems[item._id]}</p>
-                            <FontAwesomeIcon
-                              onClick={() => {
-                                addToCart(item._id);
-                              }}
-                              className="icons"
-                              icon={faPlusCircle}
-                            />
+                      <div className="cart-items-right">
+                        <div className="cart-items-right-top">
+                          <p>{item.name}</p>
+                        </div>
+                        <div className="cart-items-right-middle">
+                          <button
+                            className="btn"
+                            onClick={() => {
+                              setFoodView({
+                                name: item.name,
+                                kitchen_name: item.kitchen.kitchen_name,
+                                category: item.category,
+                                description: item.description,
+                                id: item._id,
+                                kitchenImage: item.k_image,
+                                image: item.image,
+                                price: item.price * 100,
+                                foodInfo: item.foodInformation,
+                                ingredients:
+                                  item.foodInformation.category.ingredients,
+                                allergens:
+                                  item.foodInformation.category.allergens,
+                                benefits:
+                                  item.foodInformation.healthImpacts.benefits,
+                                risks: item.foodInformation.healthImpacts.risks,
+                                extras:
+                                  item.foodInformation.extrasAndMods.extras,
+                                mods: item.foodInformation.extrasAndMods.mods,
+                                calories:
+                                  item.foodInformation.nutrients.calories,
+                                others: item.foodInformation.nutrients.others,
+                              });
+                              viewDetailsHandler();
+                            }}>
+                            Details
+                          </button>
+                          <div className="quantity-container">
+                            <span>Qty:</span>
+                            <div className="quantity">
+                              <FontAwesomeIcon
+                                className="icons"
+                                icon={faMinusCircle}
+                                onClick={() => {
+                                  removeFromCart(item._id);
+                                }}
+                              />
+                              <p>{cartItems[item._id]}</p>
+                              <FontAwesomeIcon
+                                onClick={() => {
+                                  addToCart(item._id);
+                                }}
+                                className="icons"
+                                icon={faPlusCircle}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="cart-items-right-bottom">
+                          <div className="total">
+                            <p>
+                              <span>Price:</span>{' '}
+                              <FontAwesomeIcon icon={faNairaSign} />{' '}
+                              {item.price}
+                            </p>
+                            <p>
+                              <span>Total: </span>
+                              <FontAwesomeIcon icon={faNairaSign} />{' '}
+                              {item.price * cartItems[item._id]}
+                            </p>
                           </div>
                         </div>
                       </div>
-                      <div className="cart-items-right-bottom">
-                        <div className="total">
-                          <p>
-                            <span>Price:</span>{' '}
-                            <FontAwesomeIcon icon={faNairaSign} /> {item.price}
-                          </p>
-                          <p>
-                            <span>Total: </span>
-                            <FontAwesomeIcon icon={faNairaSign} />{' '}
-                            {item.price * cartItems[item._id]}
-                          </p>
-                        </div>
-                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            }
-          })}
-        </div>
-      )}
+                );
+              }
+            })}
+          </div>
+        )}
+      </div>
 
       <form
         onSubmit={proceedHandler}

@@ -15,7 +15,9 @@
   color: #555;
   cursor: not-allowed;
 }
-
+.cart-body {
+  margin: 10px 0;
+}
 .cart-items-item {
   margin: 10px 0px;
   color: #000;
@@ -169,6 +171,9 @@ form.cart .title-block > p {
 }
 .cart-foods {
   margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 .cart-foods .cart-items-wrapper {
   border: 2px solid #ccc;

@@ -259,8 +259,16 @@ const ProfileUpdate = () => {
       return console.error('internal error ' + error.message);
     }
   };
-  const isDisabled = () => {
-    setisEnabled(!isEnabled);
+  const isDisabled = (e) => {
+    const name = e.target.id;
+    if (name === 'fName') {
+      setisEnabled((obj) => ({
+        ...obj,
+        fName: isEnabled.fName ? false : true,
+      }));
+    }
+    console.log(e);
+    console.log(isEnabled, name);
   };
   return (
     <div className="account-update">
@@ -333,14 +341,13 @@ const ProfileUpdate = () => {
               <p>Name</p>
               <div className="inputs">
                 <div className="firstName layout">
-                  <div
-                    className="label"
-                    onClick={isDisabled}>
+                  <div className="label">
                     <label htmlFor="firstName">
                       <p>First Name</p>
                     </label>
                     <FontAwesomeIcon
-                      name="fName"
+                      id="fName"
+                      onClick={isDisabled}
                       icon={faEdit}
                     />
                   </div>
@@ -354,7 +361,7 @@ const ProfileUpdate = () => {
                       type="text"
                       id="firstName"
                       name="firstName"
-                      disabled={profileData.firstName && isEnabled}
+                      disabled={profileData.firstName && isEnabled.fName}
                       onChange={onChangeHandler}
                       value={profileData.firstName}
                       required
@@ -366,7 +373,10 @@ const ProfileUpdate = () => {
                     <label htmlFor="lastName">
                       <p>Last Name</p>
                     </label>{' '}
-                    <FontAwesomeIcon icon={faEdit} />
+                    <FontAwesomeIcon
+                      icon={faEdit}
+                      onClick={isDisabled}
+                    />
                   </div>
                   <div
                     className={`wrapper ${
