@@ -17,7 +17,6 @@ import {
 import { useContext, useState } from 'react';
 import { StoreContext } from './context/StoreContext.jsx';
 import SidePopup from './components/SidePopup/SidePopup.jsx';
-import { faBackward } from '@fortawesome/free-solid-svg-icons';
 import TokenExpired from './components/TokenExpired/TokenExpired.jsx';
 const App = () => {
   const [menu, setMenu] = useState('home');
@@ -25,13 +24,13 @@ const App = () => {
   const {
     alerted,
     isOpen,
-    openPopup,
-    checked,
     closePopup,
     reloadData,
     setShowLogin,
     tokenExpired,
     isOpenProfile,
+    tokenState,
+    foodView,
   } = useContext(StoreContext);
   const location = useLocation();
   const navigate = useNavigate();
@@ -40,7 +39,7 @@ const App = () => {
 
   return (
     <>
-      <SidePopup />
+      {foodView ? <SidePopup /> : <></>}
       {isOpenProfile && <UserProfile />}
       <ToastContainer
         position="top-right"
@@ -51,23 +50,7 @@ const App = () => {
         draggable
         theme="colored"
       />
-      {location.pathname === '/' ||
-        (location.pathname === '/all_food_list' && (
-          <div
-            className={`side-popup-opener ${isOpen ? 'left' : ''}`}
-            onClick={() => {
-              if (!checked && !isOpen) {
-                alert('Please Select A Food To View Details');
-              } else {
-                !isOpen ? openPopup() : closePopup();
-              }
-            }}>
-            <FontAwesomeIcon
-              className={`icon ${!isOpen ? '' : 'forward'}`}
-              icon={faBackward}
-            />
-          </div>
-        ))}
+
       {location.pathname === home && (
         <div className="app-navbar">
           <NavBar setShowLogin={setShowLogin} />
@@ -197,6 +180,9 @@ const App = () => {
         }}
         id="home">
         {tokenExpired && <TokenExpired />}
+        {tokenState === null || (tokenExpired === null && <TokenExpired />)}
+        {/* {tokenExpired && } */}
+        {/* <TokenExpired /> */}
         <div
           className={isOpen ? 'side-popup-container-wrap' : 'hide'}
           onClick={() => {

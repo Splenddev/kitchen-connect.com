@@ -5,12 +5,18 @@ import './ProfileImage.css';
 const ProfileImage = () => {
   const { url, userInfo, color } = useContext(StoreContext);
   const fullName = userInfo.name;
+  const defaultName = 'John Doe';
   const displayName = fullName
-    .split(' ')
-    .map((word) => word.charAt(0))
-    .join(' ');
+    ? fullName
+        .split(' ')
+        .map((word) => word.charAt(0))
+        .join(' ')
+    : defaultName
+        .split(' ')
+        .map((word) => word.charAt(0))
+        .join(' ');
   return (
-    <>
+    <div className="profile-image-container">
       {userInfo.profileImage ? (
         <img src={`${url}/images/${userInfo.profileImage}`} />
       ) : (
@@ -24,7 +30,7 @@ const ProfileImage = () => {
           {displayName}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

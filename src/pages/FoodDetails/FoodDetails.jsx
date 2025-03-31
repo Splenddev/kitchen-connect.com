@@ -38,7 +38,7 @@ const FoodDetails = () => {
   } = useContext(StoreContext);
   const navigate = useNavigate();
   const location = useLocation();
-  const quantity = cartItems[foodView.id] ? cartItems[foodView.id] : 0;
+  const quantity = cartItems === undefined ? 0 : cartItems[foodView.id];
   useEffect(() => {
     if (quantity === 0) {
       setSelectState(`Select Me!${foodView.id}`);

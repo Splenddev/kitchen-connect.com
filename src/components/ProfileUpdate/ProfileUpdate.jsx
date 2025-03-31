@@ -1,10 +1,10 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import './ProfileUpdate.css';
 import { StoreContext } from '../../context/StoreContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faAngleUp,
-  faEdit,
+  faCheck,
   faPen,
   faUserAlt,
 } from '@fortawesome/free-solid-svg-icons';
@@ -14,32 +14,30 @@ import axios from 'axios';
 
 const ProfileUpdate = () => {
   //context
-  const { subText, url, token, setUserInfo, userInfo } =
-    useContext(StoreContext);
+  const {
+    subText,
+    url,
+    token,
+    setUserInfo,
+    customerName,
+    setCustomerName,
+    userInfo,
+  } = useContext(StoreContext);
 
   //state
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [isEnabled, setisEnabled] = useState({
-    fName: true,
-    lName: true,
-    uName: true,
-  });
-  const [inputState, setInputState] = useState(false);
-
+  const [isEnabled, setisEnabled] = useState(true);
   const [profileData, setProfileData] = useState({
-    firstName: userInfo.name.trim().split(' ')[0],
-    lastName: userInfo.name.trim().split(' ').slice(1).join(' '),
+    firstName: customerName.fName,
+    lastName: customerName.lName,
     userName: userInfo && userInfo.username,
   });
-  const [dummyUserNames, setDummyUserNames] = useState([]);
   const [figures, setfigures] = useState(0);
-  //refs
-  const inputRef = useRef(null);
-
   // useEffect
   useEffect(() => {
     if (image) {
@@ -54,7 +52,6 @@ const ProfileUpdate = () => {
 
   //functions
   const onChangeHandler = (e) => {
-    setInputState(false);
     const name = e.target.name;
     const value = e.target.value;
 
@@ -118,7 +115,6 @@ const ProfileUpdate = () => {
 
     setTimeout(() => {
       setfigures((prev) => prev + 1);
-      setInputState(true);
 
       let newUserName = '';
       let numPrev = Math.floor(Math.random() * 100);
@@ -150,35 +146,36 @@ const ProfileUpdate = () => {
       setLoading(false);
     }, 2000);
   };
-  const userNameValidator = () => {
-    if (!profileData.userName) {
-      toast.error('Check the input fields. They are empty');
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
+  // const userNameValidator = () => {
+  //   if (!profileData.userName) {
+  //     toast.error('Check the input fields. They are empty');
+  //     setLoading(false);
+  //     return;
+  //   }
+  //   setLoading(true);
 
-    setTimeout(() => {
-      const dbUserName = profileData.userName;
-      if (dummyUserNames.includes(dbUserName)) {
-        return toast.error(
-          `The input: ${profileData.userName} already exists in the database`
-        );
-      } else toast.success('The Userame is available');
-      setLoading(false);
-    }, 2000);
-    const name = profileData.firstName + ' ' + profileData.lastName;
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('username', profileData.userName);
-    console.log(formData);
-  };
+  //   setTimeout(() => {
+  //     const dbUserName = profileData.userName;
+  //     if (dummyUserNames.includes(dbUserName)) {
+  //       return toast.error(
+  //         `The input: ${profileData.userName} already exists in the database`
+  //       );
+  //     } else toast.success('The Userame is available');
+  //     setLoading(false);
+  //   }, 2000);
+  //   const name = profileData.firstName + ' ' + profileData.lastName;
+  //   const formData = new FormData();
+  //   formData.append('name', name);
+  //   formData.append('username', profileData.userName);
+  //   console.log(formData);
+  // };
 
   const sumbitData = async (e) => {
     e.preventDefault();
+    setLoadingSubmit(true);
     if (
-      !profileData.firstName ||
-      !profileData.lastName ||
+      !profileData.firstName &&
+      !profileData.lastName &&
       !profileData.userName
     ) {
       alert('Error!');
@@ -187,7 +184,6 @@ const ProfileUpdate = () => {
     const userResponse = confirm('Are you sure about this data?');
     userResponse;
     if (userResponse) {
-      setDummyUserNames((prev) => [...prev, profileData.userName]);
       const name = profileData.firstName + ' ' + profileData.lastName;
       const username = profileData.userName;
       const data = { name, username };
@@ -198,21 +194,29 @@ const ProfileUpdate = () => {
           },
         });
         if (response.data.success) {
-          toast.success('Data submitted successfully.');
+          toast.success(response.data.message);
           localStorage.setItem('userInfo', JSON.stringify(response.data.user));
+          localStorage.setItem(
+            'customerName',
+            JSON.stringify(response.data.name)
+          );
           setUserInfo(response.data.user);
+          setCustomerName(response.data.name);
         } else {
+          toast.error(response.data.message);
           return console.error('update failed');
         }
       } catch (error) {
-        toast.error(error.response.data.message);
-        return console.error('internal error ' + error.message);
+        if (error.response) {
+          toast.error(error.response.data.message || 'An error occurred!');
+        } else {
+          toast.error(`Network Issue! Check your network connection.`);
+        }
+        console.error('internal error ' + error.message);
+      } finally {
+        setLoadingSubmit(false);
       }
-      setProfileData({
-        firstName: '',
-        lastName: '',
-        userName: '',
-      });
+      setisEnabled(true);
     } else {
       toast.info('Data not submitted.');
     }
@@ -259,17 +263,6 @@ const ProfileUpdate = () => {
       return console.error('internal error ' + error.message);
     }
   };
-  const isDisabled = (e) => {
-    const name = e.target.id;
-    if (name === 'fName') {
-      setisEnabled((obj) => ({
-        ...obj,
-        fName: isEnabled.fName ? false : true,
-      }));
-    }
-    console.log(e);
-    console.log(isEnabled, name);
-  };
   return (
     <div className="account-update">
       <div className="account-update-header flex-center-sb">
@@ -286,6 +279,8 @@ const ProfileUpdate = () => {
                   src={preview}
                   alt="Profile Preview"
                 />
+              ) : userInfo.profileImage ? (
+                <img src={`${url}/images/${userInfo.profileImage}`} />
               ) : (
                 <FontAwesomeIcon
                   className="icon"
@@ -328,7 +323,7 @@ const ProfileUpdate = () => {
             <p>Clear Image</p>
           </button>
           <button
-            className={image ? 'update-img' : 'profile-set'}
+            className={image ? 'update-img' : 'hide'}
             onClick={profilePicHandler}>
             <p>Set Profile Picture</p>
           </button>
@@ -338,18 +333,37 @@ const ProfileUpdate = () => {
         <div className="profile-update">
           <div className="details-update">
             <div className="name-update flex-fld-column">
-              <p>Name</p>
+              <div
+                id="name-update"
+                className="flex-center-sb">
+                <p>Name</p>
+                <div
+                  className="icon-container-text flex-center"
+                  onClick={() => {
+                    setisEnabled((prev) => (prev === false ? true : false));
+                    if (isEnabled === true) {
+                      setProfileData({
+                        firstName: '',
+                        lastName: '',
+                        userName: '',
+                      });
+                    }
+                  }}>
+                  <p>{isEnabled ? 'Edit' : 'Done'}</p>
+                  <FontAwesomeIcon
+                    icon={isEnabled ? faPen : faCheck}
+                    id="fName"
+                    className="icon edit"
+                  />
+                </div>
+              </div>
+              <hr />
               <div className="inputs">
                 <div className="firstName layout">
                   <div className="label">
                     <label htmlFor="firstName">
                       <p>First Name</p>
                     </label>
-                    <FontAwesomeIcon
-                      id="fName"
-                      onClick={isDisabled}
-                      icon={faEdit}
-                    />
                   </div>
                   <div
                     className={`wrapper ${
@@ -361,7 +375,7 @@ const ProfileUpdate = () => {
                       type="text"
                       id="firstName"
                       name="firstName"
-                      disabled={profileData.firstName && isEnabled.fName}
+                      disabled={profileData.firstName && isEnabled}
                       onChange={onChangeHandler}
                       value={profileData.firstName}
                       required
@@ -372,11 +386,7 @@ const ProfileUpdate = () => {
                   <div className="label">
                     <label htmlFor="lastName">
                       <p>Last Name</p>
-                    </label>{' '}
-                    <FontAwesomeIcon
-                      icon={faEdit}
-                      onClick={isDisabled}
-                    />
+                    </label>
                   </div>
                   <div
                     className={`wrapper ${
@@ -390,7 +400,7 @@ const ProfileUpdate = () => {
                       name="lastName"
                       onChange={onChangeHandler}
                       value={profileData.lastName}
-                      disabled={profileData.lastName}
+                      disabled={profileData.lastName && isEnabled}
                       required
                     />
                   </div>
@@ -401,17 +411,16 @@ const ProfileUpdate = () => {
                       <label htmlFor="lastName">
                         <p>User Name</p>
                       </label>{' '}
-                      <FontAwesomeIcon icon={faEdit} />
                     </div>
                     <div className="loader-wrap">
                       <input
-                        ref={inputRef}
+                        // ref={inputRef}
                         name="userName"
                         value={profileData.userName}
                         onChange={onChangeHandler}
                         type="text"
                         id="userName"
-                        disabled={inputState || profileData.userName}
+                        disabled={profileData.userName && isEnabled}
                         required
                       />
                       <div
@@ -464,24 +473,10 @@ const ProfileUpdate = () => {
                           onClick={userNameGenerator}
                           value="Auto Gen"
                         />
-                        <label
-                          className="edit-username-btn"
-                          htmlFor="edit-btn">
-                          {<FontAwesomeIcon icon={faEdit} />}
-                        </label>
+
                         <input
                           type="button"
-                          id="edit-btn"
-                          onClick={() => {
-                            inputRef.current.focus();
-                            setInputState(false);
-                          }}
-                          style={{ display: 'none' }}
-                          value="edit"
-                        />
-                        <input
-                          type="button"
-                          onClick={userNameValidator}
+                          // onClick={userNameValidator}
                           value="Check Username"
                         />
                       </div>
@@ -493,6 +488,17 @@ const ProfileUpdate = () => {
                   </div>
                   <div className="submit">
                     <button type="submit">Submit Data</button>
+                    {loadingSubmit && (
+                      <div className="isLoadingSubmit">
+                        <Loader
+                          width={'20px'}
+                          height={'20px'}
+                          borderWidth={'3px'}
+                          color_primary={'black'}
+                          color_secondary={'white'}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

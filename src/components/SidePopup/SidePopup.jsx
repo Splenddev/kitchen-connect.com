@@ -13,7 +13,7 @@ const SidePopup = () => {
       // style={{ width: `${width}%` }}
       className={`side-popup ${isOpen ? 'open' : ''}`}>
       <div className="popup-contents">
-        <FoodDetails foodView={foodView} />
+        {foodView ? <FoodDetails foodView={foodView} /> : <></>}
       </div>
     </div>
   );

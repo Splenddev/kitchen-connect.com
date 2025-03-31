@@ -50,7 +50,7 @@ ul.navbar-locations hr {
 }
 .navbar .logo {
   padding: 20px;
-  width: max(10vw, 120px);
+  width: max(10vw, 100px);
   cursor: pointer;
 }
 
@@ -119,40 +119,27 @@ li.active .icon {
   white-space: nowrap;
 }
 .user-icon button {
-  padding: 10px;
+  padding: 7px 20px;
   background: #fff;
-  border-radius: 46px;
+  border-radius: 26px;
   border: none;
-  /* border: 2px solid #000; */
-  font-size: 15px;
+  font-size: 18px;
   cursor: pointer;
   transition: 0.2s ease;
 }
 .user-icon button:hover {
-  background: #050b5e;
+  background: #a7a7a7;
   color: #fff;
 }
-.navbar-profile {
-  position: relative;
-}
-.nav-profile-dropdown {
-  display: grid;
-  width: 150px;
-  z-index: 10;
-  position: absolute;
-  right: -10px;
-  border-radius: 5px;
-  top: 35px;
-  background: #e8e8e8;
-  grid-template-rows: 0fr;
-  transition: 0.3s ease-in-out;
-  > div {
-    overflow: hidden;
+@media (max-width: 750px) {
+  .user-icon button {
+    padding: 5px 15px;
+    font-size: 14px;
+  }
+  .basket-container p {
+    padding: 8px;
   }
 }
-/* .nav-profile-dropdown.show div {
-  position: relative;
-} */
 div .pointer-shape {
   position: absolute;
   height: 0;
@@ -163,50 +150,41 @@ div .pointer-shape {
   top: -10px;
   right: 6px;
 }
-.nav-profile-dropdown.show {
-  grid-template-rows: 1fr;
-  > div {
-    overflow: auto;
-  }
-}
-.nav-profile-dropdown.show div li {
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  cursor: pointer;
-}
-.nav-profile-dropdown.show div li:hover {
-  background: #acacac;
-}
-.nav-profile-dropdown.show div li:hover h4,
-.nav-profile-dropdown.show div li:hover .icon {
-  color: #fff;
-}
-.icon {
-  font-size: max(1.2vw, 15px);
-  color: var(--primary);
-}
-.navbar-sub-locations p {
-  transition: all ease 0.3s;
+.navbar-profile {
   background: #fff;
-  padding: 10px;
-  /* width: 30px;
-  height: 30px; */
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 42px;
-  cursor: pointer;
+  border-radius: 50%;
+  height: 35px;
+  width: 35px;
 }
-.navbar-sub-locations p:hover {
-  scale: 1.2;
+.navbar-profile img {
+  border-radius: 50%;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  padding: 2px;
 }
 .basket-container {
   display: flex;
   flex-direction: row-reverse;
   gap: 10px;
+}
+.basket-container p {
+  transition: all ease 0.3s;
+  background: #fff;
+  padding: 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 22px;
+  cursor: pointer;
+}
+
+.basket-container p:hover {
+  scale: 1.2;
+}
+.basket-container .icon {
+  font-size: max(1.5vw, 14px);
 }
 .basket-container .dot {
   position: absolute;

@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { StoreContext } from '../../context/StoreContext.jsx';
+import { toast } from 'react-toastify';
 
 const NavBar = () => {
   // const [] = useState(false);
@@ -16,6 +17,8 @@ const NavBar = () => {
     setRightCard,
     setUserData,
     setIsOpenProfile,
+    userInfo,
+    url,
   } = useContext(StoreContext);
   // const [userState, setUserState] = useState(false);
   const navigate = useNavigate();
@@ -47,18 +50,21 @@ const NavBar = () => {
         </div>
         <div className="navbar-sub-locations">
           <div className="basket-container">
-            <p>
-              <Link to="/cart">
-                {getTotalCartAmount() != 0 ? (
-                  <span className="dot">{getTotalCartQuantity()}</span>
-                ) : (
-                  <></>
-                )}
-                <FontAwesomeIcon
-                  className="icon"
-                  icon={faCartShopping}
-                />
-              </Link>
+            <p
+              onClick={() => {
+                getTotalCartAmount() != 0
+                  ? navigate('/cart')
+                  : toast.error('The cart is empty.');
+              }}>
+              {getTotalCartAmount() != 0 ? (
+                <span className="dot">{getTotalCartQuantity()}</span>
+              ) : (
+                <></>
+              )}
+              <FontAwesomeIcon
+                className="icon"
+                icon={faCartShopping}
+              />
             </p>
           </div>
           {token === '' ? (
@@ -78,9 +84,13 @@ const NavBar = () => {
                 setIsOpenProfile(true);
               }}
               className="navbar-profile">
-              <div className="kelly">
-                <FontAwesomeIcon icon={faUser} />
-              </div>
+              {userInfo.profileImage ? (
+                <img src={`${url}/images/${userInfo.profileImage}`} />
+              ) : (
+                <div className="kelly">
+                  <FontAwesomeIcon icon={faUser} />
+                </div>
+              )}
             </div>
           )}
         </div>

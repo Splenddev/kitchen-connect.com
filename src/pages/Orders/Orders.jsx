@@ -9,10 +9,14 @@ import {
   faCheckCircle,
   faClock,
   faNairaSign,
+  faRefresh,
 } from '@fortawesome/free-solid-svg-icons';
 import BackNav from '../../components/BackNav/BackNav.jsx';
 // import { toast } from 'react-toastify';
 import OrdersSkeleton from '../../components/OrdersSkeleton/OrdersSkeleton.jsx';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import Loader from '../../components/Loader/Loader.jsx';
 
 const Orders = () => {
   const {
@@ -24,28 +28,46 @@ const Orders = () => {
     loadingOrders,
     setcount,
     totalPage,
+    ordermenu,
+    setOrderMenu,
+    statusCounts,
   } = useContext(StoreContext);
 
-  // useState
+  const [load, setLoad] = useState(false);
 
-  const [menu, setMenu] = useState('all');
-
-  const handlePage = (newPage) => {
-    if (newPage >= 1 && newPage <= totalPage) {
-      setPage(newPage);
-    }
-  };
+  // const handlePage = (newPage) => {
+  //   if (newPage >= 1 && newPage <= totalPage) {
+  //     setPage(newPage);
+  //   }
+  // };
 
   // const all = orderData;
-  const paid = orderData.filter((paid) => {
-    return paid.payment.status === 'paid';
-  });
-  const pend = orderData.filter((paid) => {
-    return paid.payment.status === 'pending';
-  });
-  const fail = orderData.filter((paid) => {
-    return paid.payment.status === 'failed';
-  });
+  // const paid = orderData.filter((paid) => {
+  //   return paid.payment.status === 'paid';
+  // });
+  // const pend = orderData.filter((paid) => {
+  //   return paid.payment.status === 'pending';
+  // });
+  // const fail = orderData.filter((paid) => {
+  //   return paid.payment.status === 'failed';
+  // });
+  const requeryHandler = async (orderId, reference) => {
+    try {
+      setLoad(true);
+      const response = await axios.post(`${url}/api/order/requery?`, {
+        orderId,
+        reference: reference,
+      });
+      console.log(response);
+
+      toast.success(response.data.message || response.data.status);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response.data.message || 'error!');
+    } finally {
+      setLoad(false);
+    }
+  };
   const showMore = (id) => {
     setcount((prev) => ({ ...prev, [id]: 4 }));
   };
@@ -72,35 +94,18 @@ const Orders = () => {
         <div className="orders-content">
           <div className="orders-data-navbar">
             <ul>
-              <li
-                className={`${menu === 'all' ? 'active' : ''}`}
-                onClick={() => {
-                  setMenu('all');
-                  setPage(1);
-                }}>
-                All <span>{orderData.length}</span>
-              </li>
-              <li
-                className={`${menu === 'pending' ? 'active' : ''}`}
-                onClick={() => {
-                  setMenu('pending');
-                  setPage(1);
-                }}>
-                Pending <span>{pend.length}</span>
-              </li>
-              <li
-                className={`${menu === 'paid' ? 'active' : ''}`}
-                onClick={() => {
-                  setMenu('paid');
-                  setPage(1);
-                }}>
-                Paid <span>{paid.length}</span>
-              </li>
-              <li
-                className={`${menu === 'fail' ? 'active' : ''}`}
-                onClick={() => setMenu('fail')}>
-                Failed <span>{fail.length}</span>
-              </li>
+              {['all', 'pending', 'paid', 'failed'].map((status) => (
+                <li
+                  key={status}
+                  className={`${ordermenu === status ? 'active' : ''}`}
+                  onClick={() => {
+                    setOrderMenu(status);
+                    setPage(1);
+                  }}>
+                  {status.toUpperCase()}{' '}
+                  <span>{statusCounts[status] || 0}</span>
+                </li>
+              ))}
             </ul>
           </div>
           <div className="orders-data-list">
@@ -109,9 +114,9 @@ const Orders = () => {
             ) : (
               orderData
                 .filter((orders) => {
-                  if (menu === 'all') {
+                  if (ordermenu === 'all') {
                     return orders;
-                  } else return orders.payment.status === menu;
+                  } else return orders.payment.status === ordermenu;
                 })
                 .map((item, index) => {
                   const date = new Date(item.date);
@@ -161,6 +166,32 @@ const Orders = () => {
                               <b> {item.payment.status}</b>
                             </div>
                           </div>
+                          {item.payment.status === 'pending' && (
+                            <button
+                              onClick={() =>
+                                requeryHandler(
+                                  item._id,
+                                  item.payment.transactionId
+                                )
+                              }>
+                              Requery{' '}
+                              <FontAwesomeIcon
+                                icon={faRefresh}
+                                className="icon"
+                              />
+                              {load && (
+                                <div className="isLoadingSubmit">
+                                  <Loader
+                                    width={'20px'}
+                                    height={'20px'}
+                                    borderWidth={'3px'}
+                                    color_primary={'black'}
+                                    color_secondary={'white'}
+                                  />
+                                </div>
+                              )}
+                            </button>
+                          )}
                         </div>
                       </div>
                       <div className="orders-data-middle">
@@ -233,7 +264,12 @@ const Orders = () => {
           </div>
         </div>
         <div className="order-data-btn">
-          <button onClick={() => handlePage(page - 1)}>
+          <button
+            onClick={() => {
+              setPage((prev) => (prev > 1 ? prev - 1 : 1));
+              console.log(page);
+            }}
+            disabled={page === 1}>
             <FontAwesomeIcon
               className="icon"
               icon={faAngleLeft}
@@ -243,7 +279,12 @@ const Orders = () => {
           <span>
             Page <b>{page}</b> of <b>{totalPage}</b>
           </span>
-          <button onClick={() => handlePage(page + 1)}>
+          <button
+            onClick={() => {
+              setPage((prev) => (prev < totalPage ? prev + 1 : prev));
+              console.log(page);
+            }}
+            disabled={page === totalPage}>
             Next
             <FontAwesomeIcon
               className="icon"

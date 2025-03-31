@@ -16,6 +16,7 @@ import {
   faUpRightFromSquare,
   faBagShopping,
   faWallet,
+  faSignIn,
 } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../Loader/Loader';
@@ -31,6 +32,7 @@ const UserProfile = () => {
     foodEaten,
     loadFoodEaten,
     getTotalCartQuantity,
+    token,
   } = useContext(StoreContext);
   const sidebarVariants = {
     hidden: { x: '100%', opacity: 0, rotateY: -20 },
@@ -183,9 +185,16 @@ const UserProfile = () => {
             <div className="flex">
               <button
                 className="flex"
-                onClick={logout}>
-                <p>Logout</p>
-                <FontAwesomeIcon icon={faSignOut} />
+                onClick={() => {
+                  if (token) {
+                    logout();
+                    return;
+                  }
+                  navigate('/user');
+                  setIsOpenProfile(false);
+                }}>
+                <p>{token ? 'Logout' : 'Login'}</p>
+                <FontAwesomeIcon icon={token ? faSignOut : faSignIn} />
               </button>
               <button className="flex">
                 <p>Contact Us</p>

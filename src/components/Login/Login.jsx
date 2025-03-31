@@ -24,6 +24,7 @@ const Login = () => {
     userData,
     setUserData,
     setUserInfo,
+    setCustomerName,
   } = useContext(StoreContext);
 
   const [loading, setLoading] = useState(false);
@@ -77,7 +78,12 @@ const Login = () => {
         setLoading(false);
 
         localStorage.setItem('token', response.data.token);
+        localStorage.setItem(
+          'customerName',
+          JSON.stringify(response.data.name)
+        );
         localStorage.setItem('userInfo', JSON.stringify(response.data.user));
+        setCustomerName(response.data.name);
         setUserInfo(response.data.user);
         setToken(response.data.token);
         setUserData({
