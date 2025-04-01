@@ -67,8 +67,8 @@ const StoreContextProvider = (props) => {
   const [orderData, setOrderData] = useState([]);
   const [adding, setAdding] = useState('');
   const [query, setQuery] = useState('');
-  // const url = 'http://localhost:4000';
-  const url = 'https://server-b0f1.onrender.com';
+  const url = 'http://localhost:4000';
+  // const url = 'https://server-b0f1.onrender.com';
   //  let alerted = false;
 
   useEffect(() => {
@@ -421,9 +421,6 @@ const StoreContextProvider = (props) => {
         setTotalPage(response.data.totalPages);
         setStatusCounts(response.data.statusCounts);
         console.log(response.data.data);
-      } else {
-        toast.info('Check your network connection and try again.');
-        console.log('Error');
       }
     } catch (error) {
       if (error.response) {

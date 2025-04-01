@@ -9,38 +9,6 @@
   border-radius: 12px;
   box-shadow: 0px 0px 5px 2px #00000063;
 }
-/* .top-menu-cards.add::before {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #000000dc;
-  z-index: 3;
-  overflow: hidden;
-  white-space: nowrap;
-  font-weight: 600;
-  color: #fff; */
-/* animation: typing 3s steps(7, end) forwards infinite, blink 0.7s infinite; 
-  border-right: 2px solid #000;
-  width: 0;*/
-/* } */
-/* @keyframes typing {
-  from {
-    width: 0;
-  }
-  to {
-    width: 100%;
-  }
-}
-@keyframes blink {
-  50% {
-    border-color: transparent;
-  }
-} */
 .image-container {
   width: 100%;
 }
@@ -75,7 +43,7 @@
   flex-direction: column;
   align-items: center;
 }
-.top-menu-cards button {
+.top-menu-cards .top-menu-card-bottom button {
   color: #fff;
   background: var(--main-color);
   cursor: pointer;
@@ -87,7 +55,7 @@
   border: 2px solid var(--main-color);
   transition: all 0.5s;
 }
-.top-menu-cards button:hover {
+.top-menu-cards .top-menu-card-bottom button:hover {
   background: #fff;
   color: var(--main-color);
 }
