@@ -87,7 +87,7 @@ const NavBar = () => {
               {userInfo.profileImage ? (
                 <img src={`${url}/images/${userInfo.profileImage}`} />
               ) : (
-                <div className="kelly">
+                <div className="kelly flex-center">
                   <FontAwesomeIcon icon={faUser} />
                 </div>
               )}

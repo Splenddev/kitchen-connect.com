@@ -163,6 +163,9 @@ div .pointer-shape {
   object-fit: cover;
   padding: 2px;
 }
+.kelly {
+  justify-content: center;
+}
 .basket-container {
   display: flex;
   flex-direction: row-reverse;

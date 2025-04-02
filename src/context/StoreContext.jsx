@@ -86,7 +86,6 @@ const StoreContextProvider = (props) => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, [alerted]);
-
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userInfo');
@@ -95,7 +94,6 @@ const StoreContextProvider = (props) => {
     setUserInfo('');
     setCustomerName({});
   };
-
   const addToCart = async (itemId) => {
     if (!cartItems[itemId]) {
       setCartItems((prev) => ({ ...prev, [itemId]: 1 }));
@@ -326,7 +324,6 @@ const StoreContextProvider = (props) => {
       setCartItems('');
     }
   };
-
   useEffect(() => {
     const isTokenExpired = (token) => {
       if (!token) return null;
@@ -451,7 +448,6 @@ const StoreContextProvider = (props) => {
       setAllOrders(orderData.length);
     }
   }, [orderData]);
-
   function reloadData(index) {
     setSubText(settings[index].set1);
     setLoading(true);
@@ -474,7 +470,6 @@ const StoreContextProvider = (props) => {
       setKitchenImage('');
     }
   };
-
   const contextValue = {
     food_list,
     addToCart,

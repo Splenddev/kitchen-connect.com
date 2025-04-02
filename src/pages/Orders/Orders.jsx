@@ -102,7 +102,7 @@ const Orders = () => {
                     setOrderMenu(status);
                     setPage(1);
                   }}>
-                  {status.toUpperCase()}{' '}
+                  {status}
                   <span>{statusCounts[status] || 0}</span>
                 </li>
               ))}
