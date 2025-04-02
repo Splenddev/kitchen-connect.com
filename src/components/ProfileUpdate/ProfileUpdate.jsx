@@ -3,14 +3,16 @@ import './ProfileUpdate.css';
 import { StoreContext } from '../../context/StoreContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faAngleUp,
-  faCheck,
+  faBoltLightning,
+  faInfoCircle,
   faPen,
   faUserAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 import Loader from '../Loader/Loader';
 import axios from 'axios';
+import { AnimatePresence, motion } from 'framer-motion';
+import InfoModal from '../InfoModal/InfoModal';
 
 const ProfileUpdate = () => {
   //context
@@ -29,8 +31,10 @@ const ProfileUpdate = () => {
   const [preview, setPreview] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [submitBtn, setSubmitBtn] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
   const [isEnabled, setisEnabled] = useState(true);
   const [profileData, setProfileData] = useState({
     firstName: customerName.fName,
@@ -38,6 +42,28 @@ const ProfileUpdate = () => {
     userName: userInfo && userInfo.username,
   });
   const [figures, setfigures] = useState(0);
+
+  //constants variables
+  const info = {
+    title: 'How the username generator work',
+    contentsDescription: {
+      title: 'Purpose',
+      titleDes: 'This tool helps you generate unique and creative usernames.',
+    },
+
+    contents: [
+      {
+        title: 'Use First & Last Name buttons',
+        info: 'Click these buttons to add random numbers to your first name and last name respectively.',
+      },
+      {
+        title: 'Auto Gen button',
+        info: 'Click this button to generate completely unique usernames.',
+      },
+    ],
+    button: 'Close',
+  };
+
   // useEffect
   useEffect(() => {
     if (image) {
@@ -68,12 +94,55 @@ const ProfileUpdate = () => {
     // setError('');
     setProfileData((prev) => ({ ...prev, [name]: value }));
   };
-
+  const sidebarVariants = {
+    hidden: { y: '100%', opacity: 0, rotateX: -20 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      rotateX: 0,
+      transition: { duration: 0.6, ease: 'easeInOut' },
+    },
+    exit: {
+      y: '120%',
+      opacity: 0,
+      rotateX: -30,
+      transition: { duration: 0.4, ease: 'easeInOut', delay: 0.1 },
+    },
+  };
+  const sidebarVariants2 = {
+    hidden: { y: '100%', opacity: 0, rotateX: -20 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      rotateX: 0,
+      transition: { duration: 0.6, ease: 'easeInOut', delay: 0.05 },
+    },
+    exit: {
+      y: '120%',
+      opacity: 0,
+      rotateX: -30,
+      transition: { duration: 0.4, ease: 'easeInOut', delay: 0.05 },
+    },
+  };
+  const sidebarVariants3 = {
+    hidden: { y: '100%', opacity: 0, rotateX: -20 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      rotateX: 0,
+      transition: { duration: 0.6, ease: 'easeInOut', delay: 0.1 },
+    },
+    exit: {
+      y: '120%',
+      opacity: 0,
+      rotateX: -30,
+      transition: { duration: 0.4, ease: 'easeInOut' },
+    },
+  };
   const userNameGenerator = (e) => {
     const name = e.target.name;
     if (figures >= 25) {
       toast.error('Limit reached! You can only generate 5 usernames.');
-      setIsVisible(false);
       return;
     }
 
@@ -146,30 +215,6 @@ const ProfileUpdate = () => {
       setLoading(false);
     }, 2000);
   };
-  // const userNameValidator = () => {
-  //   if (!profileData.userName) {
-  //     toast.error('Check the input fields. They are empty');
-  //     setLoading(false);
-  //     return;
-  //   }
-  //   setLoading(true);
-
-  //   setTimeout(() => {
-  //     const dbUserName = profileData.userName;
-  //     if (dummyUserNames.includes(dbUserName)) {
-  //       return toast.error(
-  //         `The input: ${profileData.userName} already exists in the database`
-  //       );
-  //     } else toast.success('The Userame is available');
-  //     setLoading(false);
-  //   }, 2000);
-  //   const name = profileData.firstName + ' ' + profileData.lastName;
-  //   const formData = new FormData();
-  //   formData.append('name', name);
-  //   formData.append('username', profileData.userName);
-  //   console.log(formData);
-  // };
-
   const sumbitData = async (e) => {
     e.preventDefault();
     setLoadingSubmit(true);
@@ -267,7 +312,6 @@ const ProfileUpdate = () => {
     <div className="account-update">
       <div className="account-update-header flex-center-sb">
         <p className="sub-text">Edit {subText}</p>
-        <button className="sub-text">Save & Update</button>
       </div>
       <hr />
       <div className="profile-update-image-upload">
@@ -341,17 +385,18 @@ const ProfileUpdate = () => {
                   className="icon-container-text flex-center"
                   onClick={() => {
                     setisEnabled((prev) => (prev === false ? true : false));
-                    if (isEnabled === true) {
-                      setProfileData({
-                        firstName: '',
-                        lastName: '',
-                        userName: '',
-                      });
-                    }
+                    setSubmitBtn(true);
+                    // if (isEnabled === true) {
+                    //   setProfileData({
+                    //     firstName: '',
+                    //     lastName: '',
+                    //     userName: '',
+                    //   });
+                    // }
                   }}>
-                  <p>{isEnabled ? 'Edit' : 'Done'}</p>
+                  <p>Edit</p>
                   <FontAwesomeIcon
-                    icon={isEnabled ? faPen : faCheck}
+                    icon={faPen}
                     id="fName"
                     className="icon edit"
                   />
@@ -406,11 +451,26 @@ const ProfileUpdate = () => {
                   </div>
                 </div>
                 <div className="userName">
-                  <div className=" layout">
+                  <div className="layout">
                     <div className="label">
+                      <InfoModal
+                        modalContents={info}
+                        clickHandler={setShowInfo}
+                        stateHandler={showInfo}
+                      />
                       <label htmlFor="lastName">
                         <p>User Name</p>
-                      </label>{' '}
+                      </label>
+                      <div
+                        onClick={() => setShowInfo(!showInfo)}
+                        className="info_icon_container">
+                        <FontAwesomeIcon
+                          className={`info_icon icon ${
+                            showInfo ? 'active' : ''
+                          }`}
+                          icon={faInfoCircle}
+                        />
+                      </div>
                     </div>
                     <div className="loader-wrap">
                       <input
@@ -424,13 +484,9 @@ const ProfileUpdate = () => {
                         required
                       />
                       <div
-                        className={`angleDown ${loading && 'adjust'} ${
-                          isVisible && 'rotate'
-                        }`}
-                        onClick={() =>
-                          isVisible ? setIsVisible(false) : setIsVisible(true)
-                        }>
-                        <FontAwesomeIcon icon={faAngleUp} />
+                        onClick={() => setIsVisible(!isVisible)}
+                        className="bolt">
+                        <FontAwesomeIcon icon={faBoltLightning} />
                       </div>
                       {loading && (
                         <div className="isLoading">
@@ -446,60 +502,66 @@ const ProfileUpdate = () => {
                     </div>
                   </div>
                   <div className="userName-btn layout">
-                    {isVisible ? (
-                      <div>
-                        <input
-                          type="button"
-                          className={`useFirstName-btn ${
-                            loading ? 'blurry' : ''
-                          }`}
-                          name="useFirstName"
-                          onClick={userNameGenerator}
-                          value="Use First Name"
-                        />
-                        <input
-                          type="button"
-                          className={`useLastName-btn ${
-                            loading ? 'blurry' : ''
-                          }`}
-                          name="useLastName"
-                          onClick={userNameGenerator}
-                          value="Use Last Name"
-                        />
-                        <input
-                          type="button"
-                          className={`autoGen-btn ${loading ? 'blurry' : ''}`}
-                          name="autoGen"
-                          onClick={userNameGenerator}
-                          value="Auto Gen"
-                        />
-
-                        <input
-                          type="button"
-                          // onClick={userNameValidator}
-                          value="Check Username"
-                        />
-                      </div>
-                    ) : (
-                      <p>
-                        For more username creation option, click on the angle{' '}
-                      </p>
-                    )}
+                    <AnimatePresence>
+                      {isVisible && (
+                        <div>
+                          <motion.input
+                            variants={sidebarVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            type="button"
+                            className={`useFirstName-btn ${
+                              loading ? 'blurry' : ''
+                            }`}
+                            name="useFirstName"
+                            onClick={userNameGenerator}
+                            value="Use First Name"
+                          />
+                          <motion.input
+                            variants={sidebarVariants2}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            type="button"
+                            className={`useLastName-btn ${
+                              loading ? 'blurry' : ''
+                            }`}
+                            name="useLastName"
+                            onClick={userNameGenerator}
+                            value="Use Last Name"
+                          />
+                          <motion.input
+                            variants={sidebarVariants3}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            type="button"
+                            className={`autoGen-btn ${loading ? 'blurry' : ''}`}
+                            name="autoGen"
+                            onClick={userNameGenerator}
+                            value="Auto Gen"
+                          />
+                        </div>
+                      )}
+                    </AnimatePresence>
                   </div>
-                  <div className="submit">
-                    <button type="submit">Submit Data</button>
-                    {loadingSubmit && (
-                      <div className="isLoadingSubmit">
-                        <Loader
-                          width={'20px'}
-                          height={'20px'}
-                          borderWidth={'3px'}
-                          color_primary={'black'}
-                          color_secondary={'white'}
-                        />
-                      </div>
-                    )}
-                  </div>
+                  {submitBtn && (
+                    <div className="submit">
+                      <button type="submit">Submit Data</button>
+                      {loadingSubmit && (
+                        <div className="isLoadingSubmit">
+                          <Loader
+                            width={'20px'}
+                            height={'20px'}
+                            borderWidth={'3px'}
+                            color_primary={'black'}
+                            color_secondary={'white'}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

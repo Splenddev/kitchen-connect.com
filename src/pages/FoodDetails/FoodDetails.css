@@ -24,7 +24,6 @@
   padding: 20px;
 }
 .food-details-right-nav .nav-box {
-  padding: 10px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -34,8 +33,8 @@
   font-weight: 600;
   border: 1px solid #a3a3a3;
   border-top: none;
+  font-size: 15px;
 }
-
 .nav-box.essential,
 .nav-box.nutrients,
 .nav-box.wellness,

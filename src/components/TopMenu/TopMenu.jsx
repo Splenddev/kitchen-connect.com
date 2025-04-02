@@ -4,7 +4,7 @@ import '../CheckBox/CheckBox.css';
 import { useContext } from 'react';
 import { StoreContext } from '../../context/StoreContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faNairaSign } from '@fortawesome/free-solid-svg-icons';
+import { faLeaf, faNairaSign } from '@fortawesome/free-solid-svg-icons';
 import TypingEffect from '../TypingEffect/TypingEffect';
 import CartCheckbox from '../CartCheckbox/CartCheckbox';
 
@@ -19,19 +19,19 @@ const TopMenu = ({
   foodInfo,
   category,
 }) => {
-  const {
-    viewDetailsHandler,
-    setFoodView,
-    url,
-    // addToCart,
-    // removeFromCart,
-    // setChecked,
-    // setSelectState,
-    // selectState,
-    k_imageHandler,
-    adding,
-  } = useContext(StoreContext);
-
+  const { viewDetailsHandler, setFoodView, url, k_imageHandler, adding } =
+    useContext(StoreContext);
+  const setColor = (category) => {
+    if (category === 'Rolls' && category !== undefined) {
+      return '#05940c';
+    }
+    if (category === 'Sandwich' && category !== undefined) {
+      return '#c9a60d';
+    }
+    if (category === 'Cake' && category !== undefined) {
+      return '#aa0779';
+    }
+  };
   // const checkboxHandler = (e) => {
   //   setChecked(e.target.checked);
   //   if (e.target.checked) {
@@ -77,7 +77,6 @@ const TopMenu = ({
         <div className="food-other-contents">
           <div className="ratings--name">
             <h2>{name}</h2>
-            <CartCheckbox id={id} />
             {/* <div className="checkbox-wrapper top-menu">
               <input
                 id={`_checkbox-26 ${id}`}
@@ -92,42 +91,61 @@ const TopMenu = ({
             </div> */}
           </div>
           <hr className="hr" />
-          <p className="description">{description}</p>
+          <div className="top-menu-categories flex-sb">
+            <div
+              style={{ background: setColor(category) }}
+              className="top-menu-category flex-sb">
+              <FontAwesomeIcon
+                className="icon"
+                icon={faLeaf}
+              />{' '}
+              {category}
+            </div>
+            <button
+              onClick={() => {
+                k_imageHandler(kitchen);
+                setFoodView({
+                  name,
+                  kitchen_name: kitchen.kitchen_name,
+                  description,
+                  id,
+                  price,
+                  kitchenImage,
+                  foodInfo,
+                  category,
+                  ingredients: foodInfo.category.ingredients,
+                  allergens: foodInfo.category.allergens,
+                  benefits: foodInfo.healthImpacts.benefits,
+                  risks: foodInfo.healthImpacts.risks,
+                  extras: foodInfo.extrasAndMods.extras,
+                  mods: foodInfo.extrasAndMods.mods,
+                  calories: foodInfo.nutrients.calories,
+                  others: foodInfo.nutrients.others,
+                  image,
+                });
+                viewDetailsHandler();
+              }}>
+              View Details
+            </button>
+          </div>
+          <hr className="hr" />
+          <p className="description">
+            {description
+              ? description.split(' ').length > 30
+                ? description.split(' ').slice(0, 30).join(' ') + '...'
+                : description
+              : 'No description available'}
+          </p>
         </div>
       </div>
       <div className="top-menu-card-bottom">
         <hr className="hr" />
-        <div className="view-details___price">
-          <button
-            onClick={() => {
-              k_imageHandler(kitchen);
-              setFoodView({
-                name,
-                kitchen_name: kitchen.kitchen_name,
-                description,
-                id,
-                price,
-                kitchenImage,
-                foodInfo,
-                category,
-                ingredients: foodInfo.category.ingredients,
-                allergens: foodInfo.category.allergens,
-                benefits: foodInfo.healthImpacts.benefits,
-                risks: foodInfo.healthImpacts.risks,
-                extras: foodInfo.extrasAndMods.extras,
-                mods: foodInfo.extrasAndMods.mods,
-                calories: foodInfo.nutrients.calories,
-                others: foodInfo.nutrients.others,
-                image,
-              });
-              viewDetailsHandler();
-            }}>
-            View Details
-          </button>
+        <div className="add-to-cart_price">
           <p className="price">
             <FontAwesomeIcon icon={faNairaSign} />
-            {price * 100}.00
+            {price}.00
           </p>
+          <CartCheckbox id={id} />
         </div>
       </div>
     </div>

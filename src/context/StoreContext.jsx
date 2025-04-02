@@ -67,8 +67,8 @@ const StoreContextProvider = (props) => {
   const [orderData, setOrderData] = useState([]);
   const [adding, setAdding] = useState('');
   const [query, setQuery] = useState('');
-  // const url = 'http://localhost:4000';
-  const url = 'https://server-b0f1.onrender.com';
+  const url = 'http://localhost:4000';
+  // const url = 'https://server-b0f1.onrender.com';
   //  let alerted = false;
 
   useEffect(() => {
@@ -271,7 +271,8 @@ const StoreContextProvider = (props) => {
     for (const item in cartItems) {
       if (cartItems[item] > 0) {
         let itemInfo = food_list.find((product) => product._id === item);
-        totalAmount += itemInfo.price * cartItems[item];
+        totalAmount +=
+          itemInfo === undefined ? 0 : itemInfo.price * cartItems[item];
       }
     }
     return totalAmount;

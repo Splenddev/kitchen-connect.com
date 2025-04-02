@@ -59,7 +59,7 @@ const App = () => {
       {location.pathname === home && (
         <ul
           className="navbar-locations"
-          style={{ position: 'sticky', top: 0, right: 0, zIndex: 10 }}>
+          style={{ position: 'sticky', top: 0, right: 0, zIndex: 5 }}>
           <a href="#navbar">
             <li
               className={menu === 'home' ? 'active' : ''}

@@ -128,7 +128,7 @@ const FoodDetails = () => {
                 foodDetailsRightStateHandler === 'extras' ? 'extras' : ''
               }`}
               onClick={() => setFoodDetailsRightStateHandler('extras')}>
-              Extras & Mods
+              Extras
             </div>
           </div>
           <div className="food-details-right-body">

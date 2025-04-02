@@ -120,14 +120,17 @@ button.profile-set {
   flex-direction: column;
   gap: 10px;
 }
-.inputs .layout {
+.angleDown .inputs .layout {
   display: grid;
   grid-template-columns: 1fr;
-  row-gap: 5px;
+  column-gap: 5px;
 }
 .layout .label {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 5px;
+  position: relative;
+  /* overflow-x: hidden; */
 }
 .layout .label label {
   display: flex;
@@ -167,10 +170,11 @@ div.blink input {
   flex-direction: column;
 }
 
-.userName-btn div:last-child {
+.userName-btn div {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 5px;
+  overflow: hidden;
 }
 .userName-btn input,
 .edit-username-btn {
@@ -221,21 +225,35 @@ div.blink input {
   width: 100%;
 }
 .loader-wrap .isLoading,
-.layout .angleDown {
+.layout .bolt {
   position: absolute;
   right: 20px;
   top: 50%;
   transform: translateY(-50%);
 }
-.layout .angleDown {
-  transition: transform 0.3s ease-in-out;
+.layout .bolt {
+  background: #0ab63d;
+  color: #fff;
+  height: 100%;
+  right: 0;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  cursor: pointer;
+}
+.info_icon {
+  margin-right: 10px;
+  color: #727272;
+  transition: 0.3s ease-in-out;
+}
+.info_icon.active {
+  color: #0ab63d;
 }
 .loader-wrap .isLoading {
   right: 45px;
-}
-.layout .angleDown.rotate {
-  /* right: 55px; */
-  transform: rotate(180deg) translateY(50%);
 }
 .userName-btn p {
   position: relative;
