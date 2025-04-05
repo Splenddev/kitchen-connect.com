@@ -323,18 +323,30 @@ const Cart = () => {
             <div>
               <div className="cart-total-details">
                 <p>Food Transaction Total</p>
-                <p>${getTotalCartAmount()}</p>
+                <p>
+                  {' '}
+                  <FontAwesomeIcon icon={faNairaSign} />
+                  {getTotalCartAmount()}
+                </p>
               </div>
               <hr />
               <div className="cart-total-details">
                 <p>Delivery Fee</p>
-                <p>${getTotalCartAmount() === 0 ? 0 : 2}</p>
+                <p>
+                  <FontAwesomeIcon icon={faNairaSign} />
+                  {getTotalCartAmount() === 0
+                    ? 0
+                    : (16 / 100) * getTotalCartAmount()}
+                </p>
               </div>
               <hr />
               <div className="cart-total-details">
                 <b>Total Amount</b>
                 <b>
-                  ${getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 2}
+                  <FontAwesomeIcon icon={faNairaSign} />
+                  {getTotalCartAmount() === 0
+                    ? 0
+                    : getTotalCartAmount() + (16 / 100) * getTotalCartAmount()}
                 </b>
               </div>
             </div>

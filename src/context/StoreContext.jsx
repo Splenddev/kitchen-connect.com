@@ -35,6 +35,7 @@ const StoreContextProvider = (props) => {
   const [kitchen, setKitchen] = useState('all');
   const [token, setToken] = useState('');
   const [rightCard, setRightCard] = useState(false);
+  const [reload, setReload] = useState(false);
   const color = ['#0ab63d', '#4e15d4', '#f0b921', '#db0b0b', '#db0b84'];
   const [ordermenu, setOrderMenu] = useState('all');
   const [food_list, setFood_list] = useState([]);
@@ -69,7 +70,7 @@ const StoreContextProvider = (props) => {
   const [orderData, setOrderData] = useState([]);
   const [adding, setAdding] = useState('');
   const [query, setQuery] = useState('');
-  //const url = 'http://localhost:4000';
+  // const url = 'http://localhost:4000';
   const url = 'https://server-b0f1.onrender.com';
   //  let alerted = false;
 
@@ -503,7 +504,8 @@ const StoreContextProvider = (props) => {
   };
   useEffect(() => {
     fetchOrders();
-  }, [ordermenu, page]);
+    setReload(false);
+  }, [ordermenu, page, reload]);
   useEffect(() => {
     setLoadFoodEaten(true);
     if (orderData) {
@@ -653,6 +655,8 @@ const StoreContextProvider = (props) => {
     setFavorites,
     isAdded,
     setIsAdded,
+    reload,
+    setReload,
   };
   return (
     <StoreContext.Provider value={contextValue}>

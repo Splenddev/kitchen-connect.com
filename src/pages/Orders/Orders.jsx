@@ -10,6 +10,7 @@ import {
   faClock,
   faNairaSign,
   faRefresh,
+  faWarning,
 } from '@fortawesome/free-solid-svg-icons';
 import BackNav from '../../components/BackNav/BackNav.jsx';
 // import { toast } from 'react-toastify';
@@ -31,6 +32,7 @@ const Orders = () => {
     ordermenu,
     setOrderMenu,
     statusCounts,
+    setReload,
   } = useContext(StoreContext);
 
   const [load, setLoad] = useState(false);
@@ -54,13 +56,15 @@ const Orders = () => {
   const requeryHandler = async (orderId, reference) => {
     try {
       setLoad(true);
-      const response = await axios.post(`${url}/api/order/requery?`, {
+      const response = await axios.post(`${url}/api/order/requery`, {
         orderId,
-        reference: reference,
+        reference,
       });
       console.log(response);
-
-      toast.success(response.data.message || response.data.status);
+      if (response.data.success) {
+        toast.success(response.data.message || response.data.status);
+        setReload(true);
+      }
     } catch (error) {
       console.error(error);
       toast.error(error.response.data.message || 'error!');
@@ -134,7 +138,9 @@ const Orders = () => {
                       key={index}
                       className={`orders-data  ${
                         item.payment.status === 'paid' && 'paid'
-                      } ${item.payment.status === 'pending' && 'pend'}`}>
+                      } ${item.payment.status === 'pending' && 'pend'} ${
+                        item.payment.status === 'failed' && 'failed'
+                      }`}>
                       <div className="orders-data-top">
                         <div className="order-data-id">
                           <p>Order ID</p>
@@ -156,42 +162,37 @@ const Orders = () => {
                                 item.payment.status === 'paid' && 'paid'
                               } ${
                                 item.payment.status === 'pending' && 'pend'
+                              } ${
+                                item.payment.status === 'failed' && 'failed'
                               }`}>
                               {item.payment.status === 'paid' && (
-                                <FontAwesomeIcon icon={faCheckCircle} />
+                                <p className="status-icon">
+                                  <FontAwesomeIcon icon={faCheckCircle} />
+                                </p>
                               )}
                               {item.payment.status === 'pending' && (
-                                <FontAwesomeIcon icon={faClock} />
+                                <p className="status-icon">
+                                  <FontAwesomeIcon icon={faClock} />
+                                  <svg
+                                    viewBox="0 0 50 50"
+                                    className="spinner">
+                                    <circle
+                                      cx="25"
+                                      cy="25"
+                                      r="20"
+                                    />
+                                    {/* <svg className="test-in"></svg> */}
+                                  </svg>
+                                </p>
+                              )}
+                              {item.payment.status === 'failed' && (
+                                <p className="status-icon">
+                                  <FontAwesomeIcon icon={faWarning} />
+                                </p>
                               )}
                               <b> {item.payment.status}</b>
                             </div>
                           </div>
-                          {item.payment.status === 'pending' && (
-                            <button
-                              onClick={() =>
-                                requeryHandler(
-                                  item._id,
-                                  item.payment.transactionId
-                                )
-                              }>
-                              Requery{' '}
-                              <FontAwesomeIcon
-                                icon={faRefresh}
-                                className="icon"
-                              />
-                              {load && (
-                                <div className="isLoadingSubmit">
-                                  <Loader
-                                    width={'20px'}
-                                    height={'20px'}
-                                    borderWidth={'3px'}
-                                    color_primary={'black'}
-                                    color_secondary={'white'}
-                                  />
-                                </div>
-                              )}
-                            </button>
-                          )}
                         </div>
                       </div>
                       <div className="orders-data-middle">
@@ -253,6 +254,46 @@ const Orders = () => {
                             <button
                               onClick={() => showPrev(item._id, item.items)}>
                               show Prev
+                            </button>
+                          )}
+                        </div>
+                        <div
+                          className={`order-data-bottom ${
+                            item.payment.status === 'paid' && 'paid'
+                          } ${item.payment.status === 'pending' && 'pend'} ${
+                            item.payment.status === 'failed' && 'failed'
+                          }`}>
+                          {item.payment.status === 'failed' && (
+                            <p>
+                              Payment for this order failed. This could be
+                              because you cancelled or abandoned the payment.
+                            </p>
+                          )}
+
+                          {item.payment.status === 'pending' && (
+                            <button
+                              onClick={() =>
+                                requeryHandler(
+                                  item._id,
+                                  item.payment.transactionId
+                                )
+                              }>
+                              Requery{' '}
+                              <FontAwesomeIcon
+                                icon={faRefresh}
+                                className="icon"
+                              />
+                              {load && (
+                                <div className="isLoadingSubmit">
+                                  <Loader
+                                    width={'20px'}
+                                    height={'20px'}
+                                    borderWidth={'3px'}
+                                    color_primary={'black'}
+                                    color_secondary={'white'}
+                                  />
+                                </div>
+                              )}
                             </button>
                           )}
                         </div>

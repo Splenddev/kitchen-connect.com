@@ -32,7 +32,7 @@ const VerifyPayment = () => {
       );
       if (response.data.status === 'paid') {
         toast.success(response.data.message);
-        navigate('/orders');
+        window.location.href = '/orders';
         console.log('paid');
       } else if (response.data.status === 'failed') {
         toast.error(response.data.message);
