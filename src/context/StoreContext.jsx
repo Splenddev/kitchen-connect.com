@@ -20,6 +20,7 @@ const StoreContextProvider = (props) => {
   const [text, setText] = useState('account');
   const [noFood, setNoFood] = useState(false);
   const [icon, setIcon] = useState(false);
+  const [favorites, setFavorites] = useState([]);
   const [tokenState, setTokenState] = useState(null);
   const [selectState, setSelectState] = useState('Select Me!');
   const [checked, setChecked] = useState(false);
@@ -52,6 +53,7 @@ const StoreContextProvider = (props) => {
   const [totalPage, setTotalPage] = useState(1);
   const [customerName, setCustomerName] = useState({});
   const [loading, setLoading] = useState(true);
+  const [isAdded, setIsAdded] = useState(false);
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
   const [currentState, setCurrentState] = useState('Login');
@@ -67,8 +69,8 @@ const StoreContextProvider = (props) => {
   const [orderData, setOrderData] = useState([]);
   const [adding, setAdding] = useState('');
   const [query, setQuery] = useState('');
-  const url = 'http://localhost:4000';
-  // const url = 'https://server-b0f1.onrender.com';
+  // const url = 'http://localhost:4000';
+  const url = 'https://server-b0f1.onrender.com';
   //  let alerted = false;
 
   useEffect(() => {
@@ -110,9 +112,11 @@ const StoreContextProvider = (props) => {
         );
         if (response.data.success) {
           setAdding('');
+          setIsAdded(true);
         } else {
           setAdding('');
           toast.info('Check your network connection and try again.');
+          return false;
         }
       } catch (error) {
         if (error.response) {
@@ -139,6 +143,73 @@ const StoreContextProvider = (props) => {
       setCartItems((prev) => ({ ...prev, [itemId]: 1 }));
     } else {
       setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] }));
+    }
+  };
+  const addToFavorite = async (foodId) => {
+    if (token) {
+      try {
+        const response = await axios.post(
+          `${url}/api/favorites/add`,
+          { foodId },
+          { headers: { token } }
+        );
+        if (response.data.success) {
+          toast.success(response.data.message);
+        }
+      } catch (error) {
+        if (error.response) {
+          toast.error(error.response.data.message || 'An error occurred!');
+          if (
+            error.response.data.message ===
+            'Session expired. Please login again!'
+          ) {
+            setTokenExpired(true);
+          }
+        } else {
+          toast.error(`Network Issue! Check your network connection.`);
+        }
+        console.error(error);
+      }
+    }
+  };
+  const removeFromFavorite = async (foodId) => {
+    if (token) {
+      try {
+        const response = await axios.post(
+          `${url}/api/favorites/remove/by/foodId`,
+          { foodId },
+          { headers: { token } }
+        );
+        if (response.data.success) {
+          toast.success(response.data.message);
+        }
+      } catch (error) {
+        if (error.response) {
+          toast.error(error.response.data.message || 'An error occurred!');
+          if (
+            error.response.data.message ===
+            'Session expired. Please login again!'
+          ) {
+            setTokenExpired(true);
+          }
+        } else {
+          toast.error(`Network Issue! Check your network connection.`);
+        }
+        console.error(error);
+      }
+    }
+  };
+  const getFavorites = async (token) => {
+    if (token) {
+      const response = await axios.post(
+        url + '/api/favorites/get',
+        {},
+        { headers: { token } }
+      );
+      toast.success(response.data.message);
+      setFavorites(response.data.favorites);
+    } else {
+      setCartItems('');
     }
   };
   function openPopup() {
@@ -359,7 +430,6 @@ const StoreContextProvider = (props) => {
     async function loadData() {
       if (tokenState === null) {
         setTokenExpired(null);
-        console.log(tokenExpired);
         return;
       } else if (tokenState === false) {
         setTokenExpired(true);
@@ -576,6 +646,13 @@ const StoreContextProvider = (props) => {
     setOrderMenu,
     statusCounts,
     setStatusCounts,
+    addToFavorite,
+    removeFromFavorite,
+    getFavorites,
+    favorites,
+    setFavorites,
+    isAdded,
+    setIsAdded,
   };
   return (
     <StoreContext.Provider value={contextValue}>

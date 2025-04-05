@@ -4,8 +4,9 @@
   animation: fadeInDisplay 2s;
   display: grid;
   margin-top: 20px;
-  row-gap: 30px;
+  row-gap: 50px;
   column-gap: 30px;
+  margin-top: 50px;
   grid-template-columns: repeat(auto-fill, minmax(1fr));
 }
 .menu-card {

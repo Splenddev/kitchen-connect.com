@@ -214,7 +214,7 @@ form.cart .title-block > p {
 } */
 .cart-items-left img {
   object-position: center;
-  object-fit: cover;
+  object-fit: contain;
   width: 100%;
   height: 100%;
   border-radius: 6px;

@@ -155,6 +155,7 @@ div .pointer-shape {
   border-radius: 50%;
   height: 35px;
   width: 35px;
+  justify-content: center;
 }
 .navbar-profile img {
   border-radius: 50%;
@@ -163,9 +164,7 @@ div .pointer-shape {
   object-fit: cover;
   padding: 2px;
 }
-.kelly {
-  justify-content: center;
-}
+
 .basket-container {
   display: flex;
   flex-direction: row-reverse;

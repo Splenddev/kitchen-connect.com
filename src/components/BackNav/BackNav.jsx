@@ -4,6 +4,7 @@ import './BackNav.css';
 import { StoreContext } from '../../context/StoreContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faArrowLeftLong,
   faCartShopping,
   faClose,
   faHome,
@@ -25,12 +26,11 @@ const BackNav = ({
 
   return (
     <div className={`back-nav ${location.pathname === '/' ? '' : sup}`}>
-      {goto === 'home' ? (
+      {goto !== 'home' ? (
         <FontAwesomeIcon
-          icon={faClose}
+          icon={faArrowLeftLong}
           className="icon"
           onClick={() => {
-            closePopup;
             navigate(-1);
           }}
         />
@@ -38,7 +38,7 @@ const BackNav = ({
         <FontAwesomeIcon
           onClick={() => {
             closePopup();
-            navigate(-1);
+            navigate('/');
             setData({
               name: '',
               email: '',

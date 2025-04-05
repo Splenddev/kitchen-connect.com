@@ -1,0 +1,92 @@
+.fav-container {
+  margin-top: 60px;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0px 0px 15px 0px #e6e6e6;
+}
+.fav-top {
+  display: grid;
+  grid-template-columns: 50px 1fr 50px;
+  margin-bottom: 30px;
+}
+.fav-top p {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 600;
+}
+.fav-top p .title {
+  text-transform: uppercase;
+  font-size: 18px;
+}
+.fav-top p .length {
+  height: 18px;
+  justify-content: center;
+  color: #fff;
+  border-radius: 50%;
+  width: 18px;
+  font-size: 14px;
+  background: var(--main-color);
+}
+.fav-top .icon {
+  color: var(--main-color);
+}
+.fav-top .icon.o {
+  color: #000;
+  font-size: 7px;
+}
+.fav-lists {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+.fav-list {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 60px 1fr 60px;
+  column-gap: 10px;
+}
+.fav-list .fav-image {
+  overflow: hidden;
+}
+.fav-image img {
+  object-fit: cover;
+  width: 100%;
+  height: 60px;
+  border-radius: 50%;
+}
+.fav-middle {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.fav-right {
+  flex-direction: column;
+  text-align: center;
+  gap: 3px;
+  position: relative;
+}
+.fav-right button {
+  padding: 5px 10px;
+  background: var(--main-color);
+  color: #fff;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  position: relative;
+}
+.fav-right button span {
+  position: absolute;
+  background: #ffffff8c;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+}

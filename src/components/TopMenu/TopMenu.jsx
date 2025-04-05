@@ -1,11 +1,17 @@
 /* eslint-disable react/prop-types */
 import './TopMenu.css';
 import '../CheckBox/CheckBox.css';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { StoreContext } from '../../context/StoreContext';
+// import { toast } from 'react-toastify';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLeaf, faNairaSign } from '@fortawesome/free-solid-svg-icons';
-import TypingEffect from '../TypingEffect/TypingEffect';
+import {
+  faHeart,
+  faLeaf,
+  faNairaSign,
+} from '@fortawesome/free-solid-svg-icons';
+// import TypingEffect from '../TypingEffect/TypingEffect';
 import CartCheckbox from '../CartCheckbox/CartCheckbox';
 
 const TopMenu = ({
@@ -19,10 +25,22 @@ const TopMenu = ({
   foodInfo,
   category,
 }) => {
-  const { viewDetailsHandler, setFoodView, url, k_imageHandler, adding } =
-    useContext(StoreContext);
+  const {
+    viewDetailsHandler,
+    setFoodView,
+    url,
+    k_imageHandler,
+    addToFavorite,
+    removeFromFavorite,
+  } = useContext(StoreContext);
+  // useState
+
+  const [isFavorite, setIsFavorite] = useState(false);
   const setColor = (category) => {
-    if (category === 'Rolls' && category !== undefined) {
+    if (
+      category === 'Rolls' ||
+      (category === 'Snacks, Non-vegetarian' && category !== undefined)
+    ) {
       return '#05940c';
     }
     if (category === 'Sandwich' && category !== undefined) {
@@ -31,7 +49,30 @@ const TopMenu = ({
     if (category === 'Cake' && category !== undefined) {
       return '#aa0779';
     }
+    if (category === 'Deserts' && category !== undefined) {
+      return '#e7803d';
+    }
+    if (category === 'Soup') {
+      return '#a9a9a9';
+    }
   };
+  const favoriteHandler = () => {
+    if (isFavorite) {
+      setIsFavorite(false);
+      removeFromFavorite(id);
+    } else {
+      addToFavorite(id);
+      setIsFavorite(true);
+    }
+  };
+
+  // useEffect(() => {
+  //   console.log(favorites);
+  //   console.log(isFavorite);
+  //   if (!favorites) return;
+
+  //   favIconHandler(id) ? setIsFavorite(true) : setIsFavorite(false);
+  // }, [id]);
   // const checkboxHandler = (e) => {
   //   setChecked(e.target.checked);
   //   if (e.target.checked) {
@@ -67,28 +108,34 @@ const TopMenu = ({
   //   }
   // };
   return (
-    <div className={'top-menu-cards ' + adding}>
-      {adding === `add${id}` && <TypingEffect />}
-
-      <div className="top-menu-card">
-        <div className="image-container">
-          <img src={url + '/images/' + image} />
+    <div className="top-menu-cards ">
+      <div className="image-container">
+        <div className="blured-bg ">
+          <img
+            src={url + '/images/' + image}
+            alt="food image"
+          />
         </div>
+        <img
+          className="main-img"
+          src={url + '/images/' + image}
+          alt="food image"
+        />
+      </div>
+      <div className="top-menu-card">
         <div className="food-other-contents">
           <div className="ratings--name">
             <h2>{name}</h2>
-            {/* <div className="checkbox-wrapper top-menu">
-              <input
-                id={`_checkbox-26 ${id}`}
-                type="checkbox"
-                onChange={checkboxHandler}
+            <div
+              onClick={favoriteHandler}
+              className={`top-menu-favorite flex-center ${
+                isFavorite ? 'is-fav' : ''
+              }`}>
+              <FontAwesomeIcon
+                className="icon"
+                icon={faHeart}
               />
-              <label
-                className="checkbox"
-                htmlFor={`_checkbox-26 ${id}`}>
-                <div className="tick_mark"></div>
-              </label>
-            </div> */}
+            </div>
           </div>
           <hr className="hr" />
           <div className="top-menu-categories flex-sb">
@@ -99,7 +146,7 @@ const TopMenu = ({
                 className="icon"
                 icon={faLeaf}
               />{' '}
-              {category}
+              {category ? category : 'None'}
             </div>
             <button
               onClick={() => {
@@ -110,6 +157,7 @@ const TopMenu = ({
                   description,
                   id,
                   price,
+                  image,
                   kitchenImage,
                   foodInfo,
                   category,
@@ -117,11 +165,9 @@ const TopMenu = ({
                   allergens: foodInfo.category.allergens,
                   benefits: foodInfo.healthImpacts.benefits,
                   risks: foodInfo.healthImpacts.risks,
-                  extras: foodInfo.extrasAndMods.extras,
-                  mods: foodInfo.extrasAndMods.mods,
+                  extras: foodInfo.extras,
                   calories: foodInfo.nutrients.calories,
                   others: foodInfo.nutrients.others,
-                  image,
                 });
                 viewDetailsHandler();
               }}>
@@ -129,12 +175,23 @@ const TopMenu = ({
             </button>
           </div>
           <hr className="hr" />
-          <p className="description">
-            {description
-              ? description.split(' ').length > 30
-                ? description.split(' ').slice(0, 30).join(' ') + '...'
-                : description
-              : 'No description available'}
+          <p
+            className={`description ${
+              description.split(' ').length > 25 ? 'blur' : ''
+            }`}>
+            {description ? (
+              description.split(' ').length > 25 ? (
+                <div className="info-text-wrap">
+                  {description.split(' ').slice(0, 25).join(' ')}
+                  ...{' '}
+                  <span className="info-text">more in food detail page</span>
+                </div>
+              ) : (
+                description
+              )
+            ) : (
+              'No description available'
+            )}
           </p>
         </div>
       </div>
@@ -143,7 +200,7 @@ const TopMenu = ({
         <div className="add-to-cart_price">
           <p className="price">
             <FontAwesomeIcon icon={faNairaSign} />
-            {price}.00
+            {price}
           </p>
           <CartCheckbox id={id} />
         </div>

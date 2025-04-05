@@ -83,11 +83,11 @@ const NavBar = () => {
               onClick={() => {
                 setIsOpenProfile(true);
               }}
-              className="navbar-profile">
+              className="navbar-profile flex-center">
               {userInfo.profileImage ? (
                 <img src={`${url}/images/${userInfo.profileImage}`} />
               ) : (
-                <div className="kelly flex-center">
+                <div className="kelly ">
                   <FontAwesomeIcon icon={faUser} />
                 </div>
               )}

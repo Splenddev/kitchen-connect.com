@@ -140,7 +140,6 @@ const FoodDetails = () => {
                 name={foodView.name}
                 category={foodView.category}
                 price={foodView.price}
-                foodInfo={foodView ? foodView.foodInfo : ''}
                 ingredients={foodView ? foodView.ingredients : ''}
                 allergens={foodView ? foodView.allergens : ''}
                 foodDetailInformation={foodDetailInformation}
@@ -153,10 +152,7 @@ const FoodDetails = () => {
               />
             )}
             {foodDetailsRightStateHandler === 'extras' && (
-              <Extras
-                extras={foodView.extras}
-                mods={foodView.mods}
-              />
+              <Extras extras={foodView ? foodView.extras : []} />
             )}
           </div>
           <div className="increase-quantity">

@@ -17,6 +17,7 @@ import {
   faBagShopping,
   faWallet,
   faSignIn,
+  faHeart,
 } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../Loader/Loader';
@@ -120,6 +121,21 @@ const UserProfile = () => {
                 <div className="flex-sb">
                   <p>Orders</p>
                   <p>{allOrders}</p>
+                </div>
+              </div>
+              <div
+                onClick={() => {
+                  navigate('/favorites');
+                  setIsOpenProfile(false);
+                }}
+                className="user-profile-list-elements layout">
+                <FontAwesomeIcon
+                  className="icon"
+                  icon={faHeart}
+                />
+                <div className="flex-sb">
+                  <p>Favorites</p>
+                  <p>0</p>
                 </div>
               </div>
               <div className="user-profile-list-elements layout">

@@ -15,6 +15,7 @@ import Settings from './pages/Settings/Settings.jsx';
 import VerifyPayment from './pages/VerifyPayment/VerifyPayment.jsx';
 import Login from './components/Login/Login.jsx';
 import AnimationTest from './pages/AnimationTest/AnimationTest.jsx';
+import Favorites from './pages/Favorites/Favorites.jsx';
 
 const router = createBrowserRouter([
   {
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
       {
         path: '/cartanim',
         element: <AnimationTest />,
+      },
+      {
+        path: '/favorites',
+        element: <Favorites />,
       },
     ],
   },
