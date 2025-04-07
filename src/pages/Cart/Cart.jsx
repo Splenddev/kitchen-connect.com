@@ -15,6 +15,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const Cart = () => {
+  const [paymentMethod, setPaymentMethod] = useState('Paystack');
   const {
     cartItems,
     food_list,
@@ -62,14 +63,6 @@ const Cart = () => {
         orderItems.push(itemInfo);
       }
     });
-
-    // food_list.map((item) => {
-    //   if (cartItems[item._id] > 0) {
-    //     let itemInfo = item;
-    //     itemInfo['quantity'] = cartItems[item._id];
-    //     orderItems.push(itemInfo);
-    //   }
-    // });
     let orderData = {
       address: data,
       items: orderItems,
@@ -77,17 +70,15 @@ const Cart = () => {
       email: data.email,
     };
     try {
-      let response = await axios.post(
-        url + '/api/order/create/paystack',
-        orderData,
-        {
-          headers: {
-            token,
-            // 'Content-Type': 'application/json',
-            // Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const req_url =
+        paymentMethod === 'Paystack'
+          ? `${url}/api/order/create/paystack`
+          : `${url}/api/order/create/monnify`;
+      let response = await axios.post(req_url, orderData, {
+        headers: {
+          token,
+        },
+      });
       if (response.data.success) {
         toast.success('Order placed successfully! Redirecting...');
         window.location.href = response.data.paymentUrl;
@@ -315,6 +306,27 @@ const Cart = () => {
               onChange={onChangeHandler}
               required
               value={data.street}></textarea>
+          </div>
+        </div>
+        <div>
+          <p>Choose a payment method to proceed</p>
+          <div>
+            <input
+              type="radio"
+              checked={paymentMethod === 'Paystack'}
+              value="Paystack"
+              onChange={(e) => setPaymentMethod(e.target.value)}
+            />
+            Paystack
+          </div>
+          <div>
+            <input
+              type="radio"
+              checked={paymentMethod === 'Monnify'}
+              value="Monnify"
+              onChange={(e) => setPaymentMethod(e.target.value)}
+            />
+            Monnify
           </div>
         </div>
         <div className="cart-bottom">

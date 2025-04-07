@@ -13,23 +13,31 @@ const VerifyPayment = () => {
   const navigate = useNavigate();
   // const transactionId = urlParams.get('trxref');
   const orderId = urlParams.get('orderId');
-  const reference = urlParams.get('reference');
+  let reference = urlParams.get('reference');
+  const paymentReference = urlParams.get('paymentReference');
   const verifyPayment = async () => {
     console.log(orderId);
     // console.log(transactionId);
     console.log(reference);
-
-    if (!orderId || !reference) {
-      console.log(orderId, reference);
+    if (!paymentReference) {
+      if (!orderId || !reference) {
+        console.log(orderId, reference);
+        toast.error(`Missing details! Check your network connection.`);
+        return;
+      }
+    }
+    if (!orderId || !paymentReference) {
+      console.log(orderId, paymentReference);
       toast.error(`Missing details! Check your network connection.`);
       return;
     }
-
+    let req_url = `${url}/api/order/verify-payments/paystack`;
+    if (paymentReference) {
+      req_url = `${url}/api/order/verify-payments/monnify`;
+      reference = paymentReference;
+    }
     try {
-      const response = await axios.post(
-        `${url}/api/order/verify-payments/paystack`,
-        { orderId, reference }
-      );
+      const response = await axios.post(req_url, { orderId, reference });
       if (response.data.status === 'paid') {
         toast.success(response.data.message);
         window.location.href = '/orders';

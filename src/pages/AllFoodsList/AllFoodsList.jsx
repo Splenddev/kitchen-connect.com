@@ -14,6 +14,10 @@ const AllFoodsList = () => {
         other={'cart'}
       />
       <div className="all_food_list">
+      <div className="all_food_list_header">  <div className="all_food_list_header">     </div>
+      <div className="all_food_list_header">     </div>   </div>
+      
+
         {loader ? (
           <div className="skeletons">
             {[...Array(8)].map((_, index) => (

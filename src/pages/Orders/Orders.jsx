@@ -53,10 +53,14 @@ const Orders = () => {
   // const fail = orderData.filter((paid) => {
   //   return paid.payment.status === 'failed';
   // });
-  const requeryHandler = async (orderId, reference) => {
+  const requeryHandler = async (orderId, reference, method) => {
+    let req_url = `${url}/api/order/requery/paystack`;
+    if (method === 'Monnify') {
+      req_url = `${url}/api/order/requery/monnify`;
+    }
     try {
       setLoad(true);
-      const response = await axios.post(`${url}/api/order/requery`, {
+      const response = await axios.post(req_url, {
         orderId,
         reference,
       });
@@ -197,7 +201,7 @@ const Orders = () => {
                       </div>
                       <div className="orders-data-middle">
                         <FontAwesomeIcon icon={faBoxesPacking} />{' '}
-                        <button>Track Orders</button>
+                        <button>Track Orders</button>:{item.status}
                       </div>
                       <div className="order-data-food-items">
                         {item.items
@@ -275,7 +279,8 @@ const Orders = () => {
                               onClick={() =>
                                 requeryHandler(
                                   item._id,
-                                  item.payment.transactionId
+                                  item.payment.transactionId,
+                                  item.payment.paymentMethod
                                 )
                               }>
                               Requery{' '}
