@@ -66,7 +66,9 @@ const Cart = () => {
     let orderData = {
       address: data,
       items: orderItems,
-      amount: parseInt(getTotalCartAmount() + 2),
+      amount: parseInt(
+        getTotalCartAmount() + (16 / 100) * getTotalCartAmount()
+      ),
       email: data.email,
     };
     try {

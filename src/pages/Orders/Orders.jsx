@@ -37,22 +37,6 @@ const Orders = () => {
 
   const [load, setLoad] = useState(false);
 
-  // const handlePage = (newPage) => {
-  //   if (newPage >= 1 && newPage <= totalPage) {
-  //     setPage(newPage);
-  //   }
-  // };
-
-  // const all = orderData;
-  // const paid = orderData.filter((paid) => {
-  //   return paid.payment.status === 'paid';
-  // });
-  // const pend = orderData.filter((paid) => {
-  //   return paid.payment.status === 'pending';
-  // });
-  // const fail = orderData.filter((paid) => {
-  //   return paid.payment.status === 'failed';
-  // });
   const requeryHandler = async (orderId, reference, method) => {
     let req_url = `${url}/api/order/requery/paystack`;
     if (method === 'Monnify') {

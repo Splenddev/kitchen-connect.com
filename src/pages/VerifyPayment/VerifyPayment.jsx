@@ -25,11 +25,12 @@ const VerifyPayment = () => {
         toast.error(`Missing details! Check your network connection.`);
         return;
       }
-    }
-    if (!orderId || !paymentReference) {
-      console.log(orderId, paymentReference);
-      toast.error(`Missing details! Check your network connection.`);
-      return;
+    } else {
+      if (!orderId || !paymentReference) {
+        console.log(orderId, paymentReference);
+        toast.error(`Missing details! Check your network connection.`);
+        return;
+      }
     }
     let req_url = `${url}/api/order/verify-payments/paystack`;
     if (paymentReference) {
@@ -39,11 +40,13 @@ const VerifyPayment = () => {
     try {
       const response = await axios.post(req_url, { orderId, reference });
       if (response.data.status === 'paid') {
-        toast.success(response.data.message);
+        toast.success(
+          response.data.message || 'Payment successfully verified.'
+        );
         window.location.href = '/orders';
         console.log('paid');
       } else if (response.data.status === 'failed') {
-        toast.error(response.data.message);
+        toast.error(response.data.message || 'Payment not completed.');
         // alert('Payment cancelled! ');
         navigate('/cart');
         console.log('failed');
