@@ -169,7 +169,6 @@ const Orders = () => {
                                       cy="25"
                                       r="20"
                                     />
-                                    {/* <svg className="test-in"></svg> */}
                                   </svg>
                                 </p>
                               )}

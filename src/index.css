@@ -29,7 +29,7 @@ a {
   --primary: #000000;
   --paid: #2cb60a;
   --pend: #5372f0;
-  --failed: #ff0000;
+  --failed: #ee0f0f;
 }
 .icon {
   cursor: pointer;

@@ -1,6 +1,10 @@
 .all_food_list {
   margin-top: 70px;
 }
+.highlight {
+  color: var(--main-color);
+  font-weight: bold;
+}
 .all_food_list_header {
   display: flex;
   align-items: center;
@@ -105,7 +109,7 @@
   color: var(--main-color);
 }
 .all_food_list_filter_search_filter-list {
-  background: #d89595;
+  /* background: #d89595; */
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -115,7 +119,7 @@
 .all_food_list_filter_search {
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 150px;
+  grid-template-columns: 1fr 130px;
   gap: 12px;
   margin: 0;
 }
@@ -126,6 +130,7 @@
   padding-right: 10px;
   border-radius: 6px;
   overflow: hidden;
+  box-shadow: 0px 0px 2px #9c9c9c;
 }
 .all_food_list_search input {
   width: 100%;
@@ -155,7 +160,6 @@
   background: #f5f5f5;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 10px;
   padding: 5px 10px;
   border: 2px solid #000;
@@ -184,7 +188,7 @@ input[type='range'] {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 0.8fr));
   justify-content: center;
-  font-size: max(1.1vw, 13px);
+  font-size: max(1vw, 14px);
   align-items: center;
   gap: 10px;
 }
@@ -193,9 +197,14 @@ input[type='range'] {
   border-radius: 6px;
   display: flex;
   gap: 10px;
-  padding: 5px;
+  padding: 8px;
   cursor: pointer;
   background: #f5f5f5;
+  position: relative;
+}
+.filter_list-title .icon {
+  position: absolute;
+  right: 10px;
 }
 .filter_list-title .icon-change,
 .filter_list-title .icon-change ~ p {
@@ -245,12 +254,11 @@ input[type='range'] {
   background: transparent;
   color: var(--main-color);
 }
-.range-price .range-btn button:last-child {
-}
 .all_food_list_filter-option span,
 .filter_list-option span {
   cursor: pointer;
   padding: 6px;
+  font-size: 14px;
   text-transform: capitalize;
 }
 .all_food_list_filter-option span:hover,
@@ -258,7 +266,35 @@ input[type='range'] {
   background: #a5a5a5;
   color: #fff;
 }
-
+.filter-search-btn-wrap {
+  place-self: end;
+  display: flex;
+  gap: 10px;
+}
+.filter-search-btn {
+  padding: 6px;
+  font-size: 14px;
+  background: var(--main-color);
+  color: #fff;
+  min-width: 140px;
+  border: none;
+  cursor: pointer;
+  border-radius: 20px;
+}
+.spinner-btn {
+  height: 22px;
+  width: 22px;
+}
+.spinner-btn circle {
+  fill: none;
+  stroke: var(--main-color);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 80;
+  stroke-dashoffset: 60;
+  animation: spin 1.5s linear infinite, dash 1.5s linear infinite;
+  transform-origin: 50% 50%;
+}
 .all-food-wrapper {
   margin-top: 60px;
   display: grid;

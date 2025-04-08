@@ -70,6 +70,7 @@ const StoreContextProvider = (props) => {
   const [orderData, setOrderData] = useState([]);
   const [adding, setAdding] = useState('');
   const [query, setQuery] = useState('');
+  const [foods, setFoods] = useState(food_list);
   // const url = 'http://localhost:4000';
   const url = 'https://server-b0f1.onrender.com';
   //  let alerted = false;
@@ -369,6 +370,7 @@ const StoreContextProvider = (props) => {
       const response = await axios.get(url + '/api/food/list');
       if (response.data.success) {
         setFood_list(response.data.data);
+        setFoods(response.data.data);
         toast.success(response.data.message);
         setLoading(false);
       } else {
@@ -657,6 +659,8 @@ const StoreContextProvider = (props) => {
     setIsAdded,
     reload,
     setReload,
+    foods,
+    setFoods,
   };
   return (
     <StoreContext.Provider value={contextValue}>

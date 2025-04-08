@@ -24,6 +24,7 @@ const TopMenu = ({
   kitchenImage,
   foodInfo,
   category,
+  textHighlight,
 }) => {
   const {
     viewDetailsHandler,
@@ -65,48 +66,6 @@ const TopMenu = ({
       setIsFavorite(true);
     }
   };
-
-  // useEffect(() => {
-  //   console.log(favorites);
-  //   console.log(isFavorite);
-  //   if (!favorites) return;
-
-  //   favIconHandler(id) ? setIsFavorite(true) : setIsFavorite(false);
-  // }, [id]);
-  // const checkboxHandler = (e) => {
-  //   setChecked(e.target.checked);
-  //   if (e.target.checked) {
-  //     setSelectState(`Selected${id}`);
-  //     console.log(selectState);
-  //     k_imageHandler(kitchen);
-  //     setChecked(e.target.checked);
-  //     addToCart(id);
-  //     setFoodView({
-  //       name,
-  //       kitchen_name: kitchen.kitchen_name,
-  //       description,
-  //       id,
-  //       price,
-  //       kitchenImage,
-  //       category,
-  //       image,
-  //       foodInfo,
-  //       ingredients: foodInfo.category.ingredients,
-  //       allergens: foodInfo.category.allergens,
-  //       benefits: foodInfo.healthImpacts.benefits,
-  //       risks: foodInfo.healthImpacts.risks,
-  //       extras: foodInfo.extrasAndMods.extras,
-  //       mods: foodInfo.extrasAndMods.mods,
-  //       calories: foodInfo.nutrients.calories,
-  //       others: foodInfo.nutrients.others,
-  //     });
-  //   } else if (!e.target.checked) {
-  //     setChecked(false);
-  //     removeFromCart(id);
-  //     setFoodView({});
-  //     setSelectState(`Select Me!${id}`);
-  //   }
-  // };
   return (
     <div className="top-menu-cards ">
       <div className="image-container">
@@ -125,7 +84,9 @@ const TopMenu = ({
       <div className="top-menu-card">
         <div className="food-other-contents">
           <div className="ratings--name">
-            <h2>{name}</h2>
+            <p>
+              <h2 dangerouslySetInnerHTML={{ __html: textHighlight(name) }} />
+            </p>
             <div
               onClick={favoriteHandler}
               className={`top-menu-favorite flex-center ${

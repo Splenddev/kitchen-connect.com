@@ -1,23 +1,36 @@
 import './AllFoodsList.css';
 import BackNav from '../../components/BackNav/BackNav';
 import TopMenu from '../../components/TopMenu/TopMenu';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { StoreContext } from '../../context/StoreContext';
 import Skeleton from 'react-loading-skeleton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBagShopping,
   faCartShopping,
+  faClose,
   faFilter,
   faNairaSign,
   faSearch,
   faSort,
 } from '@fortawesome/free-solid-svg-icons';
 import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const AllFoodsList = () => {
-  const { food_list, loader, bissyJoy, tastyMunch, arena, krafty, iyaAfusat } =
-    useContext(StoreContext);
+  const {
+    loading,
+    bissyJoy,
+    tastyMunch,
+    arena,
+    krafty,
+    iyaAfusat,
+    url,
+    setLoading,
+    foods,
+    setFoods,
+  } = useContext(StoreContext);
   const kitchens = [
     { image: iyaAfusat },
     { image: arena },
@@ -27,29 +40,120 @@ const AllFoodsList = () => {
   ];
   // useState
   const [dropdown, setDropdown] = useState(false);
+  const [text, setText] = useState(false);
   const [dropdownList, setDropdownList] = useState(false);
   const [activeId, setActiveId] = useState('');
+  const [kitchen, setKitchen] = useState('');
+  const [category, setCategory] = useState('');
+  const [price, setPrice] = useState('');
+  const [reput, setReput] = useState('');
+  const [search, setSearch] = useState('');
+  const [location, setLocation] = useState('');
   const [maxprice, setMaxprice] = useState(5000);
-  const [filterList, setFilterList] = useState([
-    {
-      id: uuidv4(),
-      title: 'kitchen',
-      filters: ['arena', 'krafty', 'tasty munch'],
-      type: 'select',
-    },
-    {
-      id: uuidv4(),
-      title: 'category',
-      filters: ['Soup', 'Rolls', 'Snacks, Non-vegetarian'],
-      type: 'select',
-    },
-    {
-      id: uuidv4(),
-      title: 'price',
-      filters: [],
-      type: 'range',
-    },
-  ]);
+  const [filterList, setFilterList] = useState([]);
+  const addFilter = (title, type) => {
+    const update = filterList.filter((pre) => pre.title === title);
+    let filters;
+    if (title === 'kitchen') {
+      filters = ['Arena', 'Krafty', 'Tasty munch'];
+      setKitchen(filters[0]);
+    }
+    if (title === 'category') {
+      filters = ['Soup', 'Rolls', 'Snacks, Non-vegetarian'];
+      setCategory(filters[0]);
+    }
+    if (title === 'reput') {
+      filters = ['Top food', 'Newest', 'Recommends'];
+      setReput(filters[0]);
+    }
+    if (title === 'location') {
+      filters = ['Tarmac', 'School road'];
+      setLocation(filters[0]);
+    }
+    if (title === 'price') filters = [];
+    if (!update || update.length === 0) {
+      setFilterList((prev) => [
+        ...prev,
+        {
+          id: uuidv4(),
+          title,
+          filters,
+          type,
+        },
+      ]);
+    }
+    setDropdown(false);
+  };
+  const filterSetHandler = (filter, title) => {
+    console.log(filter);
+    console.log(title);
+    if (title === 'kitchen') {
+      setKitchen(filter);
+    }
+    if (title === 'category') {
+      setCategory(filter);
+    }
+    if (title === 'price') {
+      setPrice(filter);
+    }
+    if (title === 'reput') {
+      setReput(filter);
+    }
+    if (title === 'location') {
+      setLocation(filter);
+    }
+  };
+  const closeFilterHandler = (title, id) => {
+    console.log(title);
+    setFilterList((prev) => prev.filter((del) => del.id !== id));
+    if (title === 'kitchen') {
+      setKitchen('');
+    }
+    if (title === 'category') {
+      setCategory('');
+    }
+    if (title === 'price') {
+      setPrice('');
+    }
+    if (title === 'reput') {
+      setReput('');
+    }
+    if (title === 'location') {
+      setLocation('');
+    }
+  };
+  const filterData = { kitchen, category, price, reput, location };
+  const filterHandler = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(`${url}/api/food/filter`, {
+        filterData,
+        search,
+      });
+      if (response.data.success) {
+        setFoods(response.data.data);
+        toast.success(response.data.message);
+        setText(true);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    if (!search && search === '') return;
+    filterHandler();
+  }, [search]);
+  const highlightText = (text) => {
+    if (!search) return text;
+    const regex = new RegExp(`(${search})`, 'gi');
+    return text.replace(
+      regex,
+      (match) => `<span class='highlight'>${match}</span>`
+    );
+  };
   return (
     <>
       <BackNav
@@ -109,6 +213,7 @@ const AllFoodsList = () => {
               <input
                 type="text"
                 placeholder="Search a food by name here"
+                onChange={(e) => setSearch(e.target.value)}
               />
               <div className="icon">
                 <FontAwesomeIcon icon={faSearch} />
@@ -122,17 +227,25 @@ const AllFoodsList = () => {
                   icon={faFilter}
                   className="icon"
                 />
-                <p>Attribute Filter</p>
+                <p>Filter Option</p>
               </div>
               <div
                 className={
                   dropdown === false ? 'hide' : 'all_food_list_filter-option'
                 }>
-                <span>Kitchen</span>
-                <span>Category</span>
-                <span>Price</span>
-                <span>Reputation</span>
-                <span>Kitchen Location</span>
+                <span onClick={() => addFilter('kitchen', 'select')}>
+                  Kitchen
+                </span>
+                <span onClick={() => addFilter('category', 'select')}>
+                  Category
+                </span>
+                <span onClick={() => addFilter('price', 'range')}>Price</span>
+                <span onClick={() => addFilter('reput', 'select')}>
+                  Customer Choice
+                </span>
+                <span onClick={() => addFilter('location', 'select')}>
+                  Location
+                </span>
               </div>
             </div>
           </div>
@@ -156,6 +269,11 @@ const AllFoodsList = () => {
                     icon={faSort}
                   />
                   <p>{filter.title}</p>
+                  <FontAwesomeIcon
+                    className="icon"
+                    icon={faClose}
+                    onClick={() => closeFilterHandler(filter.title, filter.id)}
+                  />
                 </div>
                 <div
                   className={
@@ -165,7 +283,14 @@ const AllFoodsList = () => {
                   }>
                   {filter.type === 'select' ? (
                     filter.filters.map((list, ind) => (
-                      <span key={ind}>{list}</span>
+                      <span
+                        onClick={(e) => {
+                          filterSetHandler(e.target.innerHTML, filter.title);
+                          setDropdownList(false);
+                        }}
+                        key={ind}>
+                        {list}
+                      </span>
                     ))
                   ) : (
                     <div className="range-price">
@@ -181,7 +306,10 @@ const AllFoodsList = () => {
                           max={5000}
                           step={500}
                           value={maxprice}
-                          onChange={(e) => setMaxprice(e.target.value)}
+                          onChange={(e) => {
+                            setMaxprice(e.target.value);
+                            filterSetHandler(e.target.value, filter.title);
+                          }}
                         />
                       </div>
                       <div className="range-btn">
@@ -200,8 +328,29 @@ const AllFoodsList = () => {
               </div>
             ))}
           </div>
+          <div className="filter-search-btn-wrap">
+            <button
+              className="filter-search-btn"
+              onClick={filterHandler}>
+              Filter / Search
+            </button>
+            {loading && (
+              <svg
+                viewBox="0 0 50 50"
+                className="spinner-btn">
+                <circle
+                  cx="25"
+                  cy="25"
+                  r="20"
+                />
+              </svg>
+            )}
+          </div>
+          {text && search && (
+            <p className="highlight">Showing results for {search}</p>
+          )}
         </div>
-        {loader ? (
+        {loading ? (
           <div className="skeletons">
             {[...Array(8)].map((_, index) => (
               <div
@@ -228,14 +377,15 @@ const AllFoodsList = () => {
           </div>
         ) : (
           <div className="all-food-wrapper ">
-            {food_list !== undefined &&
-              food_list.map((allFoods, index) => {
+            {foods !== undefined &&
+              foods.map((allFoods, index) => {
                 return (
                   <TopMenu
                     key={index}
                     id={allFoods._id}
                     image={allFoods.image}
                     name={allFoods.name}
+                    textHighlight={highlightText}
                     price={allFoods.price}
                     category={allFoods.category}
                     kitchen={allFoods.kitchen.kitchen_name}

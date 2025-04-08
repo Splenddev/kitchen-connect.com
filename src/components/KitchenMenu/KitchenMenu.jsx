@@ -32,7 +32,14 @@ const KitchenMenu = () => {
   function searchHandler(e) {
     setQuery(e.target.value);
   }
-
+  const highlightText = (text) => {
+    if (!query) return text;
+    const regex = new RegExp(`(${query})`, 'gi');
+    return text.replace(
+      regex,
+      (match) => `<span class='highlight'>${match}</span>`
+    );
+  };
   return (
     <div className="explore-kitchen">
       <Title
@@ -93,6 +100,7 @@ const KitchenMenu = () => {
                   kitchenImage={item.k_image}
                   description={item.description}
                   foodInfo={item.foodInformation}
+                  textHighlight={highlightText}
                 />
               );
             })}
