@@ -561,8 +561,8 @@ const Verify = () => {
                 <p>Display Anonymously</p>
               </div>
               <div className="btn-options">
-                <button onClick={() => (window.location.href = '/order')}>
-                  Maybe Later
+                <button onClick={() => (window.location.href = '/orders')}>
+                  Orders
                 </button>
                 <button onClick={webReview}>
                   {btnloading ? 'Submitting...' : 'Submit'}
