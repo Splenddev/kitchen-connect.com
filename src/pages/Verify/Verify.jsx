@@ -118,7 +118,7 @@ const Verify = () => {
         );
       }
       // navigate('/');
-    }
+    }finally{setLoading(false)}
   };
   useEffect(() => {
     verifyPayment();
