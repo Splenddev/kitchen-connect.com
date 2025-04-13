@@ -8,11 +8,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBagShopping,
   faCartShopping,
+  faCircle,
   faClose,
   faFilter,
   faNairaSign,
   faSearch,
-  faSort,
 } from '@fortawesome/free-solid-svg-icons';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
@@ -30,6 +30,7 @@ const AllFoodsList = () => {
     setLoading,
     foods,
     setFoods,
+    food_list,
   } = useContext(StoreContext);
   const kitchens = [
     { image: iyaAfusat },
@@ -43,28 +44,32 @@ const AllFoodsList = () => {
   const [text, setText] = useState(false);
   const [dropdownList, setDropdownList] = useState(false);
   const [activeId, setActiveId] = useState('');
-  const [kitchen, setKitchen] = useState('');
-  const [category, setCategory] = useState('');
-  const [price, setPrice] = useState('');
-  const [reput, setReput] = useState('');
   const [search, setSearch] = useState('');
   const [location, setLocation] = useState('');
-  const [maxprice, setMaxprice] = useState(5000);
+  const [maxprice, setMaxprice] = useState(0);
+  const [price, setPrice] = useState('');
   const [filterList, setFilterList] = useState([]);
+  const [filterData, setFilterData] = useState({
+    kitchen: '',
+    category: '',
+    price,
+    reput: '',
+    location,
+  });
   const addFilter = (title, type) => {
     const update = filterList.filter((pre) => pre.title === title);
     let filters;
     if (title === 'kitchen') {
-      filters = ['Arena', 'Krafty', 'Tasty munch'];
-      setKitchen(filters[0]);
+      filters = ['Arena', 'Krafty', 'Tasty Munch', 'Iya Afusat', 'Bissy Joy'];
+      setFilterData((prev) => ({ ...prev, kitchen: filters[0] }));
     }
     if (title === 'category') {
       filters = ['Soup', 'Rolls', 'Snacks, Non-vegetarian'];
-      setCategory(filters[0]);
+      setFilterData((prev) => ({ ...prev, category: filters[0] }));
     }
     if (title === 'reput') {
       filters = ['Top food', 'Newest', 'Recommends'];
-      setReput(filters[0]);
+      setFilterData((prev) => ({ ...prev, reput: filters[0] }));
     }
     if (title === 'location') {
       filters = ['Tarmac', 'School road'];
@@ -88,16 +93,16 @@ const AllFoodsList = () => {
     console.log(filter);
     console.log(title);
     if (title === 'kitchen') {
-      setKitchen(filter);
+      setFilterData((prev) => ({ ...prev, kitchen: filter }));
     }
     if (title === 'category') {
-      setCategory(filter);
+      setFilterData((prev) => ({ ...prev, category: filter }));
     }
     if (title === 'price') {
       setPrice(filter);
     }
     if (title === 'reput') {
-      setReput(filter);
+      setFilterData((prev) => ({ ...prev, reput: filter }));
     }
     if (title === 'location') {
       setLocation(filter);
@@ -107,22 +112,22 @@ const AllFoodsList = () => {
     console.log(title);
     setFilterList((prev) => prev.filter((del) => del.id !== id));
     if (title === 'kitchen') {
-      setKitchen('');
+      setFilterData((prev) => ({ ...prev, kitchen: '' }));
     }
+    console.log(filterData.kitchen);
     if (title === 'category') {
-      setCategory('');
+      setFilterData((prev) => ({ ...prev, category: '' }));
     }
     if (title === 'price') {
-      setPrice('');
+      setFilterData((prev) => ({ ...prev, price: '' }));
     }
     if (title === 'reput') {
-      setReput('');
+      setFilterData((prev) => ({ ...prev, reput: '' }));
     }
     if (title === 'location') {
-      setLocation('');
+      setFilterData((prev) => ({ ...prev, location: '' }));
     }
   };
-  const filterData = { kitchen, category, price, reput, location };
   const filterHandler = async () => {
     setLoading(true);
     try {
@@ -134,6 +139,9 @@ const AllFoodsList = () => {
         setFoods(response.data.data);
         toast.success(response.data.message);
         setText(true);
+      } else if (!response.data.success) {
+        setFoods(food_list);
+        toast.error(response.data.message);
       }
     } catch (error) {
       console.log(error);
@@ -143,9 +151,9 @@ const AllFoodsList = () => {
     }
   };
   useEffect(() => {
-    if (!search && search === '') return;
+    if (!search && search === '' && !filterData) return;
     filterHandler();
-  }, [search]);
+  }, [search, filterData]);
   const highlightText = (text) => {
     if (!search) return text;
     const regex = new RegExp(`(${search})`, 'gi');
@@ -260,15 +268,8 @@ const AllFoodsList = () => {
                     setActiveId(filter.id);
                   }}
                   className="filter_list-title">
-                  <FontAwesomeIcon
-                    className={
-                      dropdownList + activeId === `true${filter.id}`
-                        ? 'icon-change'
-                        : ''
-                    }
-                    icon={faSort}
-                  />
                   <p>{filter.title}</p>
+
                   <FontAwesomeIcon
                     className="icon"
                     icon={faClose}
@@ -287,6 +288,7 @@ const AllFoodsList = () => {
                         onClick={(e) => {
                           filterSetHandler(e.target.innerHTML, filter.title);
                           setDropdownList(false);
+                          console.log(e.target.innerHTML);
                         }}
                         key={ind}>
                         {list}
@@ -296,7 +298,6 @@ const AllFoodsList = () => {
                     <div className="range-price">
                       <p>
                         <FontAwesomeIcon icon={faNairaSign} />
-                        {0} - <FontAwesomeIcon icon={faNairaSign} />
                         {maxprice}
                       </p>
                       <div className="slider-container">
@@ -308,19 +309,13 @@ const AllFoodsList = () => {
                           value={maxprice}
                           onChange={(e) => {
                             setMaxprice(e.target.value);
+                            setPrice(e.target.value);
                             filterSetHandler(e.target.value, filter.title);
                           }}
                         />
                       </div>
                       <div className="range-btn">
-                        <button
-                          onClick={() => console.log('Range:' + maxprice)}>
-                          Clear
-                        </button>
-                        <button
-                          onClick={() => console.log('Range:' + maxprice)}>
-                          Filter
-                        </button>
+                        <button onClick={() => setMaxprice(0)}>Clear</button>
                       </div>
                     </div>
                   )}
@@ -329,11 +324,14 @@ const AllFoodsList = () => {
             ))}
           </div>
           <div className="filter-search-btn-wrap">
+            {/* {filterList.length > 0 && ( */}
             <button
-              className="filter-search-btn"
+              className={`filter-search-btn ${loading && 'opacity'}`}
+              disabled={loading}
               onClick={filterHandler}>
-              Filter / Search
+              {loading ? 'Filtering...' : 'Filter'}
             </button>
+            {/* )} */}
             {loading && (
               <svg
                 viewBox="0 0 50 50"
@@ -347,7 +345,15 @@ const AllFoodsList = () => {
             )}
           </div>
           {text && search && (
-            <p className="highlight">Showing results for {search}</p>
+            <>
+              <p className="highlight">Showing results for {search}</p>
+              <p className="filtered-option">
+                <FontAwesomeIcon
+                  className="circle"
+                  icon={faCircle}
+                />
+              </p>
+            </>
           )}
         </div>
         {loading ? (

@@ -1,0 +1,16 @@
+.verify-review-star .icon {
+  font-size: 2em;
+  color: #fff;
+  transition: all ease-in-out 0.3s;
+  filter: drop-shadow(-1px -1px 0 #000) drop-shadow(1px -1px 0 #000)
+    drop-shadow(-1px 1px 0 #000) drop-shadow(1px 1px 0 #000);
+}
+.verify-review-star .icon.active {
+  color: var(--main-color);
+  filter: none;
+}
+.verify-review-star {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}

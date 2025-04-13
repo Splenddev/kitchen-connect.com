@@ -351,3 +351,19 @@ input[type='range'] {
   .all-food-wrapper {
   }
 }
+.filtered-option {
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.circle {
+  font-size: 6px;
+}
+.opacity {
+  background: #fc8282d0;
+}
+.capitalize.address {
+  display: flex;
+  flex-direction: column;
+}

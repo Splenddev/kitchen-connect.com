@@ -1,0 +1,11 @@
+.copied {
+  padding: 7px 10px;
+  background: #000;
+  color: #fff;
+  position: absolute;
+  top: -35px;
+  right: 0;
+  border-radius: 12px;
+  gap: 10px;
+  font-size: 14px;
+}

@@ -16,18 +16,13 @@ const VerifyPayment = () => {
   let reference = urlParams.get('reference');
   const paymentReference = urlParams.get('paymentReference');
   const verifyPayment = async () => {
-    console.log(orderId);
-    // console.log(transactionId);
-    console.log(reference);
     if (!paymentReference) {
       if (!orderId || !reference) {
-        console.log(orderId, reference);
         toast.error(`Missing details! Check your network connection.`);
         return;
       }
     } else {
       if (!orderId || !paymentReference) {
-        console.log(orderId, paymentReference);
         toast.error(`Missing details! Check your network connection.`);
         return;
       }
@@ -44,7 +39,6 @@ const VerifyPayment = () => {
           response.data.message || 'Payment successfully verified.'
         );
         window.location.href = '/orders';
-        console.log('paid');
       } else if (response.data.status === 'failed') {
         toast.error(response.data.message || 'Payment not completed.');
         // alert('Payment cancelled! ');

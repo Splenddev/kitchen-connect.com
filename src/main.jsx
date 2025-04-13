@@ -1,4 +1,3 @@
-// import { BrowserRouter } from 'react-router-dom';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
 import './index.css';
@@ -16,6 +15,7 @@ import VerifyPayment from './pages/VerifyPayment/VerifyPayment.jsx';
 import Login from './components/Login/Login.jsx';
 import AnimationTest from './pages/AnimationTest/AnimationTest.jsx';
 import Favorites from './pages/Favorites/Favorites.jsx';
+import Verify from './pages/Verify/Verify.jsx';
 
 const router = createBrowserRouter([
   {
@@ -65,6 +65,10 @@ const router = createBrowserRouter([
       {
         path: '/favorites',
         element: <Favorites />,
+      },
+      {
+        path: '/verify',
+        element: <Verify />,
       },
     ],
   },

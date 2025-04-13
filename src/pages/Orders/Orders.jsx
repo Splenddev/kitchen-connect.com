@@ -132,6 +132,10 @@ const Orders = () => {
                       <div className="orders-data-top">
                         <div className="order-data-id">
                           <p>Order ID</p>
+                          <b>{item._id}</b>
+                        </div>
+                        <div className="order-data-id">
+                          <p>Tx Ref</p>
                           <b>#{item.payment.transactionId}</b>
                         </div>
                         <div className="order-data-date-status">

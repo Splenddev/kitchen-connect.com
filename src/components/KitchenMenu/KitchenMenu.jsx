@@ -74,36 +74,43 @@ const KitchenMenu = () => {
         <Skeletons />
       ) : (
         <div className="restaurants_cards menu-card">
-          {food_list
-            .filter((item) => {
-              return item.customerChoice === 'Top Food';
-            })
-            .filter((item) => {
-              if (filterKitchen === 'All') {
-                return item;
-              } else
+          {food_list.length <= 0 ? (
+            <p>
+              No food available, please check your network connection and
+              refresh
+            </p>
+          ) : (
+            food_list
+              .filter((item) => {
+                return item.customerChoice === 'Top Food';
+              })
+              .filter((item) => {
+                if (filterKitchen === 'All') {
+                  return item;
+                } else
+                  return (
+                    item.kitchen.kitchen_name.toLowerCase() ===
+                    filterKitchen.toLowerCase()
+                  );
+              })
+              .map((item) => {
                 return (
-                  item.kitchen.kitchen_name.toLowerCase() ===
-                  filterKitchen.toLowerCase()
+                  <TopMenu
+                    key={item._id}
+                    id={item._id}
+                    image={item.image}
+                    name={item.name}
+                    price={item.price}
+                    category={item.category}
+                    kitchen={item.kitchen.kitchen_name}
+                    kitchenImage={item.k_image}
+                    description={item.description}
+                    foodInfo={item.foodInformation}
+                    textHighlight={highlightText}
+                  />
                 );
-            })
-            .map((item) => {
-              return (
-                <TopMenu
-                  key={item._id}
-                  id={item._id}
-                  image={item.image}
-                  name={item.name}
-                  price={item.price}
-                  category={item.category}
-                  kitchen={item.kitchen.kitchen_name}
-                  kitchenImage={item.k_image}
-                  description={item.description}
-                  foodInfo={item.foodInformation}
-                  textHighlight={highlightText}
-                />
-              );
-            })}
+              })
+          )}
         </div>
       )}
       {noFood && <p className="no-food">There are no food with this name!</p>}
