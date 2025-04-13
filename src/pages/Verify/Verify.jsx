@@ -248,7 +248,7 @@ const Verify = () => {
                   We could not process your payment.
                 </p>
               </>
-            ) : (
+            ) : order.payment.status === 'paid' && (
               <>
                 <FontAwesomeIcon
                   icon={faCheckCircle}
