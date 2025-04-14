@@ -16,10 +16,10 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
-  padding: 7px max(1.2vw, 8px);
+  padding: 7px max(1.3vw, 8px);
   width: 100%;
   border-radius: 30px;
-  font-size: max(1.2vw, 11px);
+  font-size: max(1vw, 11px);
   font-weight: 600;
   transition: 0.3s ease;
   text-transform: capitalize;
@@ -46,8 +46,6 @@
   color: #fff;
 }
 .orders-data-list {
-  /* background: #000000; */
-  /* padding: 10px; */
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -59,11 +57,11 @@
   justify-content: center;
 }
 .spinner {
-  height: 26px;
+  height: 27px;
   position: absolute;
-  width: 26px;
-  top: -4px;
-  left: -5px;
+  width: 27px;
+  top: -5px;
+  left: -6px;
   right: 0;
   bottom: 0;
 }
@@ -91,45 +89,53 @@
     stroke-dashoffset: -120;
   }
 }
-/* .test {
-  height: 20px;
-  width: 20px;
-  background: conic-gradient(#00fff7, #0051ff, #d100ff, #ff0077, #00fff7);
-  animation: spin 1.5s linear infinite;
-  border-radius: 50%;
-  position: relative;
+.orders-data-top {
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0px 0px 5px 0px #686868;
+  padding: 10px;
+  background: #fff;
+  border-radius: 6px;
+}
+.orders-data-middle {
+  display: flex;
+  margin-top: 10px;
+  background: #fff;
+  gap: 10px;
+  box-shadow: 0px 0px 5px 0px #686868;
+  padding: 10px;
+  justify-content: space-between;
+  border-radius: 6px;
+}
+.order-status {
   display: flex;
   align-items: center;
-  justify-content: center;
-} */
-/* .test::before {
-  content: '';
-  border-radius: 50%;
-  position: absolute;
-  height: 90%;
-  width: 90%;
-  background: #fff;
-} */
-.test-in {
+  gap: 10px;
+}
+.order-status .icon.processing {
+  animation: spin 2s ease infinite forwards;
+  color: #686868;
+}
+.order-status .icon.out-for-delivery {
+  animation: truckMoving 2s ease infinite forwards;
+  color: #686868;
+}
+.order-status-text {
+  color: var(--main-color);
+  font-size: 15px;
+  font-weight: 600;
+}
+.order-list-middle {
+  display: grid;
+  grid-template-columns: 1fr 0.6fr;
+  gap: 10px;
+  margin-top: 10px;
 }
 .orders-data {
-  padding: 15px;
+  padding: 18px;
   border-radius: 10px;
-  background: #fff;
+  background: #e4e4e4;
   border-top-left-radius: -15px;
-  overflow: hidden;
-  position: relative;
-  z-index: 5;
-  width: 100%;
-}
-.orders-data.paid {
-  box-shadow: 0px 0px 5px 0px var(--paid);
-}
-.orders-data.pend {
-  box-shadow: 0px 0px 5px 0px var(--pend);
-}
-.orders-data.failed {
-  box-shadow: 0px 0px 5px 0px var(--failed);
 }
 
 .order-data-bottom {
@@ -147,10 +153,6 @@
 .order-data-bottom.failed {
   background: #f5caca;
   /* color: var(--failed); */
-}
-.orders-data-top {
-  display: flex;
-  justify-content: space-between;
 }
 .order-data-date-status {
   display: flex;
@@ -182,26 +184,44 @@
   background: #f5caca;
   color: var(--failed);
 }
+.order-track {
+  padding: 7px;
+  cursor: pointer;
+  margin-right: 20px;
+}
 .order-data-food-items {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  z-index: -2;
-}
-.order-data-food-item {
-  background: #f1f1f1;
+  background: #fff;
   box-shadow: 0px 0px 5px 0px #686868;
   border-radius: 6px;
-  margin-top: 5px;
+  padding: 10px;
+}
+.order-data-food-item {
   display: flex;
   flex-direction: row-reverse;
   gap: 10px;
   justify-content: space-between;
-  padding: 8px 5px;
+  padding: 10px;
+}
+@keyframes truckMoving {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  25%,
+  50% {
+    transform: translateX(10px);
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 .order-data-food-item-name-quantity {
   width: 100%;
-  font-size: max(1.2vw, 12.5px);
+  font-size: max(1vw, 15px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -211,6 +231,18 @@
   justify-content: space-between;
 }
 .order-data-food-items .img-cont {
+  position: relative;
+}
+.img-cont .item-qty {
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  background: #000;
+  color: #fff;
+  border-radius: 50%;
+  justify-content: center;
+  top: 0;
+  right: 0;
 }
 .order-data-food-items img {
   width: 60px;
@@ -218,17 +250,104 @@
   object-fit: contain;
   object-position: center;
 }
+.order-data-food-items hr {
+  height: 1px;
+  background: #8b8b8b;
+  border: none;
+}
+.order-data-button {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 15px;
+  background: #fff;
+  box-shadow: 0px 0px 5px 0px #686868;
+  border-radius: 6px;
+}
+.order-data-button button.order-track {
+  width: 100%;
+  border-radius: 4px;
+  padding: 10px;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+}
+.order-data-button button.order-track:hover,
+.order-receipt-btn button:hover {
+  opacity: 0.8;
+}
+.order-data-button.pend button.order-track:first-child {
+  background: var(--pend);
+}
+.order-data-button.failed button.order-track:first-child {
+  background: var(--failed);
+}
+.order-data-button.paid button.order-track:first-child {
+  background: var(--paid);
+}
+.order-data-button button.order-track:first-child {
+  color: #fff;
+}
+.order-data-button.paid button.details {
+  border: 2px solid var(--paid);
+  color: var(--paid);
+}
+.order-data-button.pend button.details {
+  border: 2px solid var(--pend);
+  color: var(--pend);
+}
+.order-data-button.failed button.details {
+  border: 2px solid var(--failed);
+  color: var(--failed);
+}
+.order-data-button button.details {
+  background: transparent;
+}
+.order-receipt-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.requery-btn {
+  padding: 8px;
+  place-self: start;
+  cursor: pointer;
+  background: #000;
+  color: #fff;
+  border-radius: 25px;
+}
+.order-data-button.paid .order-receipt-btn button {
+  border: 2px solid var(--paid);
+  color: var(--paid);
+}
+.order-data-button.pend .order-receipt-btn button {
+  border: 2px solid var(--pend);
+  color: var(--pend);
+}
+.order-data-button.failed .order-receipt-btn button {
+  border: 2px solid var(--failed);
+  color: var(--failed);
+}
+.order-receipt-btn button {
+  font-weight: 600;
+  padding: 10px;
+  cursor: pointer;
+  width: 100%;
+  background: transparent;
+  font-size: 14px;
+}
 .order-data-food-item-btn {
   display: flex;
   align-items: center;
   gap: 15px;
+  z-index: 10;
 }
 .order-data-food-item-btn button {
-  text-transform: capitalize;
   background: transparent;
   border: none;
   color: #1100fa;
   cursor: pointer;
+  font-size: 14px;
 }
 .order-data-btn {
   display: flex;
@@ -260,4 +379,18 @@
 .order-data-btn button .icon {
   color: #fff;
   font-size: 22px;
+}
+
+@media (max-width: 800px) {
+  .order-list-middle {
+    display: flex;
+    flex-direction: column;
+  }
+  .order-receipt-btn {
+    justify-content: space-between;
+    flex-direction: row;
+  }
+  .orders-data-middle {
+    flex-direction: column;
+  }
 }

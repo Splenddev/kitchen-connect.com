@@ -5,11 +5,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faAngleLeft,
   faAngleRight,
-  faBoxesPacking,
   faCheckCircle,
   faClock,
+  faHourglassHalf,
   faNairaSign,
+  faPrint,
   faRefresh,
+  faTruck,
   faWarning,
 } from '@fortawesome/free-solid-svg-icons';
 import BackNav from '../../components/BackNav/BackNav.jsx';
@@ -36,6 +38,7 @@ const Orders = () => {
   } = useContext(StoreContext);
 
   const [load, setLoad] = useState(false);
+  const [detailsVisible, setDetailsVisible] = useState(false);
 
   const requeryHandler = async (orderId, reference, method) => {
     let req_url = `${url}/api/order/requery/paystack`;
@@ -124,16 +127,14 @@ const Orders = () => {
                   return (
                     <div
                       key={index}
-                      className={`orders-data  ${
-                        item.payment.status === 'paid' && 'paid'
-                      } ${item.payment.status === 'pending' && 'pend'} ${
-                        item.payment.status === 'failed' && 'failed'
-                      }`}>
+                      className="orders-data"
+                      // className={`orders-data  ${
+                      //   item.payment.status === 'paid' && 'paid'
+                      // } ${item.payment.status === 'pending' && 'pend'} ${
+                      //   item.payment.status === 'failed' && 'failed'
+                      // }`}>
+                    >
                       <div className="orders-data-top">
-                        <div className="order-data-id">
-                          <p>Order ID</p>
-                          <b>{item._id}</b>
-                        </div>
                         <div className="order-data-id">
                           <p>Tx Ref</p>
                           <b>#{item.payment.transactionId}</b>
@@ -187,82 +188,109 @@ const Orders = () => {
                         </div>
                       </div>
                       <div className="orders-data-middle">
-                        <FontAwesomeIcon icon={faBoxesPacking} />{' '}
-                        <button>Track Orders</button>:{item.status}
+                        <span className="order-status">
+                          <span>Order Status:</span>
+                          <span className="order-status-text">
+                            {item.status}
+                          </span>
+                          {item.status === 'Food Processing' && (
+                            <FontAwesomeIcon
+                              icon={faHourglassHalf}
+                              className="icon processing"
+                            />
+                          )}
+                          {item.status === 'Out For Delivery' && (
+                            <FontAwesomeIcon
+                              icon={faTruck}
+                              className="icon out-for-delivery"
+                            />
+                          )}
+                          {item.status === 'Delivered' && (
+                            <FontAwesomeIcon
+                              icon={faCheckCircle}
+                              className="icon"
+                            />
+                          )}
+                        </span>
+                        <p>
+                          Payment Method:{' '}
+                          <span
+                            style={{
+                              color: 'var(--main-color)',
+                              fontWeight: '600',
+                            }}>
+                            {item.payment.paymentMethod}
+                          </span>
+                        </p>
                       </div>
-                      <div className="order-data-food-items">
-                        {item.items
-                          .slice(0, count[item._id])
-                          .map((food, index) => (
-                            <div
-                              key={index}
-                              className="order-data-food-item">
-                              <div className="order-data-food-item-name-quantity">
-                                <p>{food.name}</p>
-                                <div className="order-data-food-item-quantity flex">
-                                  <p>Qty: {food.quantity}x</p>
-                                  <p>
-                                    Price:{' '}
-                                    <FontAwesomeIcon icon={faNairaSign} />
-                                    {food.price}
-                                  </p>
+                      <div className="order-list-middle">
+                        <div className="order-data-food-items">
+                          {item.items
+                            .slice(0, count[item._id])
+                            .map((food, index) => (
+                              <>
+                                <div
+                                  key={index}
+                                  className="order-data-food-item">
+                                  <div className="order-data-food-item-name-quantity">
+                                    <p>{food.name}</p>
+                                    <div className="order-data-food-item-quantity flex">
+                                      <p>
+                                        Price:{' '}
+                                        <FontAwesomeIcon icon={faNairaSign} />
+                                        {food.price}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div className="img-cont">
+                                    <img
+                                      src={`${url}/images/${food.image}`}
+                                      alt="food image"
+                                    />
+                                    <div className="item-qty flex-center">
+                                      {food.quantity}
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="img-cont">
-                                <img
-                                  src={`${url}/images/${food.image}`}
-                                  alt="food image"
-                                />
-                              </div>
-                            </div>
-                          ))}
-                        <div className="order-data-food-item-btn">
-                          {count[item._id] < item.items.length && (
-                            <>
-                              {count[item._id] === 1 && (
-                                <button onClick={() => showMore(item._id)}>
-                                  show more
-                                </button>
-                              )}
-                              {count[item._id] >= 4 &&
-                                count[item._id] < item.items.length && (
-                                  <button
-                                    onClick={() => {
-                                      showNext(item._id, item.items);
-                                      console.log();
-                                    }}>
-                                    show next
+                                <hr style={{ margin: '5px 0' }} />
+                              </>
+                            ))}
+                          <div className="order-data-food-item-btn">
+                            {count[item._id] < item.items.length && (
+                              <>
+                                {count[item._id] === 1 && (
+                                  <button onClick={() => showMore(item._id)}>
+                                    Show More
                                   </button>
                                 )}
-                            </>
-                          )}
-                          {count[item._id] > 1 && (
-                            <button onClick={() => showLess(item._id)}>
-                              show less
-                            </button>
-                          )}
-                          {count[item._id] > 4 && (
-                            <button
-                              onClick={() => showPrev(item._id, item.items)}>
-                              show Prev
-                            </button>
-                          )}
-                        </div>
-                        <div
-                          className={`order-data-bottom ${
-                            item.payment.status === 'paid' && 'paid'
-                          } ${item.payment.status === 'pending' && 'pend'} ${
-                            item.payment.status === 'failed' && 'failed'
-                          }`}>
-                          {item.payment.status === 'failed' && (
-                            <p>
-                              Payment for this order failed. This could be
-                              because you cancelled or abandoned the payment.
-                            </p>
-                          )}
-
+                                {count[item._id] >= 4 &&
+                                  count[item._id] < item.items.length && (
+                                    <button
+                                      onClick={() => {
+                                        showNext(item._id, item.items);
+                                        console.log();
+                                      }}>
+                                      Show Next
+                                    </button>
+                                  )}
+                              </>
+                            )}
+                            {count[item._id] > 1 && (
+                              <button onClick={() => showLess(item._id)}>
+                                Show Less
+                              </button>
+                            )}
+                            {count[item._id] > 4 && (
+                              <button
+                                onClick={() => showPrev(item._id, item.items)}>
+                                Show Prev
+                              </button>
+                            )}
+                            <p>Item length: {item.items.length}</p>
+                          </div>
                           {item.payment.status === 'pending' && (
                             <button
+                              className="requery-btn"
                               onClick={() =>
                                 requeryHandler(
                                   item._id,
@@ -288,6 +316,60 @@ const Orders = () => {
                               )}
                             </button>
                           )}
+                          <div
+                            className={`order-data-bottom ${
+                              item.payment.status === 'paid' && 'paid'
+                            } ${item.payment.status === 'pending' && 'pend'} ${
+                              item.payment.status === 'failed' && 'failed'
+                            }`}>
+                            {item.payment.status === 'failed' && (
+                              <p>
+                                We couldn&apos;t complete your payment. This may
+                                be due to a cancellation or an incomplete
+                                transaction.
+                              </p>
+                            )}
+                            {item.payment.status === 'pending' && (
+                              <p>
+                                Your payment is being processed. If this takes
+                                more than a few minutes, click the{' '}
+                                <span style={{ fontWeight: '600' }}>
+                                  Requery
+                                </span>{' '}
+                                button or contact support.
+                              </p>
+                            )}
+                            {item.payment.status === 'paid' && (
+                              <p>
+                                Your payment has been received and your order is
+                                being processed. Thank you!
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <div
+                          className={`order-data-button ${
+                            item.payment.status === 'paid' && 'paid'
+                          } ${item.payment.status === 'pending' && 'pend'} ${
+                            item.payment.status === 'failed' && 'failed'
+                          }`}>
+                          <button
+                            onClick={() => setReload(true)}
+                            className="order-track">
+                            Track Order Status
+                          </button>
+                          <button
+                            onClick={() => setReload(true)}
+                            className="order-track details">
+                            View Order Details
+                          </button>
+                          <div className="order-receipt-btn">
+                            <button>View Reciept</button>
+                            <button>
+                              <FontAwesomeIcon icon={faPrint} />
+                              Print
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>

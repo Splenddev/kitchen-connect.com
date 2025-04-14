@@ -5,7 +5,6 @@ import {
   faAddressBook,
   faCheckCircle,
   faClock,
-  faCoins,
   faCopy,
   faEnvelope,
   faEyeSlash,
@@ -64,17 +63,29 @@ const Verify = () => {
   const orderId = urlParams.get('orderId');
   let reference = urlParams.get('reference');
   const paymentReference = urlParams.get('paymentReference');
-
-  const [displayNane, setDisplayNane] = useState(true);
+  const [isVerified, setIsVerified] = useState(false);
   const [displayName, setDisplayName] = useState(true);
   const [loading, setLoading] = useState(true);
   const [btnloading, setBtnLoading] = useState(false);
-  const [ratingWeb, setRatingWeb] = useState(0);
-  const [ratingFood, setRatingFood] = useState(0);
+  const [rating, setRating] = useState(0);
   const [copied, setCopied] = useState(false);
-  const [commentWeb, setCommentWeb] = useState('');
-  const [commentFood, setCommentFood] = useState('');
-  const deliveryFee = !paymentReference && !reference ? 0 : 500;
+  const [modal, setModal] = useState(false);
+  const [comment, setComment] = useState('');
+
+  useEffect(() => {
+    window.history.pushState(null, '', window.location.href);
+    const blockBack = () => {
+      if (!isVerified) {
+        setModal(true);
+        window.history.pushState(null, '', window.location.href);
+      }
+    };
+    window.addEventListener('popstate', blockBack);
+    return () => {
+      window.removeEventListener('popstate', blockBack);
+    };
+  }, [isVerified]);
+
   const verifyPayment = async () => {
     setLoading(true);
     if (!paymentReference) {
@@ -94,6 +105,8 @@ const Verify = () => {
       reference = paymentReference;
     }
     try {
+      if (order.payment.status === 'paid')
+        return toast.info('Payment has been verified already');
       const response = await axios.post(req_url, { orderId, reference });
       setOrder(response.data.order);
       if (response.data.status === 'paid') {
@@ -117,22 +130,26 @@ const Verify = () => {
           `Network Issue! Check your network connection. ${error.message}`
         );
       }
-      // navigate('/');
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
     verifyPayment();
   }, []);
-  const foodReview = async () => {};
-  const webReview = async () => {
+  const reviewHandler = async () => {
+    if (!comment && rating === 0)
+      return toast.warn('Kindly rate and share your feedback to proceed.');
+    if (!comment) return toast.warn('Write a comment to proceed.');
+    if (rating === 0) return toast.warn('You did not rate.');
     setBtnLoading(true);
     try {
       const response = await axios.post(
         `${url}/api/review/add`,
         {
-          rating: ratingWeb,
-          comment: commentWeb,
-          nameDisplay: displayNane,
+          rating: rating,
+          comment: comment,
+          nameDisplay: displayName,
         },
         { headers: { token } }
       );
@@ -140,7 +157,11 @@ const Verify = () => {
         toast.success(response.data.message);
       }
     } catch (error) {
-      toast.success(error.response.data.message);
+      if (error.response) {
+        toast.error(error.response.data.message || 'An error occurred!');
+      } else {
+        toast.error('Network Issue! Check your network connection.');
+      }
     } finally {
       setBtnLoading(false);
     }
@@ -156,15 +177,34 @@ const Verify = () => {
       console.error('failed to copy t_ref', error);
     }
   };
+  const leave = () => {
+    setIsVerified(true);
+    setModal(false);
+    setTimeout(() => {
+      window.location.href = '/orders';
+    }, 50);
+  };
   return (
     <div className="verify">
-      <h2>Verify Payment</h2>
+      {modal && (
+        <div className="verify-modal">
+          <p>Are you sure you want to leave this site?</p>
+          <button
+            className="stay"
+            onClick={() => setModal(false)}>
+            Cancel
+          </button>
+          <button
+            className="leave"
+            onClick={leave}>
+            Yes
+          </button>
+        </div>
+      )}
       <div className="verify-progresses">
         <div
           style={{
-            color: `${
-              order.payment.status === 'pending' && 'var(--main-color)'
-            }`,
+            color: 'var(--main-color)',
           }}
           className="verify-progress">
           <FontAwesomeIcon icon={faTruckLoading} />
@@ -173,7 +213,12 @@ const Verify = () => {
         <hr />
         <div
           style={{
-            color: `${order.payment.status === 'pending' && 'var(--pend)'}`,
+            color: `${
+              order.payment.status === 'pending' ||
+              order.payment.status === 'paid'
+                ? 'var(--pend)'
+                : '#d9d9d9'
+            }`,
           }}
           className="verify-progress">
           <FontAwesomeIcon icon={faClock} />
@@ -185,7 +230,7 @@ const Verify = () => {
               order.payment.status === 'paid' ||
               order.payment.status === 'failed'
                 ? 'var(--paid)'
-                : '#000'
+                : '#d9d9d9'
             }`,
           }}
         />
@@ -195,7 +240,7 @@ const Verify = () => {
               order.payment.status === 'paid' ||
               order.payment.status === 'failed'
                 ? 'var(--paid)'
-                : '#000'
+                : '#d9d9d9'
             }`,
           }}
           className="verify-progress">
@@ -394,7 +439,7 @@ const Verify = () => {
             <hr />
             <div className="verify-receipt-bottom-right-order-mid">
               <span>
-                <h4>Order Id</h4>
+                <h4>Trx Id</h4>
                 <p
                   style={{ position: 'relative' }}
                   className="values">
@@ -445,16 +490,6 @@ const Verify = () => {
                   </p>
                 </p>
               </span>
-              <span>
-                <h4>Fees</h4>
-                <p className="values">
-                  <FontAwesomeIcon icon={faCoins} />
-                  <p>
-                    <FontAwesomeIcon icon={faNairaSign} />
-                    {deliveryFee}
-                  </p>
-                </p>
-              </span>
             </div>
             <hr />
             <div className="verify-receipt-bottom-right-order-bottom">
@@ -462,7 +497,7 @@ const Verify = () => {
                 <h3>Total</h3>
                 <h3>
                   <FontAwesomeIcon icon={faNairaSign} />
-                  {order.amount + deliveryFee}
+                  {order.amount}
                 </h3>
               </span>
             </div>
@@ -486,46 +521,6 @@ const Verify = () => {
             Tell us what you think. Your feedback matters.
           </p>
           <div className="verify-review">
-            {/* <div className="verify-review-star-rate">
-              <p
-                className="review-title"
-                style={{ marginBottom: '10px' }}>
-                How would you rate this kitchen?
-              </p>
-              <Rating setRating={setRatingFood} />
-              <div
-                className="verify-review-text-area"
-                style={{ marginTop: '10px' }}>
-                <p className="review-title">
-                  Please provide your review of this kitchen.
-                </p>
-                <textarea />
-              </div>
-              <div
-                className={`display-option ${displayName ? 'active' : ''}`}
-                onClick={() => setDisplayName(true)}>
-                <FontAwesomeIcon
-                  icon={faUserPlus}
-                  className="icon"
-                />
-                <p>Display with your Name</p>
-              </div>
-              <div
-                className={`display-option ${displayName ? '' : 'active'}`}
-                onClick={() => setDisplayName(false)}>
-                <FontAwesomeIcon
-                  className="icon"
-                  icon={faEyeSlash}
-                />
-                <p>Display Anonymously</p>
-              </div>
-              <div className="btn-options">
-                <button onClick={() => console.log(ratingFood, ratingWeb)}>
-                  Maybe Later
-                </button>
-                <button>Submit Review</button>
-              </div>
-            </div> */}
             <hr className="line-hr" />
             <div className="verify-review-btn">
               <div className="verify-review-text-area">
@@ -533,38 +528,44 @@ const Verify = () => {
                   Please rate the usability and overall experience of this
                   website?
                 </p>
-                <Rating setRating={setRatingWeb} />
+                <Rating setRating={setRating} />
                 <p style={{ textAlign: 'center' }}>
                   Kindly share your thoughts and suggestions about this website.
                 </p>
                 <textarea
-                  value={commentWeb}
-                  onChange={(e) => setCommentWeb(e.target.value)}
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
                 />
               </div>
-              <div
-                className={`display-option ${displayNane ? 'active' : ''}`}
-                onClick={() => setDisplayNane(true)}>
-                <FontAwesomeIcon
-                  icon={faUserPlus}
-                  className="icon"
-                />
-                <p>Display with your Name</p>
-              </div>
-              <div
-                className={`display-option ${displayNane ? '' : 'active'}`}
-                onClick={() => setDisplayNane(false)}>
-                <FontAwesomeIcon
-                  className="icon"
-                  icon={faEyeSlash}
-                />
-                <p>Display Anonymously</p>
+              <div className="display-option-container">
+                <div
+                  className={`display-option ${displayName ? 'active' : ''}`}
+                  onClick={() => setDisplayName(true)}>
+                  <FontAwesomeIcon
+                    icon={faUserPlus}
+                    className="icon"
+                  />
+                  <p>Display with your Name</p>
+                </div>
+                <div
+                  className={`display-option ${displayName ? '' : 'active'}`}
+                  onClick={() => setDisplayName(false)}>
+                  <FontAwesomeIcon
+                    className="icon"
+                    icon={faEyeSlash}
+                  />
+                  <p>Display Anonymously</p>
+                </div>
               </div>
               <div className="btn-options">
                 <button onClick={() => (window.location.href = '/order')}>
                   Maybe Later
                 </button>
-                <button onClick={webReview}>
+                <button
+                  onClick={() => {
+                    reviewHandler();
+                    console.log(rating);
+                  }}>
                   {btnloading ? 'Submitting...' : 'Submit'}
                 </button>
               </div>

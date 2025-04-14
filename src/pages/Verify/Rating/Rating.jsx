@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Ratings.css';
 
 const Rating = ({ setRating }) => {
@@ -69,6 +69,11 @@ const Rating = ({ setRating }) => {
     }
     setRating(star);
   };
+  useEffect(() => {
+    if (!star1 && !star2 && !star3 && !star4 && !star5) {
+      setRating(0);
+    }
+  });
   return (
     <div>
       <div className="verify-review-star">
