@@ -130,9 +130,14 @@ const Verify = () => {
           `Network Issue! Check your network connection. ${error.message}`
         );
       }
+<<<<<<< HEAD
     } finally {
       setLoading(false);
     }
+=======
+      // navigate('/');
+    }finally{setLoading(false)}
+>>>>>>> 647b49b72d7d46a6d331f8ba62d9288eca83282d
   };
   useEffect(() => {
     verifyPayment();
@@ -293,7 +298,7 @@ const Verify = () => {
                   We could not process your payment.
                 </p>
               </>
-            ) : (
+            ) : order.payment.status === 'paid' && (
               <>
                 <FontAwesomeIcon
                   icon={faCheckCircle}
@@ -558,8 +563,8 @@ const Verify = () => {
                 </div>
               </div>
               <div className="btn-options">
-                <button onClick={() => (window.location.href = '/order')}>
-                  Maybe Later
+                <button onClick={() => (window.location.href = '/orders')}>
+                  Orders
                 </button>
                 <button
                   onClick={() => {
