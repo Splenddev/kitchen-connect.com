@@ -130,14 +130,11 @@ const Verify = () => {
           `Network Issue! Check your network connection. ${error.message}`
         );
       }
-<<<<<<< HEAD
+
+      // navigate('/');
     } finally {
       setLoading(false);
     }
-=======
-      // navigate('/');
-    }finally{setLoading(false)}
->>>>>>> 647b49b72d7d46a6d331f8ba62d9288eca83282d
   };
   useEffect(() => {
     verifyPayment();
@@ -298,24 +295,26 @@ const Verify = () => {
                   We could not process your payment.
                 </p>
               </>
-            ) : order.payment.status === 'paid' && (
-              <>
-                <FontAwesomeIcon
-                  icon={faCheckCircle}
-                  className="icon"
-                />
-                <p style={{ fontSize: '18px', fontWeight: 600 }}>
-                  Thank you{' '}
-                  <span className="highlight">{order.address.fName}</span>
-                </p>
-                <p style={{ textAlign: 'center', fontSize: '15px' }}>
-                  Your order{' '}
-                  <span className="highlight">
-                    {reference || paymentReference || '*****'}
-                  </span>{' '}
-                  is verified successfully and will be delivered soon.
-                </p>
-              </>
+            ) : (
+              order.payment.status === 'paid' && (
+                <>
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="icon"
+                  />
+                  <p style={{ fontSize: '18px', fontWeight: 600 }}>
+                    Thank you{' '}
+                    <span className="highlight">{order.address.fName}</span>
+                  </p>
+                  <p style={{ textAlign: 'center', fontSize: '15px' }}>
+                    Your order{' '}
+                    <span className="highlight">
+                      {reference || paymentReference || '*****'}
+                    </span>{' '}
+                    is verified successfully and will be delivered soon.
+                  </p>
+                </>
+              )
             )}
           </div>
         </div>

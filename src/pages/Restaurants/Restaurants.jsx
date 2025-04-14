@@ -25,7 +25,6 @@ const Restaurants = () => {
                     <p>{item.price}</p>
                     <p>{item.description}</p>
                     <p>{item.category}</p>
-                    <p>{item.reviews}</p>
                   </div>
                 );
               })}
