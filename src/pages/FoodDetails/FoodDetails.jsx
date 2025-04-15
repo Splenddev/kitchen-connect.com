@@ -80,7 +80,10 @@ const FoodDetails = () => {
           <div className="food-details">
             <div className="kitchen-image__food-name">
               <div className="kitchen-image-container">
-                <img src={kitchenImage} />
+                <img
+                  src={kitchenImage}
+                  alt="kitchen image"
+                />
               </div>
               <div className="food-name__ratings__reviews">
                 <div className="left">
@@ -97,7 +100,10 @@ const FoodDetails = () => {
             </div>
           </div>
           <div className="food-details-header">
-            <img src={url + '/images/' + foodView.image} />
+            <img
+              src={url + '/images/' + foodView.image}
+              alt="header image"
+            />
           </div>
         </div>
         <div className="food-details-right">

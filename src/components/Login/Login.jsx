@@ -366,7 +366,10 @@ const Login = () => {
               <h2>Welcome to</h2>
               <div className="img_container_company">
                 <div className="image">
-                  <img src={assets.logo} />
+                  <img
+                    src={assets.logo}
+                    alt="company logo"
+                  />
                 </div>
                 <p>Kitchen Connect</p>
               </div>

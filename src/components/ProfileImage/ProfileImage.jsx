@@ -18,7 +18,10 @@ const ProfileImage = () => {
   return (
     <div className="profile-image-container">
       {userInfo.profileImage ? (
-        <img src={`${url}/images/${userInfo.profileImage}`} />
+        <img
+          src={`${url}/images/${userInfo.profileImage}`}
+          alt="profile image"
+        />
       ) : (
         <div
           style={{

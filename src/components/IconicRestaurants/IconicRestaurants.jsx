@@ -29,11 +29,36 @@ const IconicRestaurants = ({ name, location }) => {
       className="iconic_restaurant"
       onClick={restaurantsHandler}>
       <div className="image_container">
-        {name === 'Arena' && <img src={arena} />}
-        {name === 'Bissy Joy' && <img src={bissyJoy} />}
-        {name === 'Krafty' && <img src={krafty} />}
-        {name === 'Iya Afusat' && <img src={iyaAfusat} />}
-        {name === 'Tasty Munch' && <img src={tastyMunch} />}
+        {name === 'Arena' && (
+          <img
+            src={arena}
+            alt="kitchen image"
+          />
+        )}
+        {name === 'Bissy Joy' && (
+          <img
+            src={bissyJoy}
+            alt="kitchen image"
+          />
+        )}
+        {name === 'Krafty' && (
+          <img
+            src={krafty}
+            alt="kitchen image"
+          />
+        )}
+        {name === 'Iya Afusat' && (
+          <img
+            src={iyaAfusat}
+            alt="kitchen image"
+          />
+        )}
+        {name === 'Tasty Munch' && (
+          <img
+            src={tastyMunch}
+            alt="kitchen image"
+          />
+        )}
       </div>
       <div className="other-contemts">
         <h2>{name}</h2>

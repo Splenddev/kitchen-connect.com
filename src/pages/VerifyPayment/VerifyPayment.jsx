@@ -9,9 +9,7 @@ import { toast } from 'react-toastify';
 const VerifyPayment = () => {
   const { url } = useContext(StoreContext);
   const urlParams = new URLSearchParams(window.location.search);
-  // const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  // const transactionId = urlParams.get('trxref');
   const orderId = urlParams.get('orderId');
   let reference = urlParams.get('reference');
   const paymentReference = urlParams.get('paymentReference');

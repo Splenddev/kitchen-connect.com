@@ -30,6 +30,7 @@ const SettingsNavbar = () => {
           <img
             src={assets.logo}
             className="logo"
+            alt="company logo"
           />
         </div>
         <p>Kitchen Connect</p>

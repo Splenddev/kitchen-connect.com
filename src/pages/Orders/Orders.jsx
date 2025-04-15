@@ -2,11 +2,14 @@ import { useContext, useState } from 'react';
 import './Order.css';
 import { StoreContext } from '../../context/StoreContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   faAngleLeft,
   faAngleRight,
   faCheckCircle,
+  faCircle,
   faClock,
+  faClose,
   faHourglassHalf,
   faNairaSign,
   faPrint,
@@ -15,12 +18,15 @@ import {
   faWarning,
 } from '@fortawesome/free-solid-svg-icons';
 import BackNav from '../../components/BackNav/BackNav.jsx';
-// import { toast } from 'react-toastify';
 import OrdersSkeleton from '../../components/OrdersSkeleton/OrdersSkeleton.jsx';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import Loader from '../../components/Loader/Loader.jsx';
-
+import { ReactComponent as OrderPlaced } from '../../assets/SVG/add_shopping_cart.svg';
+import { ReactComponent as DeliveryTruck } from '../../assets/SVG/del-truck.svg';
+import { ReactComponent as OrderProccessed } from '../../assets/SVG/order-processed.svg';
+import { ReactComponent as Package } from '../../assets/SVG/package.svg';
+import { ReactComponent as ConfirmOrder } from '../../assets/SVG/confirm-order.svg';
 const Orders = () => {
   const {
     url,
@@ -38,7 +44,13 @@ const Orders = () => {
   } = useContext(StoreContext);
 
   const [load, setLoad] = useState(false);
-  const [detailsVisible, setDetailsVisible] = useState(false);
+  const [send, setSend] = useState(false);
+  const [loadId, setLoadId] = useState('');
+  const [orderId, setOrderId] = useState('');
+  const [loadStatusPayment, setLoadStatusPayment] = useState('');
+  const [loadStatusOrder, setLoadStatusOrder] = useState('');
+  // const [detailsVisible, setDetailsVisible] = useState(false);
+  const [trackOrderVisible, setTrackOrderVisible] = useState(false);
 
   const requeryHandler = async (orderId, reference, method) => {
     let req_url = `${url}/api/order/requery/paystack`;
@@ -63,6 +75,46 @@ const Orders = () => {
       setLoad(false);
     }
   };
+  const generateReceipt = async (id, email, send) => {
+    try {
+      const res = await axios.post(`${url}/api/receipt/generate`, {
+        orderId: id,
+        userEmail: email,
+        send,
+      });
+      toast.success(res.data.message);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
+  const downloadReceipt = async (orderId) => {
+    try {
+      const res = await axios.get(`${url}/api/receipt/download/${orderId}`, {
+        responseType: 'blob', // important for PDFs
+      });
+
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `receipt_${orderId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      console.error('Download failed:', err.message);
+    }
+  };
+  const trackOrderHandler = async (id) => {
+    try {
+      const response = await axios.get(`${url}/api/order/track/${id}`);
+      setLoadStatusOrder(response.data.status);
+      setReload(true);
+      toast.success(response.data.message);
+    } catch (error) {
+      toast.error(error.response.message);
+    }
+  };
   const showMore = (id) => {
     setcount((prev) => ({ ...prev, [id]: 4 }));
   };
@@ -81,11 +133,312 @@ const Orders = () => {
   const showLess = (id) => {
     setcount((prev) => ({ ...prev, [id]: 1 }));
   };
+  const sidebarVariants = {
+    hidden: { y: '100%', opacity: 0, rotateX: -20 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      rotateX: 0,
+      transition: { duration: 0.6, ease: 'easeInOut' },
+    },
+    exit: {
+      y: '120%',
+      opacity: 0,
+      rotateX: -30,
+      transition: { duration: 0.4, ease: 'easeInOut', delay: 0.1 },
+    },
+  };
   return (
     <>
       <BackNav />
       <div className="orders-container">
         <h2>My Orders</h2>
+        <AnimatePresence>
+          {trackOrderVisible && (
+            <div className="orders-track-container">
+              <motion.div
+                variants={sidebarVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="orders-track">
+                <div className="orders-track-top">
+                  <p>Track Order</p>
+                  <p onClick={() => setTrackOrderVisible(false)}>
+                    <FontAwesomeIcon
+                      className="icon"
+                      icon={faClose}
+                    />
+                  </p>
+                </div>
+                <div className="orders-track-middle">
+                  <div className="orders-track-middle-item">
+                    <p>Est. Time</p>
+                    <p>30 min</p>
+                  </div>
+                  <div className="orders-track-middle-item">
+                    <p>Order Ref.</p>
+                    <p>{loadId}</p>
+                  </div>
+                  <div className="orders-track-middle-item">
+                    <p>Payment Status</p>
+                    <p>{loadStatusPayment} </p>
+                  </div>
+                  <div className="orders-track-middle-item">
+                    <p>Order Status</p>
+                    <span className="order-status-text">
+                      {loadStatusOrder}
+                      {loadStatusOrder === 'Food Processing' && (
+                        <FontAwesomeIcon
+                          icon={faHourglassHalf}
+                          className="icon processing"
+                        />
+                      )}
+                      {loadStatusOrder === 'Out For Delivery' && (
+                        <FontAwesomeIcon
+                          icon={faTruck}
+                          className="icon out-for-delivery"
+                        />
+                      )}
+                      {loadStatusOrder === 'Delivered' && (
+                        <FontAwesomeIcon
+                          icon={faCheckCircle}
+                          className="icon"
+                        />
+                      )}
+                    </span>
+                  </div>
+                </div>
+                <hr />
+                <div className="orders-track-contents">
+                  <div
+                    className="orders-track-content"
+                    style={{
+                      color:
+                        loadStatusPayment !== 'paid'
+                          ? 'var(--pend)'
+                          : 'var(--good) ',
+                    }}>
+                    <div className="icon-container">
+                      <FontAwesomeIcon
+                        icon={faCircle}
+                        className="icon"
+                        style={{
+                          color:
+                            loadStatusPayment !== 'paid'
+                              ? 'var(--pend)'
+                              : 'var(--good) ',
+                        }}
+                      />
+                      <hr
+                        style={{
+                          background:
+                            loadStatusPayment !== 'paid'
+                              ? 'var(--pend)'
+                              : 'var(--good) ',
+                        }}
+                      />
+                    </div>
+                    <div className="order-track-status">
+                      <OrderPlaced
+                        className="svg placed-order"
+                        style={{
+                          fill:
+                            loadStatusPayment !== 'paid'
+                              ? 'var(--pend)'
+                              : 'var(--good) ',
+                        }}
+                      />
+                      <div className="orders-track-content-text">
+                        <h3>Order Placed</h3>
+                        <p>We have received your order.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="orders-track-content"
+                    style={{
+                      color:
+                        loadStatusPayment === 'paid' ? 'var(--good)' : 'grey',
+                    }}>
+                    <div className="icon-container">
+                      <FontAwesomeIcon
+                        icon={faCircle}
+                        className="icon"
+                      />
+                      <hr
+                        style={{
+                          background:
+                            loadStatusPayment === 'paid'
+                              ? 'var(--good) '
+                              : 'grey',
+                        }}
+                      />
+                    </div>
+                    <div className="order-track-status">
+                      <ConfirmOrder
+                        style={{
+                          fill:
+                            loadStatusPayment === 'paid'
+                              ? 'var(--good) '
+                              : 'grey',
+                        }}
+                        className=" svg confirm-order"
+                      />
+                      <div className="orders-track-content-text">
+                        <h3>Order Payment Confirmed</h3>
+                        <p>
+                          Your payment for this order has been confirmed order.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="orders-track-content"
+                    style={{
+                      color:
+                        loadStatusPayment === 'paid' && loadStatusOrder
+                          ? loadStatusOrder !== 'Out For Delivery'
+                            ? 'var(--pend) '
+                            : 'var(--good) '
+                          : 'grey',
+                    }}>
+                    <div className="icon-container">
+                      <FontAwesomeIcon
+                        icon={faCircle}
+                        className="icon"
+                      />
+                      <hr
+                        style={{
+                          background:
+                            loadStatusPayment === 'paid' && loadStatusOrder
+                              ? loadStatusOrder !== 'Out For Delivery'
+                                ? 'var(--pend) '
+                                : 'var(--good) '
+                              : 'grey',
+                        }}
+                      />
+                    </div>
+                    <div className="order-track-status">
+                      <OrderProccessed
+                        style={{
+                          fill:
+                            loadStatusPayment === 'paid' && loadStatusOrder
+                              ? loadStatusOrder !== 'Out For Delivery'
+                                ? 'var(--pend) '
+                                : 'var(--good) '
+                              : 'grey',
+                        }}
+                        className="svg order-placed"
+                      />
+                      <div className="orders-track-content-text">
+                        <h3>Order Processing</h3>
+                        <p>We are getting your order items ready.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="orders-track-content "
+                    style={{
+                      color:
+                        (loadStatusPayment === 'paid' &&
+                          loadStatusOrder === 'Out For Delivery') ||
+                        loadStatusOrder === 'Delivered'
+                          ? loadStatusOrder !== 'Delivered'
+                            ? 'var(--pend) '
+                            : 'var(--good) '
+                          : 'grey',
+                    }}>
+                    <div className="icon-container">
+                      <FontAwesomeIcon
+                        icon={faCircle}
+                        className="icon"
+                      />
+                      <hr
+                        style={{
+                          background:
+                            (loadStatusPayment === 'paid' &&
+                              loadStatusOrder === 'Out For Delivery') ||
+                            loadStatusOrder === 'Delivered'
+                              ? loadStatusOrder !== 'Delivered'
+                                ? 'var(--pend) '
+                                : 'var(--good) '
+                              : 'grey',
+                        }}
+                      />
+                    </div>
+                    <div className="order-track-status">
+                      <DeliveryTruck
+                        style={{
+                          fill:
+                            (loadStatusPayment === 'paid' &&
+                              loadStatusOrder === 'Out For Delivery') ||
+                            loadStatusOrder === 'Delivered'
+                              ? loadStatusOrder !== 'Delivered'
+                                ? 'var(--pend) '
+                                : 'var(--good) '
+                              : 'grey',
+                        }}
+                        className="truck svg"
+                      />
+                      <div className="orders-track-content-text">
+                        <h3>Out For Delivery</h3>
+                        <p>Your order is on its way.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="orders-track-content"
+                    style={{
+                      color:
+                        loadStatusPayment === 'paid' &&
+                        loadStatusOrder === 'Delivered'
+                          ? 'var(--good) '
+                          : 'grey',
+                    }}>
+                    <div className="icon-container">
+                      <FontAwesomeIcon
+                        icon={faCircle}
+                        className="icon"
+                      />
+                    </div>
+                    <div className="order-track-status">
+                      <Package
+                        className="package svg"
+                        style={{
+                          fill:
+                            loadStatusPayment === 'paid' &&
+                            loadStatusOrder === 'Delivered'
+                              ? 'var(--good) '
+                              : 'grey',
+                        }}
+                      />
+                      <div className="orders-track-content-text">
+                        <h3>Delivered</h3>
+                        <p>
+                          Your order has been delivered. Please click on the
+                          confirm delivery button to validate.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr />
+                <div className="orders-track-bottom">
+                  <button
+                    className={`confirm-delivery ${
+                      loadStatusOrder !== 'Delivered' && 'hidden'
+                    }`}>
+                    Confirm Delivery
+                  </button>
+                  <button onClick={() => trackOrderHandler(orderId)}>
+                    Track Order Status
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
         <div className="orders-content">
           <div className="orders-data-navbar">
             <ul>
@@ -188,30 +541,6 @@ const Orders = () => {
                         </div>
                       </div>
                       <div className="orders-data-middle">
-                        <span className="order-status">
-                          <span>Order Status:</span>
-                          <span className="order-status-text">
-                            {item.status}
-                          </span>
-                          {item.status === 'Food Processing' && (
-                            <FontAwesomeIcon
-                              icon={faHourglassHalf}
-                              className="icon processing"
-                            />
-                          )}
-                          {item.status === 'Out For Delivery' && (
-                            <FontAwesomeIcon
-                              icon={faTruck}
-                              className="icon out-for-delivery"
-                            />
-                          )}
-                          {item.status === 'Delivered' && (
-                            <FontAwesomeIcon
-                              icon={faCheckCircle}
-                              className="icon"
-                            />
-                          )}
-                        </span>
                         <p>
                           Payment Method:{' '}
                           <span
@@ -354,18 +683,35 @@ const Orders = () => {
                             item.payment.status === 'failed' && 'failed'
                           }`}>
                           <button
-                            onClick={() => setReload(true)}
+                            onClick={() => {
+                              setTrackOrderVisible(true);
+                              setLoadId(item.payment.transactionId);
+                              setLoadStatusPayment(item.payment.status);
+                              setLoadStatusOrder(item.status);
+                              setOrderId(item._id);
+                            }}
                             className="order-track">
-                            Track Order Status
+                            Open Order Status Log
                           </button>
                           <button
-                            onClick={() => setReload(true)}
+                            onClick={() => generateReceipt(item._id)}
                             className="order-track details">
-                            View Order Details
+                            Generate Receipt
                           </button>
                           <div className="order-receipt-btn">
                             <button>View Reciept</button>
-                            <button>
+                            <button
+                              onClick={() => {
+                                setSend(true);
+                                generateReceipt(
+                                  item._id,
+                                  item.address.email,
+                                  send
+                                );
+                              }}>
+                              Email Reciept
+                            </button>
+                            <button onClick={() => downloadReceipt(item._id)}>
                               <FontAwesomeIcon icon={faPrint} />
                               Print
                             </button>

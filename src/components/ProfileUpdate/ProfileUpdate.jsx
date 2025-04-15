@@ -324,7 +324,10 @@ const ProfileUpdate = () => {
                   alt="Profile Preview"
                 />
               ) : userInfo.profileImage ? (
-                <img src={`${url}/images/${userInfo.profileImage}`} />
+                <img
+                  src={`${url}/images/${userInfo.profileImage}`}
+                  alt="Profile Preview"
+                />
               ) : (
                 <FontAwesomeIcon
                   className="icon"

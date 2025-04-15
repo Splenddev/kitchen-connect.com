@@ -137,7 +137,10 @@ const Cart = () => {
                     <hr />
                     <div className="cart-items-wrapper-bottom">
                       <div className="cart-items-left">
-                        <img src={url + '/images/' + item.image} />
+                        <img
+                          src={url + '/images/' + item.image}
+                          alt="cart item image"
+                        />
                       </div>
                       <div className="cart-items-right">
                         <div className="cart-items-right-top">

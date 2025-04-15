@@ -178,7 +178,10 @@ const AllFoodsList = () => {
                   <div
                     key={index}
                     className="all_food_list_header_overlay-category">
-                    <img src={kitchen.image} />
+                    <img
+                      src={kitchen.image}
+                      alt="kitchen image"
+                    />
                   </div>
                 ))}
               </div>

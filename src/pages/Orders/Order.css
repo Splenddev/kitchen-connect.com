@@ -1,6 +1,119 @@
 .orders-container {
   margin-top: 60px;
 }
+.orders-track-container {
+  position: fixed;
+  z-index: 20;
+  background: #636363c2;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.orders-track {
+  background: #fff;
+  width: 500px;
+  z-index: 40;
+}
+.orders-track-top {
+  position: relative;
+  background: var(--main-color);
+  color: #fff;
+  padding: 15px 0;
+}
+.orders-track-top > p {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+}
+.orders-track-top .icon {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.orders-track-middle {
+  /* display: flex;
+  justify-content: space-between; */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 15px;
+}
+.orders-track-middle-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.orders-track-middle p:last-child {
+  font-weight: 600;
+  text-transform: capitalize;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.orders-track-contents {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+}
+.orders-track-content {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+}
+.icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.orders-track-content hr {
+  position: absolute;
+  height: 80%;
+  top: 100%;
+  transform: translateY(-45%);
+  width: 3px;
+  border: none;
+  background: #1f1f1f;
+  margin: 2px 0;
+}
+.order-track-status {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  align-items: center;
+  justify-content: center;
+}
+.order-track-status .svg {
+  fill: #000;
+  height: 60px;
+  width: 60px;
+}
+.orders-track-bottom {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px;
+}
+.orders-track-bottom button {
+  padding: 10px 15px;
+  cursor: pointer;
+}
+.orders-track-bottom button.confirm-delivery {
+  border-radius: 20px;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  background: var(--pend);
+}
+.orders-track-bottom button.confirm-delivery.hidden {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 .orders-data-navbar ul {
   display: flex;
   list-style: none;
@@ -112,18 +225,18 @@
   align-items: center;
   gap: 10px;
 }
-.order-status .icon.processing {
+.order-status-text .icon.processing {
   animation: spin 2s ease infinite forwards;
-  color: #686868;
 }
-.order-status .icon.out-for-delivery {
+.order-status-text .icon.out-for-delivery {
   animation: truckMoving 2s ease infinite forwards;
-  color: #686868;
 }
 .order-status-text {
-  color: var(--main-color);
   font-size: 15px;
+  gap: 5px;
+  display: flex;
   font-weight: 600;
+  align-items: center;
 }
 .order-list-middle {
   display: grid;

@@ -425,7 +425,10 @@ const Verify = () => {
                   className="verify-receipt-bottom-right-order-top-item"
                   key={item._id}>
                   <div className="verify-receipt-bottom-right-order-image">
-                    <img src={`${url}/images/${item.image}`} />
+                    <img
+                      src={`${url}/images/${item.image}`}
+                      alt="order item img"
+                    />
                     <div className="dot flex-center">
                       <span>{item.quantity}</span>
                     </div>

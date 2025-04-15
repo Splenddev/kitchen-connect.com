@@ -9,7 +9,10 @@ const Footer = () => {
       <div className="footer-content">
         <div className="footer-content-left">
           <div className="logo-company-name">
-            <img src={assets.logo_BW} />
+            <img
+              src={assets.logo_BW}
+              alt="company logo"
+            />
             <p>KitchenConnect.com</p>
           </div>
           <p>
@@ -19,9 +22,18 @@ const Footer = () => {
             type and scrambled it to make a type specimen book.
           </p>
           <div className="footer-content-social-icon">
-            <img src={assets.linkedin_icon} />
-            <img src={assets.twitter_icon} />
-            <img src={assets.facebook_icon} />
+            <img
+              src={assets.linkedin_icon}
+              alt="social media photos"
+            />
+            <img
+              src={assets.twitter_icon}
+              alt="social media photos"
+            />
+            <img
+              src={assets.facebook_icon}
+              alt="social media photos"
+            />
           </div>
         </div>
         <div className="footer-content-right">

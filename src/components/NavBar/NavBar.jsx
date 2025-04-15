@@ -41,6 +41,7 @@ const NavBar = () => {
             <img
               className="logo"
               src={assets.logo_BW}
+              alt="company logo"
             />
           </Link>
           <p>
@@ -85,7 +86,10 @@ const NavBar = () => {
               }}
               className="navbar-profile flex-center">
               {userInfo.profileImage ? (
-                <img src={`${url}/images/${userInfo.profileImage}`} />
+                <img
+                  src={`${url}/images/${userInfo.profileImage}`}
+                  alt="profile image"
+                />
               ) : (
                 <div className="kelly ">
                   <FontAwesomeIcon icon={faUser} />
