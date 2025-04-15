@@ -10,9 +10,11 @@ import {
   faCircle,
   faClock,
   faClose,
+  faDownload,
+  faEnvelopeOpen,
   faHourglassHalf,
   faNairaSign,
-  faPrint,
+  faInfoCircle,
   faRefresh,
   faTruck,
   faWarning,
@@ -49,7 +51,7 @@ const Orders = () => {
   const [orderId, setOrderId] = useState('');
   const [loadStatusPayment, setLoadStatusPayment] = useState('');
   const [loadStatusOrder, setLoadStatusOrder] = useState('');
-  // const [detailsVisible, setDetailsVisible] = useState(false);
+  const [completedOrder, setCompletedOrder] = useState(false);
   const [trackOrderVisible, setTrackOrderVisible] = useState(false);
 
   const requeryHandler = async (orderId, reference, method) => {
@@ -79,7 +81,7 @@ const Orders = () => {
     try {
       const res = await axios.post(`${url}/api/receipt/generate`, {
         orderId: id,
-        userEmail: email,
+        userEmail: 'felixnwode25@gmail.com',
         send,
       });
       toast.success(res.data.message);
@@ -93,14 +95,17 @@ const Orders = () => {
       const res = await axios.get(`${url}/api/receipt/download/${orderId}`, {
         responseType: 'blob', // important for PDFs
       });
+      console.log('download receipt for order' + orderId);
 
-      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const blob = new Blob([res.data], { type: 'application/pdf' });
+      const downloadUrl = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.href = url;
+      link.href = downloadUrl;
       link.setAttribute('download', `receipt_${orderId}.pdf`);
       document.body.appendChild(link);
       link.click();
-      link.remove();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (err) {
       console.error('Download failed:', err.message);
     }
@@ -250,8 +255,12 @@ const Orders = () => {
                         }}
                       />
                       <div className="orders-track-content-text">
-                        <h3>Order Placed</h3>
-                        <p>We have received your order.</p>
+                        <h3>Order Received</h3>
+                        <p>
+                          We have received your order and will begin processing
+                          it right away. You&apos;ll be updated throughout the
+                          journey.
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -286,9 +295,10 @@ const Orders = () => {
                         className=" svg confirm-order"
                       />
                       <div className="orders-track-content-text">
-                        <h3>Order Payment Confirmed</h3>
+                        <h3>Payment Confirmed</h3>
                         <p>
                           Your payment for this order has been confirmed order.
+                          We are now processing your request.
                         </p>
                       </div>
                     </div>
@@ -333,7 +343,10 @@ const Orders = () => {
                       />
                       <div className="orders-track-content-text">
                         <h3>Order Processing</h3>
-                        <p>We are getting your order items ready.</p>
+                        <p>
+                          We are getting your order items ready for dispatch.
+                          Thank you for your patience.
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -383,7 +396,10 @@ const Orders = () => {
                       />
                       <div className="orders-track-content-text">
                         <h3>Out For Delivery</h3>
-                        <p>Your order is on its way.</p>
+                        <p>
+                          Your order is currently on its way. Please stay at
+                          alert for delivery at your specified address.
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -416,8 +432,9 @@ const Orders = () => {
                       <div className="orders-track-content-text">
                         <h3>Delivered</h3>
                         <p>
-                          Your order has been delivered. Please click on the
-                          confirm delivery button to validate.
+                          Your order has been delivered. Kindly click on the
+                          &#34;Confirm Delivery&#34; button to validate and
+                          complete the process.
                         </p>
                       </div>
                     </div>
@@ -428,7 +445,14 @@ const Orders = () => {
                   <button
                     className={`confirm-delivery ${
                       loadStatusOrder !== 'Delivered' && 'hidden'
-                    }`}>
+                    }`}
+                    onClick={() => {
+                      if (loadStatusOrder !== 'Delivered')
+                        return toast.error(
+                          'You can not confirm this order. It has not been delivered.'
+                        );
+                      setCompletedOrder(true);
+                    }}>
                     Confirm Delivery
                   </button>
                   <button onClick={() => trackOrderHandler(orderId)}>
@@ -476,6 +500,7 @@ const Orders = () => {
                   const optionTime = {
                     hour: '2-digit',
                     minute: '2-digit',
+                    second: '2-digit',
                   };
                   return (
                     <div
@@ -489,18 +514,15 @@ const Orders = () => {
                     >
                       <div className="orders-data-top">
                         <div className="order-data-id">
-                          <p>Tx Ref</p>
+                          <p>Order Ref</p>
                           <b>#{item.payment.transactionId}</b>
                         </div>
                         <div className="order-data-date-status">
-                          <p>
-                            Order Date:{' '}
-                            <b>{date.toLocaleString('en-US', optionDate)}</b>
-                          </p>
-                          <p>
-                            Order Time:{' '}
-                            <b>{date.toLocaleString('en-US', optionTime)}</b>
-                          </p>
+                          <p style={{ textAlign: 'left' }}>Date</p>
+                          <b>
+                            {date.toLocaleString('en-US', optionDate)},{' '}
+                            {date.toLocaleString('en-US', optionTime)}
+                          </b>
                           <div className="order-data-status-container flex-center">
                             Status:
                             <div
@@ -549,6 +571,27 @@ const Orders = () => {
                               fontWeight: '600',
                             }}>
                             {item.payment.paymentMethod}
+                          </span>
+                        </p>
+                        <p>
+                          Total Amount + Delivery Fee:{' '}
+                          <span
+                            style={{
+                              color: 'var(--main-color)',
+                              fontWeight: '600',
+                            }}>
+                            <FontAwesomeIcon icon={faNairaSign} />
+                            {item.amount}
+                          </span>
+                        </p>
+                        <p>
+                          Item length:{' '}
+                          <span
+                            style={{
+                              color: 'var(--main-color)',
+                              fontWeight: '600',
+                            }}>
+                            {item.items.length}
                           </span>
                         </p>
                       </div>
@@ -615,7 +658,6 @@ const Orders = () => {
                                 Show Prev
                               </button>
                             )}
-                            <p>Item length: {item.items.length}</p>
                           </div>
                           {item.payment.status === 'pending' && (
                             <button
@@ -699,8 +741,13 @@ const Orders = () => {
                             Generate Receipt
                           </button>
                           <div className="order-receipt-btn">
-                            <button>View Reciept</button>
                             <button
+                              style={{
+                                display: 'flex',
+                                gap: '10px',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}
                               onClick={() => {
                                 setSend(true);
                                 generateReceipt(
@@ -709,14 +756,41 @@ const Orders = () => {
                                   send
                                 );
                               }}>
+                              <FontAwesomeIcon icon={faEnvelopeOpen} />
                               Email Reciept
                             </button>
-                            <button onClick={() => downloadReceipt(item._id)}>
-                              <FontAwesomeIcon icon={faPrint} />
-                              Print
+                            <button
+                              style={{
+                                display: 'flex',
+                                gap: '10px',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}
+                              onClick={() => downloadReceipt(item._id)}>
+                              <FontAwesomeIcon icon={faDownload} />
+                              Download
                             </button>
                           </div>
                         </div>
+                      </div>
+                      <div className="completed-order">
+                        <b className="flex-center g-10">
+                          Completed Order
+                          <FontAwesomeIcon icon={faInfoCircle} />
+                        </b>
+                        <FontAwesomeIcon
+                          icon={faCircle}
+                          style={{
+                            color: `${
+                              completedOrder ? 'var(--paid)  ' : 'grey'
+                            }`,
+                          }}
+                        />
+                        <p>
+                          If your order has been delivered, click on
+                          &#34;Confirm Delivery&#34; in Track Order to update
+                          completed order status.
+                        </p>
                       </div>
                     </div>
                   );

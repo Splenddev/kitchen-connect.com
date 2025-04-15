@@ -71,8 +71,8 @@ const StoreContextProvider = (props) => {
   const [adding, setAdding] = useState('');
   const [query, setQuery] = useState('');
   const [foods, setFoods] = useState(food_list);
-  // const url = 'http://localhost:4000';
-  const url = 'https://server-b0f1.onrender.com';
+  const url = 'http://localhost:4000';
+  // const url = 'https://server-b0f1.onrender.com';
   //  let alerted = false;
 
   useEffect(() => {

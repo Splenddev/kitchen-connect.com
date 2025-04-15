@@ -15,7 +15,7 @@
 }
 .orders-track {
   background: #fff;
-  width: 500px;
+  width: 400px;
   z-index: 40;
 }
 .orders-track-top {
@@ -65,6 +65,12 @@
   display: grid;
   grid-template-columns: 40px 1fr;
 }
+.orders-track-content-text h3 {
+  font-size: 17px;
+}
+.orders-track-content-text p {
+  font-size: 14px;
+}
 .icon-container {
   display: flex;
   flex-direction: column;
@@ -84,14 +90,14 @@
 }
 .order-track-status {
   display: grid;
-  grid-template-columns: 90px 1fr;
+  grid-template-columns: 60px 1fr;
   align-items: center;
   justify-content: center;
 }
 .order-track-status .svg {
   fill: #000;
-  height: 60px;
-  width: 60px;
+  height: 45px;
+  width: 45px;
 }
 .orders-track-bottom {
   display: flex;
@@ -162,7 +168,7 @@
   border-radius: 20px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 30px;
   margin-top: 10px;
 }
 .status-icon {
@@ -206,19 +212,29 @@
   display: flex;
   justify-content: space-between;
   box-shadow: 0px 0px 5px 0px #686868;
-  padding: 10px;
+  padding: 15px 10px;
   background: #fff;
   border-radius: 6px;
 }
 .orders-data-middle {
   display: flex;
-  margin-top: 10px;
+  margin-top: 15px;
   background: #fff;
   gap: 10px;
   box-shadow: 0px 0px 5px 0px #686868;
-  padding: 10px;
+  padding: 15px 10px;
   justify-content: space-between;
   border-radius: 6px;
+}
+.completed-order {
+  display: flex;
+  margin-top: 15px;
+  background: #fff;
+  gap: 20px;
+  box-shadow: 0px 0px 5px 0px #686868;
+  padding: 15px;
+  border-radius: 6px;
+  align-items: center;
 }
 .order-status {
   display: flex;
@@ -245,7 +261,7 @@
   margin-top: 10px;
 }
 .orders-data {
-  padding: 18px;
+  padding: 25px;
   border-radius: 10px;
   background: #e4e4e4;
   border-top-left-radius: -15px;
@@ -256,21 +272,17 @@
   padding: 5px 10px;
 }
 .order-data-bottom.paid {
-  /* color: var(--paid); */
   background: #daffd1;
 }
 .order-data-bottom.pend {
-  /* color: var(--pend); */
   background: #dde4ff;
 }
 .order-data-bottom.failed {
   background: #f5caca;
-  /* color: var(--failed); */
 }
 .order-data-date-status {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
 }
 .orders-data-container {
   margin-bottom: 10px;
@@ -505,5 +517,8 @@
   }
   .orders-data-middle {
     flex-direction: column;
+  }
+  .completed-order {
+    justify-content: space-between;
   }
 }

@@ -339,7 +339,7 @@ const Cart = () => {
             <h2>Cart Total</h2>
             <div>
               <div className="cart-total-details">
-                <p>Food Transaction Total</p>
+                <p>Sub Total</p>
                 <p>
                   {' '}
                   <FontAwesomeIcon icon={faNairaSign} />
