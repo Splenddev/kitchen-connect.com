@@ -1,6 +1,30 @@
 .orders-container {
   margin-top: 60px;
 }
+.orders-content {
+  overflow: hidden;
+  position: relative;
+}
+.warning-user .icon {
+  color: tomato;
+}
+.warning-user {
+  position: absolute;
+  white-space: nowrap;
+  top: 50px;
+  padding: 10px;
+  width: 100%;
+  animation: sliderText 22s infinite linear;
+  /* transform: translateX(-480%); */
+}
+@keyframes sliderText {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-200%);
+  }
+}
 .orders-track-container {
   position: fixed;
   z-index: 20;
@@ -15,7 +39,7 @@
 }
 .orders-track {
   background: #fff;
-  width: 400px;
+  width: 70vw;
   z-index: 40;
 }
 .orders-track-top {
@@ -165,7 +189,6 @@
   color: #fff;
 }
 .orders-data-list {
-  border-radius: 20px;
   display: flex;
   flex-direction: column;
   gap: 30px;
@@ -218,7 +241,7 @@
 }
 .orders-data-middle {
   display: flex;
-  margin-top: 15px;
+  margin: 15px 0;
   background: #fff;
   gap: 10px;
   box-shadow: 0px 0px 5px 0px #686868;
@@ -228,13 +251,13 @@
 }
 .completed-order {
   display: flex;
-  margin-top: 15px;
   background: #fff;
   gap: 20px;
   box-shadow: 0px 0px 5px 0px #686868;
   padding: 15px;
   border-radius: 6px;
   align-items: center;
+  margin-bottom: 15px;
 }
 .order-status {
   display: flex;
@@ -249,7 +272,7 @@
 }
 .order-status-text {
   font-size: 15px;
-  gap: 5px;
+  gap: 10px;
   display: flex;
   font-weight: 600;
   align-items: center;
@@ -263,7 +286,7 @@
 .orders-data {
   padding: 25px;
   border-radius: 10px;
-  background: #e4e4e4;
+  background: #f0f0f0;
   border-top-left-radius: -15px;
 }
 
@@ -283,6 +306,7 @@
 .order-data-date-status {
   display: flex;
   flex-direction: column;
+  gap: 5px;
 }
 .orders-data-container {
   margin-bottom: 10px;
@@ -430,7 +454,7 @@
 }
 .order-receipt-btn {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 6px;
 }
 .requery-btn {
@@ -454,10 +478,11 @@
   color: var(--failed);
 }
 .order-receipt-btn button {
-  font-weight: 600;
+  font-size: 15px;
   padding: 10px;
   cursor: pointer;
   width: 100%;
+  border-radius: 6px;
   background: transparent;
   font-size: 14px;
 }
@@ -505,20 +530,58 @@
   color: #fff;
   font-size: 22px;
 }
-
+.order-data-id hr,
+.date.flex-center.g-10 hr {
+  display: none;
+}
 @media (max-width: 800px) {
   .order-list-middle {
     display: flex;
     flex-direction: column;
   }
+  .orders-track {
+    width: 90vw;
+  }
+  .orders-data-top {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .order-data-id {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .order-data-id hr,
+  .date.flex-center.g-10 hr {
+    height: 1px;
+    width: 10px;
+    display: block;
+    border: none;
+    background: #000;
+  }
   .order-receipt-btn {
     justify-content: space-between;
-    flex-direction: row;
+    flex-direction: column;
   }
   .orders-data-middle {
     flex-direction: column;
   }
   .completed-order {
     justify-content: space-between;
+    margin-top: 0;
+  }
+  .order-data-button {
+    margin: 5px 0 15px 0;
+  }
+  .warning-user {
+    animation: sliderTextMini 32s infinite linear;
+  }
+}
+@keyframes sliderTextMini {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-480%);
   }
 }

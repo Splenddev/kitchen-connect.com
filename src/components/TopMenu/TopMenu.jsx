@@ -25,6 +25,7 @@ const TopMenu = ({
   foodInfo,
   category,
   textHighlight,
+  reviews,
 }) => {
   const {
     viewDetailsHandler,
@@ -129,6 +130,7 @@ const TopMenu = ({
                   extras: foodInfo.extras,
                   calories: foodInfo.nutrients.calories,
                   others: foodInfo.nutrients.others,
+                  reviews,
                 });
                 viewDetailsHandler();
               }}>

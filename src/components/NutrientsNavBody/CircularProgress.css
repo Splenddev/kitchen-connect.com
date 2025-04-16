@@ -1,0 +1,19 @@
+.composition {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 10px;
+  text-align: center;
+}
+
+.label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.percent {
+  font-weight: bold;
+  font-size: 14px;
+}

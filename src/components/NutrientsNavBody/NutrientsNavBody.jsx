@@ -1,59 +1,57 @@
 /* eslint-disable react/prop-types */
 import './NutrientsNavBody.css';
+import CircularProgress from './CircularProgress.jsx';
 
-const NutrientsNavBody = ({ foodDetailInformation }) => {
-  const info = foodDetailInformation[0];
+const NutrientsNavBody = ({ reviews, foodInfo }) => {
   return (
-    <div className="nutrients-nav-body">
+    <div className="nutrients">
       <h2>Nutritional Informations</h2>
-      <div className="calories">
-        <b>Total Calories</b>
-        <div>
-          <p>{info.nutrients.calories}</p>
-        </div>
+      <div
+        className="flex-center nutrients-circle-progress"
+        onClick={() => {
+          console.log(reviews);
+          console.log(foodInfo);
+        }}>
+        <p>Calories: {foodInfo.nutrients.calories} kcal</p>
+        <CircularProgress
+          value={
+            !foodInfo.nutrients ? 0 : foodInfo.nutrients.others[0].carbohydrates
+          }
+          label={'Carbs'}
+        />
+        <CircularProgress
+          value={!foodInfo.nutrients ? 0 : foodInfo.nutrients.others[0].protein}
+          label={'Prots'}
+        />
+        <CircularProgress
+          value={!foodInfo.nutrients ? 0 : foodInfo.nutrients.others[0].fats}
+          label={'Fats'}
+        />
       </div>
-      <div className="nutrients-nav-body-container">
+      <div className="nutrients-composition ">
+        <h2>Composition</h2>
         <div
-          style={{
-            width: `${(info.nutrients.carbohydrates / 3.8) * 100}%`,
-          }}
-          className="progress"></div>
-        <p>Carbohydrates</p>
-        <div>
-          <p>{info.nutrients.carbohydrates}</p>
-        </div>
-      </div>
-      <div className="nutrients-nav-body-container">
-        <div
-          style={{
-            width: `${(info.nutrients.fats / 3.8) * 100}%`,
-          }}
-          className="progress"></div>
-        <p>Fats</p>
-        <div>
-          <p>{info.nutrients.fats}</p>
-        </div>
-      </div>
-      <div className="nutrients-nav-body-container">
-        <div
-          style={{
-            width: `${(0.1 / 3.8) * 100}%`,
-          }}
-          className="progress"></div>
-        <p>Vitamins & Minerals</p>
-        <div>
-          <p>{info.nutrients.vitaminsAndMinerals}</p>
-        </div>
-      </div>
-      <div className="nutrients-nav-body-container">
-        <div
-          style={{
-            width: `${(info.nutrients.proteins / 3.8) * 100}%`,
-          }}
-          className="progress"></div>
-        <p>Proteins</p>
-        <div>
-          <p>{info.nutrients.proteins}</p>
+          className="flex-center j-sb nutrients-circle-progress"
+          onClick={() => {
+            console.log(reviews);
+            console.log(foodInfo);
+          }}>
+          <div className="composition-container ">
+            <p>{foodInfo.nutrients.calories} kcal</p>
+            <span>Calories</span>
+          </div>
+          <div className="composition-container">
+            <p>{foodInfo.nutrients.others[0].carbohydrates}</p>
+            <span>Carbohydrates</span>
+          </div>
+          <div className="composition-container">
+            <p>{foodInfo.nutrients.others[0].protein}</p>
+            <span>Proteins</span>
+          </div>
+          <div className="composition-container">
+            <p>{foodInfo.nutrients.others[0].fats}</p>
+            <span>Fats</span>
+          </div>
         </div>
       </div>
     </div>

@@ -1,19 +1,19 @@
-.food-details-main-container {
+.food-details-container {
   display: grid;
   margin-top: 70px;
   grid-template-columns: 1fr 0.8fr;
   gap: 20px;
 }
-.food-details-main-container.in-home {
+.food-details-container.in-home {
   margin-top: 30px;
 }
-.food-details-main-container.margin-removed {
+.food-details-container.margin-removed {
   margin-top: 30px;
 }
 .food-details-right {
   border-radius: 12px;
   border: 1px solid #a3a3a3;
-  height: max-content;
+  height: 100%;
 }
 .food-details-right-nav {
   display: flex;
@@ -53,14 +53,14 @@
 
 .food-details-header {
   height: 28vw;
-  box-shadow: 0px 0px 7px #454546;
+  box-shadow: 0px 0px 1px 1px#454546;
   position: relative;
   border-radius: 20px;
   overflow: hidden;
   background: #000;
 }
 @media (max-width: 1140px) {
-  .food-details-main-container {
+  .food-details-container {
     display: flex;
     flex-direction: column;
   }
@@ -275,4 +275,27 @@ p.kitchen:hover {
   100% {
     margin-top: 0px;
   }
+}
+.food-details-bottom_navbar ul {
+  list-style: none;
+  background: #e0e0e0;
+  padding: 3px;
+  border-radius: 40px;
+}
+.food-details-bottom_navbar ul li {
+  border-radius: 40px;
+  padding: 10px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  background: transparent;
+  cursor: pointer;
+  color: #696969;
+}
+.food-details-bottom_navbar ul li.active {
+  background: #fff;
+  color: #000;
 }

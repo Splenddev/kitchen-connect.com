@@ -43,6 +43,7 @@ const Orders = () => {
     setOrderMenu,
     statusCounts,
     setReload,
+    userInfo,
   } = useContext(StoreContext);
 
   const [load, setLoad] = useState(false);
@@ -152,6 +153,25 @@ const Orders = () => {
       rotateX: -30,
       transition: { duration: 0.4, ease: 'easeInOut', delay: 0.1 },
     },
+  };
+  const confirmDelivery = async () => {
+    if (loadStatusOrder !== 'Delivered' || !loadStatusOrder)
+      return toast.error(
+        'You can not confirm this order. It has not been delivered.'
+      );
+    try {
+      const response = await axios.post(`${url}/api/order/complete`, {
+        id: orderId,
+      });
+      if (response.data.success) {
+        setCompletedOrder(true);
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.message);
+    }
+    setCompletedOrder(true);
   };
   return (
     <>
@@ -322,7 +342,8 @@ const Orders = () => {
                         style={{
                           background:
                             loadStatusPayment === 'paid' && loadStatusOrder
-                              ? loadStatusOrder !== 'Out For Delivery'
+                              ? loadStatusOrder !== 'Out For Delivery' ||
+                                loadStatusOrder !== 'Delivered'
                                 ? 'var(--pend) '
                                 : 'var(--good) '
                               : 'grey',
@@ -446,13 +467,7 @@ const Orders = () => {
                     className={`confirm-delivery ${
                       loadStatusOrder !== 'Delivered' && 'hidden'
                     }`}
-                    onClick={() => {
-                      if (loadStatusOrder !== 'Delivered')
-                        return toast.error(
-                          'You can not confirm this order. It has not been delivered.'
-                        );
-                      setCompletedOrder(true);
-                    }}>
+                    onClick={confirmDelivery}>
                     Confirm Delivery
                   </button>
                   <button onClick={() => trackOrderHandler(orderId)}>
@@ -480,7 +495,25 @@ const Orders = () => {
               ))}
             </ul>
           </div>
-          <div className="orders-data-list">
+          <div className="warning-user flex-center g-10">
+            <FontAwesomeIcon
+              icon={faWarning}
+              className="icon"
+            />
+            <p>
+              Thank you for choosing Kitchen Connect. For your convenience and
+              record-keeping, all transaction receipts will be automatically
+              sent to your registered email address at{' '}
+            </p>
+            <b className="highlight">{userInfo.email}.</b>
+            <p>
+              Please ensure that this email address is correct to avoid any
+              disruption in communication.
+            </p>
+          </div>
+          <div
+            className="orders-data-list"
+            style={{ marginTop: '50px' }}>
             {loadingOrders ? (
               <OrdersSkeleton />
             ) : (
@@ -512,17 +545,40 @@ const Orders = () => {
                       //   item.payment.status === 'failed' && 'failed'
                       // }`}>
                     >
+                      <div className="completed-order">
+                        <b className="flex-center g-10">
+                          Completed Order
+                          <FontAwesomeIcon icon={faInfoCircle} />
+                        </b>
+                        <FontAwesomeIcon
+                          icon={faCircle}
+                          style={{
+                            color: `${
+                              completedOrder ? 'var(--paid)  ' : 'grey'
+                            }`,
+                          }}
+                        />
+                        {/* <p>
+                          If your order has been delivered, click on
+                          &#34;Confirm Delivery&#34; in Track Order to update
+                          completed order status.
+                        </p> */}
+                      </div>
                       <div className="orders-data-top">
                         <div className="order-data-id">
                           <p>Order Ref</p>
+                          <hr />
                           <b>#{item.payment.transactionId}</b>
                         </div>
                         <div className="order-data-date-status">
-                          <p style={{ textAlign: 'left' }}>Date</p>
-                          <b>
-                            {date.toLocaleString('en-US', optionDate)},{' '}
-                            {date.toLocaleString('en-US', optionTime)}
-                          </b>
+                          <div className="date flex-center g-10">
+                            <p>Date</p>
+                            <hr />
+                            <b>
+                              {date.toLocaleString('en-US', optionDate)},{' '}
+                              {date.toLocaleString('en-US', optionTime)}
+                            </b>
+                          </div>
                           <div className="order-data-status-container flex-center">
                             Status:
                             <div
@@ -574,7 +630,7 @@ const Orders = () => {
                           </span>
                         </p>
                         <p>
-                          Total Amount + Delivery Fee:{' '}
+                          Amount + Delivery Fee:{' '}
                           <span
                             style={{
                               color: 'var(--main-color)',
@@ -733,7 +789,7 @@ const Orders = () => {
                               setOrderId(item._id);
                             }}
                             className="order-track">
-                            Open Order Status Log
+                            Open Track Order
                           </button>
                           <button
                             onClick={() => generateReceipt(item._id)}
@@ -773,38 +829,22 @@ const Orders = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="completed-order">
-                        <b className="flex-center g-10">
-                          Completed Order
-                          <FontAwesomeIcon icon={faInfoCircle} />
-                        </b>
-                        <FontAwesomeIcon
-                          icon={faCircle}
-                          style={{
-                            color: `${
-                              completedOrder ? 'var(--paid)  ' : 'grey'
-                            }`,
-                          }}
-                        />
-                        <p>
-                          If your order has been delivered, click on
-                          &#34;Confirm Delivery&#34; in Track Order to update
-                          completed order status.
-                        </p>
-                      </div>
                     </div>
                   );
                 })
             )}
           </div>
         </div>
-        <div className="order-data-btn">
+        <div className="order-data-btn flex-center">
           <button
+            style={{
+              background: page === 1 ? 'grey' : 'black',
+              cursor: page === 1 ? 'not-allowed' : 'pointer',
+            }}
             onClick={() => {
               setPage((prev) => (prev > 1 ? prev - 1 : 1));
-              console.log(page);
             }}
-            disabled={page === 1}>
+            disabled={page === 1 ? true : false}>
             <FontAwesomeIcon
               className="icon"
               icon={faAngleLeft}
@@ -815,11 +855,14 @@ const Orders = () => {
             Page <b>{page}</b> of <b>{totalPage}</b>
           </span>
           <button
+            style={{
+              background: page === totalPage ? 'grey' : 'black',
+              cursor: page === totalPage ? 'not-allowed' : 'pointer',
+            }}
             onClick={() => {
               setPage((prev) => (prev < totalPage ? prev + 1 : prev));
-              console.log(page);
             }}
-            disabled={page === totalPage}>
+            disabled={page === totalPage ? true : false}>
             Next
             <FontAwesomeIcon
               className="icon"

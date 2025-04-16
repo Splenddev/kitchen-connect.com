@@ -105,6 +105,7 @@ const KitchenMenu = () => {
                     kitchen={item.kitchen.kitchen_name}
                     kitchenImage={item.k_image}
                     description={item.description}
+                    reviews={item.reviews}
                     foodInfo={item.foodInformation}
                     textHighlight={highlightText}
                   />
