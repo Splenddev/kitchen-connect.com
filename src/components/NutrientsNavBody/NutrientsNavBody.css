@@ -4,10 +4,14 @@
   grid-template-columns: 160px 1fr;
 }
 .nutrients-percentage-container {
+  padding: 0px 10px;
 }
 .nutrients-circle-progress {
   display: grid;
   grid-template-columns: 1fr 0.5fr 0.5fr;
+  white-space: nowrap;
+  justify-content: center;
+  align-items: center;
 }
 .nutrients h2 {
   margin: 15px 0;
@@ -33,7 +37,7 @@
   background: #ff6b35;
 }
 .composition-container span {
-  font-size: 18px;
+  font-size: 15px;
   text-align: center;
 }
 .circle-rotate {
