@@ -42,7 +42,7 @@ const NutrientsNavBody = ({ reviews, foodInfo }) => {
           </div>
           <div className="circle-border p-abs"></div>
         </div>
-        <div className="flex j-sb mb-20 g-30 nutrients-percentage-container">
+        <div className="flex j-sb mb-20 nutrients-percentage-container">
           {foodInfo.nutrients.others.map((nutrient, index) => (
             <div
               key={index}
@@ -60,12 +60,7 @@ const NutrientsNavBody = ({ reviews, foodInfo }) => {
       <hr />
       <div className="nutrients-composition ">
         <h2>Composition (grams)</h2>
-        <div
-          className="flex-center g-5 nutrients-circle-progress"
-          onClick={() => {
-            console.log(reviews);
-            console.log(foodInfo);
-          }}>
+        <div className="flex-center g-5 nutrients-circle-progress">
           <div className="composition-container flex-center fld mr-10">
             <div style={{ background: 'var(--main-color) ' }}>
               <p>{foodInfo.nutrients.calories} kcal</p>

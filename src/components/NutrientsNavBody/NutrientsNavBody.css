@@ -6,7 +6,8 @@
 .nutrients-percentage-container {
 }
 .nutrients-circle-progress {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 0.5fr 0.5fr;
 }
 .nutrients h2 {
   margin: 15px 0;
