@@ -82,7 +82,7 @@ const Orders = () => {
     try {
       const res = await axios.post(`${url}/api/receipt/generate`, {
         orderId: id,
-        userEmail: 'felixnwode25@gmail.com',
+        userEmail: email,
         send,
       });
       toast.success(res.data.message);

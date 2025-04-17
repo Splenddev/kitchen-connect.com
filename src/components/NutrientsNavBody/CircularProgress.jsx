@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import './CircularProgress.css';
 const CircularProgress = ({ value, label }) => {
   const circleRef = useRef(null);
-  const radius = 35;
+  const radius = 45;
   const circumference = 2 * Math.PI * radius;
 
   useEffect(() => {
@@ -16,33 +16,37 @@ const CircularProgress = ({ value, label }) => {
   return (
     <div className="composition">
       <svg
-        width="80"
-        height="80">
+        width="100"
+        height="100">
         <circle
-          cx="40"
-          cy="40"
+          cx="50"
+          cy="50"
           r={radius}
           stroke="#e0e0e0"
-          strokeWidth="7"
+          strokeWidth="10"
           fill="none"
         />
         <circle
           ref={circleRef}
-          cx="40"
-          cy="40"
+          cx="50"
+          cy="50"
           r={radius}
-          stroke="#22c55e"
-          strokeWidth="7"
+          stroke={`${value <= 75 ? '#22c55e' : '#e72525'}`}
+          strokeWidth="10"
           fill="none"
           strokeDasharray={circumference}
           strokeDashoffset={circumference}
-          transform="rotate(-90 40 40)"
+          transform="rotate(-90 50 50)"
           style={{ transition: 'stroke-dashoffset 0.5s ease' }}
         />
       </svg>
       <div className="label">
         <span className="percent">{value}%</span>
-        <p>{label}</p>
+        <p>
+          {label === 'Carbohydrates' || label === 'Carbohydrate'
+            ? 'Carbs'
+            : label}
+        </p>
       </div>
     </div>
   );

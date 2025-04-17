@@ -26,13 +26,16 @@ a {
 :root {
   --main-color: #e72525;
   --primary: #000000;
-  --paid: #2cb60a;
+  --paid: #22c55e;
   --good: #0d9e00;
   --pend: #5372f0;
   --failed: #ee0f0f;
 }
 .icon {
   cursor: pointer;
+}
+.color-main {
+  color: var(--main-color);
 }
 .g-5 {
   gap: 5px;
@@ -97,6 +100,30 @@ a {
 .mb-80 {
   margin-bottom: 80px;
 }
+.mr-10 {
+  margin-right: 10px;
+}
+.mr-20 {
+  margin-right: 20px;
+}
+.mr-30 {
+  margin-right: 30px;
+}
+.mr-40 {
+  margin-right: 40px;
+}
+.mr-50 {
+  margin-right: 50px;
+}
+.mr-60 {
+  margin-right: 60px;
+}
+.mr-70 {
+  margin-right: 70px;
+}
+.mr-80 {
+  margin-right: 80px;
+}
 .flex {
   display: flex;
 }
@@ -106,6 +133,11 @@ a {
 .flex-center {
   display: flex;
   align-items: center;
+}
+.flex-center-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .j-center {
   justify-content: center;
@@ -136,6 +168,12 @@ a {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+.p-abs {
+  position: absolute;
+}
+.p-rel {
+  position: relative;
 }
 body {
   display: flex;

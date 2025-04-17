@@ -51,10 +51,7 @@ const FoodDetails = () => {
   }, [foodView.id, quantity, setIcon, setSelectState]);
   return (
     <>
-      <div
-        className={`close-icon flex ${
-          location.pathname === '/' ? 'in-home' : ''
-        }`}>
+      <div className="close-icon flex in-home">
         <div
           className="close-icon-container flex"
           onClick={closePopup}>
@@ -66,9 +63,12 @@ const FoodDetails = () => {
         </div>
       </div>
 
-      <div className="food-details-main-container">
+      <div
+        className={`food-details-main-container  ${
+          location.pathname === '/' ? 'in-home' : ''
+        }`}>
         <div className="food-details-top_name_desc mt-30 flex fld g-10">
-          <p className="food-details-food_name">{foodView.name}</p>
+          <b className="food-details-food_name">{foodView.name}</b>
           <p className="food-details-food_description">
             {foodView.description}
           </p>
@@ -156,7 +156,7 @@ const FoodDetails = () => {
                 }}>
                 <FontAwesomeIcon icon={faMinus} />
               </p>
-              <p>{quantity}</p>
+              <p>{quantity ? quantity : 0}</p>
               <p
                 onClick={() => {
                   addToCart(foodView.id);

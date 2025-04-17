@@ -64,7 +64,17 @@ const AllFoodsList = () => {
       setFilterData((prev) => ({ ...prev, kitchen: filters[0] }));
     }
     if (title === 'category') {
-      filters = ['Soup', 'Rolls', 'Snacks, Non-vegetarian'];
+      filters = [
+        'Rice Dishes',
+        'Beans Dishes',
+        'Soups',
+        'Pasta',
+        'Noodles',
+        'Wraps',
+        'Deserts',
+        'Snacks',
+        'Grilled Meals',
+      ];
       setFilterData((prev) => ({ ...prev, category: filters[0] }));
     }
     if (title === 'reput') {

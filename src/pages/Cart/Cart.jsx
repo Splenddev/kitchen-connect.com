@@ -28,6 +28,7 @@ const Cart = () => {
     getTotalCartQuantity,
     setCartToZero,
     url,
+    userInfo,
     // token,
   } = useContext(StoreContext);
   const token = localStorage.getItem('token');
@@ -35,7 +36,7 @@ const Cart = () => {
   const [data, setData] = useState({
     firstName: '',
     lastName: '',
-    email: '',
+    email: userInfo.email || '',
     area: 'Select Area',
     street: '',
     phone: '',

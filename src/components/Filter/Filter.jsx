@@ -46,9 +46,9 @@ const Filter = () => {
           onClick={() => {
             setKitchen('all');
             showFilter();
-            setFilterKitchen('All');
+            setFilterKitchen('All Foods');
           }}>
-          All
+          All Foods
         </li>
         <li
           className={kitchen === 'arena' ? 'active' : ''}

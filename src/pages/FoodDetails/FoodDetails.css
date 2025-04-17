@@ -4,10 +4,13 @@
   grid-template-columns: 1fr 0.8fr;
   gap: 20px;
 }
-.food-details-container.in-home {
-  margin-top: 30px;
+.food-details-main-container {
+  z-index: 34;
 }
-.food-details-container.margin-removed {
+.side-popup.not-home {
+  z-index: 35;
+}
+.food-details-main-container.in-home {
   margin-top: 30px;
 }
 .food-details-right {

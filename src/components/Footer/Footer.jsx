@@ -16,10 +16,11 @@ const Footer = () => {
             <p>KitchenConnect.com</p>
           </div>
           <p>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry&apos;s standard dummy
-            text ever since the 1500s, when an unknown printer took a galley of
-            type and scrambled it to make a type specimen book.
+            Kitchen Connect is a smart food ordering platform connecting
+            students and local kitchens across KWASU. From favorite meals to new
+            flavors, we make it easy to discover, order, and enjoy food from
+            verified vendors with secure payments and fast delivery. Powered by
+            convenience, built for student life.
           </p>
           <div className="footer-content-social-icon">
             <img
@@ -38,12 +39,17 @@ const Footer = () => {
         </div>
         <div className="footer-content-right">
           <div className="footer-content-right-left">
-            <h2>COMPANY</h2>
+            <h2>Quick Links</h2>
             <ul>
-              <li>Home</li>
-              <li>About Us</li>
-              <li>Delivery</li>
-              <li>Privacy Policy</li>
+              <li>
+                <a href="/">Home</a>
+              </li>
+              <li>
+                <a href="/order">Orders</a>
+              </li>
+              <li>
+                <a href="/cart">Cart</a>
+              </li>
             </ul>
           </div>
           <div className="footer-content-right-right">
